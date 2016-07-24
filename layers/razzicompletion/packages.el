@@ -5,40 +5,30 @@
     yasnippet
     ))
 
-(toggle-debug-on-error)
-
 (defun tab-complete ()
   "Either cycle completion or expand snippet"
   (interactive)
-  (if (or (not yas/minor-mode)
-          (null (do-yas-expand)))
+  (if (null (do-yas-expand))
       (company-simple-complete-next)))
 
 (defun razzicompletion/init-company ()
   (use-package company
     :init
-
-    ; (define-key company-active-map (kbd "C-w") 'nil)
-    ; (define-key company-active-map (kbd "C-h") 'nil)
     (add-hook 'after-init-hook 'global-company-mode)
-    (setq company-idle-delay .2
+    (setq company-idle-delay .12
           company-minimum-prefix-length 2
           company-requre-match nil
           company-dabbrev-ignore-case nil
           company-dabbrev-downcase nil)
-    ;; (evil-define-key 'insert company-active-map (kbd "TAB") 'expand-snippet-or-complete-selection)
-    ;; (push '(company-semantic :with company-yasnippet) company-backends)
     :config
     (spacemacs|diminish company-mode " ⓐ" " a")
   ))
 
-; (push '(company-semantic :with company-yasnippet) company-backends)
 
 (defun razzicompletion/init-company-flx ()
   (use-package company-flx
     :init
-    (company-flx-mode)
-    ))
+    (company-flx-mode)))
 
 
 (defun razzicompletion/init-yasnippet ()
@@ -46,12 +36,9 @@
     :init
     (yas-global-mode)
     :config
-    ;; (define-key yas-minor-mode-map (kbd "TAB") nil)
-    ;; (define-key yas-minor-mode-map (kbd "<tab>") nil)
-    ;; (define-key yas-minor-mode-map [tab] nil)
-
-    define-category (and log-edit-listfun )
-    ;; (define-key evil-normal-state-map (kbd "TAB") 'tab-complete)
+    (define-key yas-minor-mode-map (kbd "TAB") nil)
+    (define-key yas-minor-mode-map (kbd "<tab>") nil)
+    (define-key yas-minor-mode-map [tab] nil)
     (spacemacs|diminish yas-minor-mode " ⓨ" " y")
     ))
 
@@ -94,10 +81,3 @@
 ;;   (if (null company-candidates)
 ;;       (yas-abort-snippet)
 ;;     (company-abort)))
-
-
-;(define-key yas-minor-mode-map (kbd "TAB") nil)
-
-;; (define-key evil-normal-state-map (kbd "TAB") 'tab-complete-or-next-field)
-;(define-key yas-keymap [(control tab)] 'yas-next-field)
-;(define-key yas-keymap (kbd "C-g") 'abort-company-or-yas)

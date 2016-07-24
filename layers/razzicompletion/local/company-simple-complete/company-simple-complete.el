@@ -59,11 +59,13 @@
 
 (with-eval-after-load 'company
   (define-key company-active-map [tab] 'company-simple-complete-next)
-  (define-key company-active-map (kbd "TAB") 'company-simple-complete-next)
+  ;; (define-key company-active-map (kbd "TAB") 'company-simple-complete-next)
   (define-key company-active-map (kbd "<S-tab>") 'company-simple-complete-previous)
   (define-key company-active-map (kbd "RET") nil)
   (define-key company-active-map (kbd "<return>") nil)
 
+  (put 'tab-complete 'company-keep t)
+  (put 'tab-complete 'company-keep t)
   (put 'company-simple-complete-next 'company-keep t)
   (put 'company-simple-complete-previous 'company-keep t)
   (setq company-require-match nil)
