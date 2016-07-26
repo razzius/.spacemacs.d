@@ -1,11 +1,6 @@
 (defun dotspacemacs/layers ()
   (setq-default
-   ;; Base distribution to use. This is a layer contained in the directory
-   ;; `+distribution'. For now available distributions are `spacemacs-base'
-   ;; or `spacemacs'. (default 'spacemacs)
-   ;;dotspacemacs-distribution 'spacemacs-base
-   ;; List of additional paths where to look for configuration layers.
-   ;; Paths must have a trailing slash (i.e. `~/.mycontribs/')
+   dotspacemacs-distribution 'spacemacs
    dotspacemacs-configuration-layer-path '("~/.spacemacs.d/layers/")
    dotspacemacs-configuration-layers
    '(
@@ -27,6 +22,7 @@
      html
      markdown
      python
+     razzishell
 
      ;; (shell :variables
      ;;        shell-default-height 30
@@ -61,12 +57,6 @@
    dotspacemacs-editing-style 'vim
    ;; If non nil output loading progress in `*Messages*' buffer. (default nil)
    dotspacemacs-verbose-loading nil
-   ;; Specify the startup banner. Default value is `official', it displays
-   ;; the official spacemacs logo. An integer value is the index of text
-   ;; banner, `random' chooses a random text banner in `core/banners'
-   ;; directory. A string value must be a path to an image format supported
-   ;; by your Emacs build.
-   ;; If the value is nil then no banner is displayed. (default 'official)
    dotspacemacs-startup-banner nil
    ;; List of items to show in the startup buffer. If nil it is disabled.
    ;; Possible values are: `recents' `bookmarks' `projects'.
@@ -74,7 +64,7 @@
    dotspacemacs-startup-lists '(recents projects)
    ;; Number of recent files to show in the startup buffer. Ignored if
    ;; `dotspacemacs-startup-lists' doesn't include `recents'. (default 5)
-   dotspacemacs-startup-recent-list-size 10
+   dotspacemacs-startup-recent-list-size 5
    ;; Default major mode of the scratch buffer (default `text-mode')
    dotspacemacs-scratch-mode 'text-mode
    dotspacemacs-themes '(
@@ -249,6 +239,34 @@ before packages are loaded."
   (transpose-lines 1)
   (forward-line -2))
 
+(defun razzi/put-before ()
+  (interactive)
+  (evil-with-single-undo
+    (evil-insert-newline-above)
+    (indent-for-tab-command)
+    (insert (s-trim (current-kill 0)))
+    (forward-line)))
+
+(defun razzi/put-after ()
+  (interactive)
+  (evil-with-single-undo
+    (evil-insert-newline-below)
+    (indent-for-tab-command)
+    (insert (s-trim (current-kill 0)))
+    (forward-line)
+    )
+  )
+
+(defun razzi/copy-paragraph ()
+  (interactive)
+  (move-beginning-of-line nil)
+  (let ((sentence (thing-at-point 'defun)))
+    (insert sentence)
+    (insert "\n")
+    ; TODO in python make this copy a method _or_ class!
+    )
+  )
+
 (defun razzi/restart-emacs ()
   (interactive)
   (save-if-buffer-is-file)
@@ -261,6 +279,11 @@ before packages are loaded."
     "," 'razzi/append-comma
     "DEL" 'razzi/restart-emacs
     "f i" 'razzi/edit-init
+    "i c" 'razzi/copy-paragraph
+    "i d" 'razzi/put-debugger
+    "o" 'razzi/put-after
+    "C-o" 'razzi/put-before
+    ;; "o d" 'razzi/put-debugger
     "v" 'razzi/select-symbol)
 
   (evil-set-initial-state 'term-mode 'insert)
@@ -301,10 +324,14 @@ before packages are loaded."
 
   (define-key evil-normal-state-map (kbd "[ SPC") 'razzi/insert-newline-before)
   (define-key evil-normal-state-map (kbd "] SPC") 'razzi/insert-newline-after)
+  (define-key evil-normal-state-map (kbd "[ c") 'git-gutter:previous-hunk)
+  (define-key evil-normal-state-map (kbd "] c") 'git-gutter:next-hunk)
+  (define-key evil-normal-state-map (kbd "TAB") 'spacemacs/alternate-buffer)
   (define-key evil-normal-state-map (kbd "-") 'razzi/transpose-next-line)
   (define-key evil-normal-state-map (kbd "_") 'razzi/transpose-previous-line)
   (define-key evil-normal-state-map (kbd "0") 'evil-first-non-blank)
   (define-key evil-normal-state-map (kbd "^") 'evil-digit-argument-or-evil-beginning-of-line)
+  (define-key evil-normal-state-map (kbd "C-c C-z") 'nil)
 
   (define-key evil-operator-state-map (kbd "SPC") 'evil-inner-symbol)
 
@@ -320,7 +347,7 @@ before packages are loaded."
 
   ;todo move to own layer
  ;todo hide 'staff' (group)
- ;todo .. to move up director
+ ;todo . to move up directory
   (use-package dired
     :config
     (setq
@@ -332,6 +359,8 @@ before packages are loaded."
     )
 
   (add-hook 'evil-insert-state-exit-hook 'save-if-buffer-is-file)
+  (add-hook 'focus-out-hook 'garbage-collect)
+  (add-hook 'focus-out-hook 'save-if-buffer-is-file)
 
   (defadvice find-file (before make-directory-maybe (filename &optional wildcards) activate)
     "Create parent directory if not exists while visiting file."
@@ -340,8 +369,6 @@ before packages are loaded."
         (unless (file-exists-p dir)
           (make-directory dir)))))
 
-  (defadvice switch-to-buffer (before save-buffer-now activate)
-    (save-if-buffer-is-file))
   )
 ; complain function which will put the string as a comment in a relevant config per mode
 ;disable the number of lines selected in modeline which seems to be slowing things down

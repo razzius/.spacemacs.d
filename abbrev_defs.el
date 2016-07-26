@@ -53,19 +53,16 @@
 
 (define-abbrev-table 'global-abbrev-table
   '(
+    ("completon" "completion" nil 1)
     ("dicitonar" "dictionary" nil 1)
-    ("efil" "evil" nil 1)
-    ("eiterh" "either" nil 1)
     ("fasle" "flase" nil 3)
     ("flase" "false" nil 3)
     ("garph" "graph" nil 1)
     ("helo" "hello" nil 1)
     ("hepl" "help" nil 1)
     ("imopt" "import" nil 1)
-    ("kdb" "kbd" nil 1)
     ("lenth" "length" nil 1)
     ("lgo" "log" nil 1)
-    ("ompletion" "completion" nil 1)
     ("psotgres" "postgres" nil 1)
     ("teh" "the" nil 1)
    ))
@@ -73,8 +70,6 @@
 (define-abbrev-table 'grep-mode-abbrev-table '())
 
 (define-abbrev-table 'haml-mode-abbrev-table '())
-
-(define-abbrev-table 'helm-ag-mode-abbrev-table '())
 
 (define-abbrev-table 'helm-grep-mode-abbrev-table '())
 
@@ -164,17 +159,9 @@
 
 (define-abbrev-table 'python-mode-abbrev-table '())
 
-(define-abbrev-table 'python-mode-skeleton-abbrev-table
-  '(
-   ))
-
-(define-abbrev-table 'reb-lisp-mode-abbrev-table '())
-
-(define-abbrev-table 'reb-mode-abbrev-table '())
+(define-abbrev-table 'python-mode-skeleton-abbrev-table '())
 
 (define-abbrev-table 'ruby-mode-abbrev-table '())
-
-(define-abbrev-table 'rxt-help-mode-abbrev-table '())
 
 (define-abbrev-table 'select-tags-table-mode-abbrev-table '())
 
