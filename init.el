@@ -22,26 +22,25 @@
      html
      markdown
      python
-     razzishell
 
-     ;; (shell :variables
-     ;;        shell-default-height 30
-     ;;        shell-default-position 'bottom)
      ;; (python
      ;;  :variables
       ;; python-enable-yapf-format-on-save t)
-     ;; org
 
+     razzishell
      (razzicompletion
         :variables auto-completion-enable-snippets-in-popup t)
      javascript
      term
+     ;; version-control
+     ;rename to razzivc
      vc
 
      ;; tl
 
+     ;; org
      ;; spell-checking
-     ;; yntax-checking
+     syntax-checking
      ;; version-control
      )
    ;; List of additional packages that will be installed without being
@@ -223,7 +222,7 @@ before packages are loaded."
   (find-file "~/.spacemacs.d/init.el"))
 
 (defun save-if-buffer-is-file ()
-  (if (buffer-file-name)
+  (if (and buffer-file-name (buffer-modified-p))
     (save-buffer)))
 
 (defun razzi/transpose-next-line ()
@@ -286,16 +285,15 @@ before packages are loaded."
 
 (defun razzi/isearch-transpose-char ()
   (interactive)
-  (let* ((string isearch-string)
-         (len (length isearch-string))
-         (second-to-last-char (aref string (- len 2)))
-         (last-char (aref string (- len 1))))
-    (isearch-pop-state)
-    (isearch-pop-state)
-    (isearch-process-search-char last-char)
-    (isearch-process-search-char second-to-last-char)
-    )
-  )
+  (when (> length isearch-search-string 1)
+    (let* ((string isearch-string)
+           (len (length isearch-string))
+           (second-to-last-char (aref string (- len 2)))
+           (last-char (aref string (- len 1))))
+      (isearch-pop-state)
+      (isearch-pop-state)
+      (isearch-process-search-char last-char)
+      (isearch-process-search-char second-to-last-char))))
 
 (defun razzi/surround-with-single-quotes (start end)
   (interactive "r")
@@ -343,6 +341,10 @@ before packages are loaded."
   (setq save-abbrevs 'silently)
 
   (setq
+    evil-regexp-search nil
+    evil-cross-lines t
+    evil-ex-substitute-global t
+
     abbrev-file-name "~/.spacemacs.d/abbrev_defs.el"
     frame-title-format "%f"
 
@@ -366,13 +368,13 @@ before packages are loaded."
 
   (global-set-key (kbd "C-`") 'describe-key)
 
+  ; need to put this somewhere else
   ;; (define-key evil-insert-state-map (kbd "C-c a") 'razzi/abbrev-or-add-global-abbrev)
   (define-key evil-insert-state-map (kbd "C-h") 'sp-backward-delete-char)
   (define-key evil-insert-state-map (kbd "C-l") 'sp-slurp-hybrid-sexp)
   (define-key evil-insert-state-map (kbd "C-p") nil)
   (define-key evil-insert-state-map (kbd "C-t") 'razzi/transpose-previous-chars)
-  ; todo conflict with yasnippet and company
-  ; (define-key evil-insert-state-map (kbd "<tab>") 'hippie-expand)
+  (define-key yas-minor-mode-map (kbd "TAB") 'yas-expand)
 
   (define-key evil-normal-state-map (kbd "-") 'razzi/transpose-next-line)
   (define-key evil-normal-state-map (kbd "0") 'evil-first-non-blank)

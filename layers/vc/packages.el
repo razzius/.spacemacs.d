@@ -4,8 +4,10 @@
   (use-package magit
     :config
     (setq
+      same-window-regexps (append same-window-regexps '("\*magit: .*\*" "\*magit-diff: .*\*"))
       magit-status-sections-hook
-      (delete 'magit-insert-status-headers magit-status-sections-hook))))
+        (delete 'magit-insert-status-headers magit-status-sections-hook))
+    ))
 
 (defun vc/init-git-gutter ()
   (use-package git-gutter
