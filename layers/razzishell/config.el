@@ -24,7 +24,7 @@
   "Default shell to use in Spacemacs. Possible values are `eshell', `shell',
 `term' and `ansi-term'.")
 
-(defvar razzishell-default-position 'bottom
+(defvar razzishell-default-position 'full
   "Position of the shell. Possible values are `top', `bottom' and `full'.")
 
 (defvar razzishell-default-height 30
@@ -32,12 +32,3 @@
 
 (defvar razzishell-default-term-shell shell-file-name
   "Default shell to use in `term' and `ansi-term' shells.")
-
-(defvar razzishell-enable-smart-eshell nil
-  "If non-nil then `em-smart' is enabled. `em-smart' allows to quickly review
-commands, modify old commands or enter a new one.")
-
-(defvar razzishell-protect-eshell-prompt t
-  "If non-nil then eshell's prompt is protected. This means that
-movement to the prompt is inhibited like for `comint-mode'
-prompts and the prompt is made read-only")

@@ -273,7 +273,59 @@ before packages are loaded."
   (mapcar 'delete-process (process-list))
   (restart-emacs))
 
+(defun razzi/kill-line-and-whitespace ()
+  (interactive)
+  (sp-kill-hybrid-sexp nil)
+  (delete-trailing-whitespace))
+
+(defun razzi/change-line ()
+  "Make vim C use paredit-kill"
+  (interactive)
+  (sp-kill-hybrid-sexp nil)
+  (evil-insert 0))
+
+(defun razzi/isearch-transpose-char ()
+  (interactive)
+  (let* ((string isearch-string)
+         (len (length isearch-string))
+         (second-to-last-char (aref string (- len 2)))
+         (last-char (aref string (- len 1))))
+    (isearch-pop-state)
+    (isearch-pop-state)
+    (isearch-process-search-char last-char)
+    (isearch-process-search-char second-to-last-char)
+    )
+  )
+
+(defun razzi/surround-with-single-quotes (start end)
+  (interactive "r")
+  (evil-surround-region start end nil ?'))
+
+(defun razzi/surround-with-double-quotes (start end)
+  (interactive "r")
+  (evil-surround-region start end nil ?\"))
+
+(defun razzi/surround-with-parens (start end)
+  (interactive "r")
+  (evil-surround-region start end nil ?\))
+  (goto-char (+ 1 end)))
+
+(defun razzi/surround-with-brackets (start end)
+  (interactive "r")
+  (evil-surround-region start end nil ?\])
+  (goto-char (+ 1 end)))
+
+(defun razzi/replay-q-macro ()
+  (interactive)
+  ; TODO could run @q directly rather than executing those chars as a command
+  (evil-execute-macro 1 "@q"))
+
 (defun dotspacemacs/user-config ()
+
+  ;; ???
+  ;; (when (get-buffer "*scratch*")
+  ;;   (kill-buffer "*scratch*"))
+
   ;; (set-face-background 'hl-line "#d3e9ff")
   (evil-leader/set-key
     "," 'razzi/append-comma
@@ -314,7 +366,7 @@ before packages are loaded."
 
   (global-set-key (kbd "C-`") 'describe-key)
 
-  (define-key evil-insert-state-map (kbd "C-c a") 'razzi/abbrev-or-add-global-abbrev)
+  ;; (define-key evil-insert-state-map (kbd "C-c a") 'razzi/abbrev-or-add-global-abbrev)
   (define-key evil-insert-state-map (kbd "C-h") 'sp-backward-delete-char)
   (define-key evil-insert-state-map (kbd "C-l") 'sp-slurp-hybrid-sexp)
   (define-key evil-insert-state-map (kbd "C-p") nil)
@@ -322,16 +374,26 @@ before packages are loaded."
   ; todo conflict with yasnippet and company
   ; (define-key evil-insert-state-map (kbd "<tab>") 'hippie-expand)
 
-  (define-key evil-normal-state-map (kbd "[ SPC") 'razzi/insert-newline-before)
-  (define-key evil-normal-state-map (kbd "] SPC") 'razzi/insert-newline-after)
-  (define-key evil-normal-state-map (kbd "[ c") 'git-gutter:previous-hunk)
-  (define-key evil-normal-state-map (kbd "] c") 'git-gutter:next-hunk)
-  (define-key evil-normal-state-map (kbd "TAB") 'spacemacs/alternate-buffer)
   (define-key evil-normal-state-map (kbd "-") 'razzi/transpose-next-line)
-  (define-key evil-normal-state-map (kbd "_") 'razzi/transpose-previous-line)
   (define-key evil-normal-state-map (kbd "0") 'evil-first-non-blank)
+  (define-key evil-normal-state-map (kbd "C") 'razzi/change-line)
+  (define-key evil-normal-state-map (kbd "C-p") 'evil-paste-after)
+  (define-key evil-normal-state-map (kbd "D") 'razzi/kill-line-and-whitespace)
+  (define-key evil-normal-state-map (kbd "Q") 'razzi/replay-q-macro)
+  (define-key evil-normal-state-map (kbd "TAB") 'spacemacs/alternate-buffer)
+  (define-key evil-normal-state-map (kbd "<backtab>") 'spacemacs/previous-useful-buffer)
+  (define-key evil-normal-state-map (kbd "[ SPC") 'razzi/insert-newline-before)
+  (define-key evil-normal-state-map (kbd "[ c") 'git-gutter:previous-hunk)
+  (define-key evil-normal-state-map (kbd "] SPC") 'razzi/insert-newline-after)
+  (define-key evil-normal-state-map (kbd "] c") 'git-gutter:next-hunk)
   (define-key evil-normal-state-map (kbd "^") 'evil-digit-argument-or-evil-beginning-of-line)
-  (define-key evil-normal-state-map (kbd "C-c C-z") 'nil)
+  (define-key evil-normal-state-map (kbd "_") 'razzi/transpose-previous-line)
+  (define-key evil-visual-state-map (kbd "'") 'razzi/surround-with-single-quotes)
+  (define-key evil-visual-state-map (kbd "\"") 'razzi/surround-with-double-quotes)
+  (define-key evil-visual-state-map (kbd ")") 'razzi/surround-with-parens)
+  (define-key evil-visual-state-map (kbd "]") 'razzi/surround-with-brackets)
+
+  (define-key evil-visual-state-map (kbd "!") 'sort-lines)
 
   (define-key evil-operator-state-map (kbd "SPC") 'evil-inner-symbol)
 
@@ -339,13 +401,9 @@ before packages are loaded."
 
   (define-key isearch-mode-map (kbd "C-j") 'isearch-done)
   (define-key isearch-mode-map (kbd "C-h") 'isearch-delete-char)
+  (define-key isearch-mode-map (kbd "C-t") 'razzi/isearch-transpose-char)
 
- (use-package shell
-    :config
-    (evil-define-key 'insert shell-mode-map (kbd "C-h") 'term-send-del)
-    (evil-define-key 'insert shell-mode-map (kbd "C-p") 'term-send-up))
-
-  ;todo move to own layer
+;todo move to own layer
  ;todo hide 'staff' (group)
  ;todo . to move up directory
   (use-package dired
