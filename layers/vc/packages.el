@@ -12,6 +12,7 @@
 (defun vc/init-git-gutter ()
   (use-package git-gutter
     :config
+    (spacemacs|diminish git-gutter-mode " ")
     (setq
       git-gutter:update-interval .4
       git-gutter:hide-gutter t)

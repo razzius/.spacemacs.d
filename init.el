@@ -29,6 +29,8 @@
 
      razzishell
      razzilisp
+     razziundohist
+
      (razzicompletion
         :variables auto-completion-enable-snippets-in-popup t)
      javascript
@@ -65,8 +67,6 @@
    ;; Number of recent files to show in the startup buffer. Ignored if
    ;; `dotspacemacs-startup-lists' doesn't include `recents'. (default 5)
    dotspacemacs-startup-recent-list-size 5
-   ;; Default major mode of the scratch buffer (default `text-mode')
-   dotspacemacs-scratch-mode 'text-mode
    dotspacemacs-themes '(
                          monokai
                          leuven
@@ -75,7 +75,7 @@
                          solarized-light
                          spacemacs-dark
                          zenburn)
-   dotspacemacs-default-font '("Source Code Pro"
+   dotspacemacs-default-font '("Bitstream Vera Sans Mono"
                                :size 18
                                :weight normal
                                :width normal
@@ -92,11 +92,6 @@
    ;; (default "C-M-m)
    dotspacemacs-major-mode-emacs-leader-key "C-M-m"
    dotspacemacs-distinguish-gui-tab t
-   ;; (Not implemented) dotspacemacs-distinguish-gui-ret nil
-   ;; The command key used for Evil commands (ex-commands) and
-   ;; Emacs commands (M-x).
-   ;; By default the command key is `:' so ex-commands are executed like in Vim
-   ;; with `:' and Emacs commands are executed with `<leader> :'.
    dotspacemacs-command-key ":"
    ;; Name of the default layout (default "Default")
    dotspacemacs-default-layout-name "Default"
@@ -105,23 +100,13 @@
    dotspacemacs-display-default-layout nil
    ;; If non nil then the last auto saved layouts are resume automatically upon
    ;; start. (default nil)
-   dotspacemacs-auto-resume-layouts nil
-   ;; Location where to auto-save files. Possible values are `original' to
-   ;; auto-save the file in-place, `cache' to auto-save the file to another
-   ;; file stored in the cache directory and `nil' to disable auto-saving.
-   ;; (default 'cache)
+   dotspacemacs-auto-resume-layouts t
    dotspacemacs-auto-save-file-location nil
-   ;; If non nil then `ido' replaces `helm' for some commands. For now only
-   ;; `find-files' (SPC f f), `find-spacemacs-file' (SPC f e s), and
-   ;; `find-contrib-file' (SPC f e c) are replaced. (default nil)
-   dotspacemacs-use-ido nil
    ;; If non nil, `helm' will try to minimize the space it uses. (default nil)
    dotspacemacs-helm-resize nil
    ;; if non nil, the helm header is hidden when there is only one source.
    ;; (default nil)
    dotspacemacs-helm-no-header t
-   ;; If non nil the paste micro-state is enabled. When enabled pressing `p`
-   ;; several times cycle between the kill ring content. (default nil)
    dotspacemacs-enable-paste-micro-state t
    ;; If non nil the frame is fullscreen when Emacs starts up. (default nil)
    ;; (Emacs 24.4+ only)
@@ -145,9 +130,6 @@
    ;; scrolling overrides the default behavior of Emacs which recenters the
    ;; point when it reaches the top or bottom of the screen. (default t)
    dotspacemacs-smooth-scrolling nil
-   ;; If non nil line numbers are turned on in all `prog-mode' and `text-mode'
-   ;; derivatives. If set to `relative', also turns on relative line numbers.
-   ;; (default nil)
    dotspacemacs-line-numbers t
    ;; If non-nil smartparens-strict-mode will be enabled in programming modes.
    ;; (default nil)
@@ -156,10 +138,6 @@
    ;; tool of the list. Supported tools are `ag', `pt', `ack' and `grep'.
    ;; (default '("ag" "pt" "ack" "grep"))
    dotspacemacs-search-tools '("ag" "pt" "ack" "grep")
-   ;; The default package repository used if no explicit repository has been
-   ;; specified with an installed package.
-   ;; Not used for now. (default nil)
-   dotspacemacs-default-package-repository nil
    ;; Delete whitespace while saving buffer. Possible values are `all'
    ;; to aggressively delete empty line and long sequences of whitespace,
    ;; `trailing' to delete only the whitespace at end of lines, `changed'to
@@ -171,8 +149,6 @@
 (defun dotspacemacs/user-init ()
   "This function is mostly useful for variables that need to be set
 before packages are loaded."
-  (setq-default
-   scroll-margin 0)
   )
 
 (defun razzi/insert-newline-after()
@@ -214,10 +190,6 @@ before packages are loaded."
   (kill-this-buffer)
   (when (> (length (window-list)) 1)
     (delete-window)))
-
-(defun razzi/edit-init ()
-  (interactive)
-  (find-file "~/.spacemacs.d/init.el"))
 
 (defun save-if-buffer-is-file ()
   (if (and buffer-file-name (buffer-modified-p))
@@ -266,7 +238,7 @@ before packages are loaded."
 
 (defun razzi/restart-emacs ()
   (interactive)
-  (save-if-buffer-is-file)
+  (save-some-buffers t)
   (mapcar 'delete-process (process-list))
   (restart-emacs))
 
@@ -311,6 +283,22 @@ before packages are loaded."
   (evil-surround-region start end nil ?\])
   (goto-char (+ 1 end)))
 
+(defun razzi/edit-init ()
+  (interactive)
+  (find-file "~/.spacemacs.d/init.el"))
+
+(defun razzi/mark-line-text ()
+  (interactive)
+  (move-end-of-line nil)
+  (set-mark-command nil)
+  (back-to-indentation))
+
+(defun razzi/almost-end-of-line ()
+  (interactive)
+  (move-end-of-line 1)
+  (backward-char)
+  (forward-char))
+
 (defun razzi/replay-q-macro ()
   (interactive)
   ; TODO could run @q directly rather than executing those chars as a command
@@ -323,6 +311,8 @@ before packages are loaded."
   ;;   (kill-buffer "*scratch*"))
 
   (set-face-background 'hl-line "black")
+  (set-face-foreground 'font-lock-comment-face "grey")
+  (set-face-foreground 'font-lock-doc-face "grey")
   ;; (set-face-background 'hl-line "#d3e9ff")
   (evil-leader/set-key
     "," 'razzi/append-comma
@@ -330,6 +320,8 @@ before packages are loaded."
     "-" 'razzi/save-delete-close
     "DEL" 'razzi/restart-emacs
     "f i" 'razzi/edit-init
+    "h f" 'describe-function
+    "h v" 'describe-variable
     "g g" 'helm-projectile-ag
     "i c" 'razzi/copy-paragraph
     "i d" 'razzi/put-debugger
@@ -341,8 +333,6 @@ before packages are loaded."
 
   (evil-set-initial-state 'term-mode 'insert)
 
-  (setq save-abbrevs 'silently)
-
   (setq
     evil-regexp-search nil
     evil-cross-lines t
@@ -351,6 +341,7 @@ before packages are loaded."
     abbrev-file-name "~/.spacemacs.d/abbrev_defs.el"
     frame-title-format "%f"
 
+    save-abbrevs 'silently
     confirm-nonexistent-file-or-buffer nil
     kill-buffer-query-functions
       (delq 'process-kill-buffer-query-function kill-buffer-query-functions)
@@ -387,12 +378,15 @@ before packages are loaded."
   (define-key evil-normal-state-map (kbd "] c") 'git-gutter:next-hunk)
   (define-key evil-normal-state-map (kbd "^") 'evil-digit-argument-or-evil-beginning-of-line)
   (define-key evil-normal-state-map (kbd "_") 'razzi/transpose-previous-line)
-  (define-key evil-visual-state-map (kbd "'") 'razzi/surround-with-single-quotes)
-  (define-key evil-visual-state-map (kbd "\"") 'razzi/surround-with-double-quotes)
-  (define-key evil-visual-state-map (kbd ")") 'razzi/surround-with-parens)
-  (define-key evil-visual-state-map (kbd "]") 'razzi/surround-with-brackets)
 
   (define-key evil-visual-state-map (kbd "!") 'sort-lines)
+  (define-key evil-visual-state-map (kbd "$") 'razzi/almost-end-of-line)
+  (define-key evil-visual-state-map (kbd "'") 'razzi/surround-with-single-quotes)
+  (define-key evil-visual-state-map (kbd ")") 'razzi/surround-with-parens)
+  (define-key evil-visual-state-map (kbd "\"") 'razzi/surround-with-double-quotes)
+  (define-key evil-visual-state-map (kbd "]") 'razzi/surround-with-brackets)
+  (define-key evil-visual-state-map (kbd "ae") 'mark-whole-buffer)
+  (define-key evil-visual-state-map (kbd "il") 'razzi/mark-line-text)
 
   (define-key evil-operator-state-map (kbd "SPC") 'evil-inner-symbol)
 

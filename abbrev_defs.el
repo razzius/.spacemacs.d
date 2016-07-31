@@ -60,6 +60,7 @@
     ("helo" "hello" nil 1)
     ("hepl" "help" nil 1)
     ("imopt" "import" nil 1)
+    ("improvments" "improvements" nil 1)
     ("lenth" "length" nil 1)
     ("lgo" "log" nil 1)
     ("maek" "make" nil 1)
