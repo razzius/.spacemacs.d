@@ -28,6 +28,7 @@
       ;; python-enable-yapf-format-on-save t)
 
      razzishell
+     razzilisp
      (razzicompletion
         :variables auto-completion-enable-snippets-in-popup t)
      javascript
@@ -90,13 +91,7 @@
    ;; Major mode leader key accessible in `emacs state' and `insert state'.
    ;; (default "C-M-m)
    dotspacemacs-major-mode-emacs-leader-key "C-M-m"
-   ;; These variables control whether separate commands are bound in the GUI to
-   ;; the key pairs C-i, TAB and C-m, RET.
-   ;; Setting it to a non-nil value, allows for separate commands under <C-i>
-   ;; and TAB or <C-m> and RET.
-   ;; In the terminal, these pairs are generally indistinguishable, so this only
-   ;; works in the GUI. (default nil)
-   dotspacemacs-distinguish-gui-tab nil
+   dotspacemacs-distinguish-gui-tab t
    ;; (Not implemented) dotspacemacs-distinguish-gui-ret nil
    ;; The command key used for Evil commands (ex-commands) and
    ;; Emacs commands (M-x).
@@ -115,7 +110,7 @@
    ;; auto-save the file in-place, `cache' to auto-save the file to another
    ;; file stored in the cache directory and `nil' to disable auto-saving.
    ;; (default 'cache)
-   dotspacemacs-auto-save-file-location 'cache
+   dotspacemacs-auto-save-file-location nil
    ;; If non nil then `ido' replaces `helm' for some commands. For now only
    ;; `find-files' (SPC f f), `find-spacemacs-file' (SPC f e s), and
    ;; `find-contrib-file' (SPC f e c) are replaced. (default nil)
@@ -128,10 +123,6 @@
    ;; If non nil the paste micro-state is enabled. When enabled pressing `p`
    ;; several times cycle between the kill ring content. (default nil)
    dotspacemacs-enable-paste-micro-state t
-   ;; If non nil a progress bar is displayed when spacemacs is loading. This
-   ;; may increase the boot time on some systems and emacs builds, set it to
-   ;; nil to boost the loading time. (default t)
-   dotspacemacs-loading-progress-bar t
    ;; If non nil the frame is fullscreen when Emacs starts up. (default nil)
    ;; (Emacs 24.4+ only)
    dotspacemacs-fullscreen-at-startup nil
@@ -160,7 +151,7 @@
    dotspacemacs-line-numbers t
    ;; If non-nil smartparens-strict-mode will be enabled in programming modes.
    ;; (default nil)
-   dotspacemacs-smartparens-strict-mode nil
+   dotspacemacs-smartparens-strict-mode t
    ;; List of search tool executable names. Spacemacs uses the first installed
    ;; tool of the list. Supported tools are `ag', `pt', `ack' and `grep'.
    ;; (default '("ag" "pt" "ack" "grep"))
@@ -216,6 +207,13 @@ before packages are loaded."
   (move-end-of-line nil)
   (insert ",")
   (evil-normal-state))
+
+(defun razzi/save-delete-close ()
+  (interactive)
+  (save-if-buffer-is-file)
+  (kill-this-buffer)
+  (when (> (length (window-list)) 1)
+    (delete-window)))
 
 (defun razzi/edit-init ()
   (interactive)
@@ -285,7 +283,7 @@ before packages are loaded."
 
 (defun razzi/isearch-transpose-char ()
   (interactive)
-  (when (> length isearch-search-string 1)
+  (when (> (length isearch-string) 1)
     (let* ((string isearch-string)
            (len (length isearch-string))
            (second-to-last-char (aref string (- len 2)))
@@ -324,15 +322,20 @@ before packages are loaded."
   ;; (when (get-buffer "*scratch*")
   ;;   (kill-buffer "*scratch*"))
 
+  (set-face-background 'hl-line "black")
   ;; (set-face-background 'hl-line "#d3e9ff")
   (evil-leader/set-key
     "," 'razzi/append-comma
+    "." 'razzi/copy-paragraph
+    "-" 'razzi/save-delete-close
     "DEL" 'razzi/restart-emacs
     "f i" 'razzi/edit-init
+    "g g" 'helm-projectile-ag
     "i c" 'razzi/copy-paragraph
     "i d" 'razzi/put-debugger
     "o" 'razzi/put-after
     "C-o" 'razzi/put-before
+    "C-SPC" 'spacemacs/workspaces-micro-state
     ;; "o d" 'razzi/put-debugger
     "v" 'razzi/select-symbol)
 
@@ -359,13 +362,6 @@ before packages are loaded."
     ;todo doesn't take effect
     scroll-margin 0)
 
-
-  ;; (spacemacs|use-package-add-hook company
-  ;;   :post-init
-  ;;   :pre-config
-  ;;   :post-config
-  ;;   )
-
   (global-set-key (kbd "C-`") 'describe-key)
 
   ; need to put this somewhere else
@@ -380,6 +376,7 @@ before packages are loaded."
   (define-key evil-normal-state-map (kbd "0") 'evil-first-non-blank)
   (define-key evil-normal-state-map (kbd "C") 'razzi/change-line)
   (define-key evil-normal-state-map (kbd "C-p") 'evil-paste-after)
+  (define-key evil-normal-state-map (kbd "C-SPC") 'spacemacs/workspaces-micro-state)
   (define-key evil-normal-state-map (kbd "D") 'razzi/kill-line-and-whitespace)
   (define-key evil-normal-state-map (kbd "Q") 'razzi/replay-q-macro)
   (define-key evil-normal-state-map (kbd "TAB") 'spacemacs/alternate-buffer)
