@@ -1,6 +1,15 @@
+(defun razzi/magit-commit ()
+  (interactive)
+  (save-if-buffer-is-file)
+  (when (not (magit-anything-staged-p))
+    (magit-run-git "add" "-u" "."))
+  (let ((same-window-regexps nil))
+    (magit-commit)))
+
 (defun razzi/save-and-status ()
   (interactive)
   (save-if-buffer-is-file)
   (magit-status))
 
 (define-key evil-normal-state-map (kbd "gs") 'razzi/save-and-status)
+(define-key evil-normal-state-map (kbd "g SPC") 'razzi/magit-commit)

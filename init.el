@@ -4,16 +4,6 @@
    dotspacemacs-configuration-layer-path '("~/.spacemacs.d/layers/")
    dotspacemacs-configuration-layers
    '(
-     ;; ----------------------------------------------------------------
-     ;; Example of useful layers you may want to use right away.
-     ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
-     ;; <M-m f e R> (Emacs style) to install them.
-     ;; ----------------------------------------------------------------
-     ;; (auto-completion :variables
-     ;;                  auto-completion-return-key-behavior nil
-     ;;                  )
-     ;; auto-completion
-
      clojure
      deft
      emacs-lisp
@@ -332,6 +322,7 @@ before packages are loaded."
     "v" 'razzi/select-symbol)
 
   (evil-set-initial-state 'term-mode 'insert)
+  (evil-set-initial-state 'text-mode 'insert)
 
   (setq
     evil-regexp-search nil
@@ -422,4 +413,3 @@ before packages are loaded."
 
   )
 ; complain function which will put the string as a comment in a relevant config per mode
-;disable the number of lines selected in modeline which seems to be slowing things down
