@@ -69,18 +69,11 @@
                                :size 18
                                :weight normal
                                :width normal
-                               :powerline-scale 1.0)
-   ;; dotspacemacs-mode-line-unicode-symbols nil
+                               :powerline-scale 1.1)
    dotspacemacs-leader-key "SPC"
-   ;; The leader key accessible in `emacs state' and `insert state'
-   ;; (default "M-m")
    dotspacemacs-emacs-leader-key "M-m"
-   ;; Major mode leader key is a shortcut key which is the equivalent of
-   ;; pressing `<leader> m`. Set it to `nil` to disable it. (default ",")
    dotspacemacs-major-mode-leader-key ","
-   ;; Major mode leader key accessible in `emacs state' and `insert state'.
-   ;; (default "C-M-m)
-   dotspacemacs-major-mode-emacs-leader-key "C-M-m"
+   dotspacemacs-major-mode-emacs-leader-key "C-SPC"
    dotspacemacs-distinguish-gui-tab t
    dotspacemacs-command-key ":"
    ;; Name of the default layout (default "Default")
@@ -277,6 +270,10 @@ before packages are loaded."
   (interactive)
   (find-file "~/.spacemacs.d/init.el"))
 
+(defun razzi/file-at-point ()
+  (interactive)
+  (find-file-at-point (ffap-file-at-point)))
+
 (defun razzi/mark-line-text ()
   (interactive)
   (move-end-of-line nil)
@@ -317,7 +314,7 @@ before packages are loaded."
     "i d" 'razzi/put-debugger
     "o" 'razzi/put-after
     "C-o" 'razzi/put-before
-    "C-SPC" 'spacemacs/workspaces-micro-state
+    "C-SPC" 'spacemacs//workspaces-eyebrowse-next-window-config-n
     ;; "o d" 'razzi/put-debugger
     "v" 'razzi/select-symbol)
 
@@ -350,7 +347,7 @@ before packages are loaded."
   ;; (define-key evil-insert-state-map (kbd "C-c a") 'razzi/abbrev-or-add-global-abbrev)
   (define-key evil-insert-state-map (kbd "C-h") 'sp-backward-delete-char)
   (define-key evil-insert-state-map (kbd "C-l") 'sp-slurp-hybrid-sexp)
-  (define-key evil-insert-state-map (kbd "C-p") nil)
+  ;; (define-key evil-insert-state-map (kbd "C-p") nil)
   (define-key evil-insert-state-map (kbd "C-t") 'razzi/transpose-previous-chars)
   (define-key yas-minor-mode-map (kbd "TAB") 'yas-expand)
 
@@ -368,6 +365,7 @@ before packages are loaded."
   (define-key evil-normal-state-map (kbd "] SPC") 'razzi/insert-newline-after)
   (define-key evil-normal-state-map (kbd "] c") 'git-gutter:next-hunk)
   (define-key evil-normal-state-map (kbd "^") 'evil-digit-argument-or-evil-beginning-of-line)
+  (define-key evil-normal-state-map (kbd "gf") 'razzi/file-at-point)
   (define-key evil-normal-state-map (kbd "_") 'razzi/transpose-previous-line)
 
   (define-key evil-visual-state-map (kbd "!") 'sort-lines)
@@ -383,9 +381,10 @@ before packages are loaded."
 
   (define-key minibuffer-local-map (kbd "C-j") 'exit-minibuffer)
 
-  (define-key isearch-mode-map (kbd "C-j") 'isearch-done)
   (define-key isearch-mode-map (kbd "C-h") 'isearch-delete-char)
+  (define-key isearch-mode-map (kbd "C-j") 'isearch-done)
   (define-key isearch-mode-map (kbd "C-t") 'razzi/isearch-transpose-char)
+  (define-key isearch-mode-map (kbd "M-v") 'isearch-yank-pop)
 
 ;todo move to own layer
  ;todo hide 'staff' (group)

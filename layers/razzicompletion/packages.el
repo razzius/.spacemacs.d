@@ -15,6 +15,8 @@
   (use-package company
     :init
     (add-hook 'after-init-hook 'global-company-mode)
+    ; todo make dabbrev work
+    ;; (add-to-list 'company-backends 'company-dabbrev t)
     (setq company-idle-delay .12
           company-minimum-prefix-length 2
           company-requre-match nil
