@@ -286,13 +286,26 @@ before packages are loaded."
   (backward-char)
   (forward-char))
 
+(defun razzi/almost-end-of-buffer ()
+  (interactive)
+  (end-of-buffer)
+  (previous-line))
+
 (defun razzi/replay-q-macro ()
   (interactive)
   ; TODO could run @q directly rather than executing those chars as a command
   (evil-execute-macro 1 "@q"))
 
+(defun razzi/recompile ()
+  (interactive)
+  ; TODO could run @q directly rather than executing those chars as a command
+  (save-buffer)
+  (recompile))
+
 (defun dotspacemacs/user-config ()
 
+  (setq display-time-default-load-average nil)
+  (display-time-mode)
   ;; ???
   ;; (when (get-buffer "*scratch*")
   ;;   (kill-buffer "*scratch*"))
@@ -303,9 +316,11 @@ before packages are loaded."
   ;; (set-face-background 'hl-line "#d3e9ff")
   (evil-leader/set-key
     "," 'razzi/append-comma
+    "[" 'evil-open-above
     "." 'razzi/copy-paragraph
     "-" 'razzi/save-delete-close
     "DEL" 'razzi/restart-emacs
+    "c r" 'razzi/recompile
     "f i" 'razzi/edit-init
     "h f" 'describe-function
     "h v" 'describe-variable
@@ -352,6 +367,7 @@ before packages are loaded."
   (define-key yas-minor-mode-map (kbd "TAB") 'yas-expand)
 
   (define-key evil-normal-state-map (kbd "-") 'razzi/transpose-next-line)
+  (define-key evil-normal-state-map (kbd "G") 'razzi/almost-end-of-buffer)
   (define-key evil-normal-state-map (kbd "0") 'evil-first-non-blank)
   (define-key evil-normal-state-map (kbd "C") 'razzi/change-line)
   (define-key evil-normal-state-map (kbd "C-p") 'evil-paste-after)
@@ -412,3 +428,4 @@ before packages are loaded."
 
   )
 ; complain function which will put the string as a comment in a relevant config per mode
+; command to turn [x] into [\n    x\n]
