@@ -2,7 +2,7 @@
   (interactive)
   (save-if-buffer-is-file)
   (when (not (magit-anything-staged-p))
-    (magit-run-git "add" "-u" "."))
+    (magit-run-git "add" "-u"))
   (let ((same-window-regexps nil))
     (magit-commit)))
 
