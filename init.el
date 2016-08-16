@@ -12,6 +12,7 @@
      html
      markdown
      python
+     yaml
 
      ;; (python
      ;;  :variables
@@ -20,6 +21,7 @@
      razzishell
      razzilisp
      razziundohist
+     razzineotree
 
      (razzicompletion
         :variables auto-completion-enable-snippets-in-popup t)
@@ -298,7 +300,6 @@ before packages are loaded."
 
 (defun razzi/recompile ()
   (interactive)
-  ; TODO could run @q directly rather than executing those chars as a command
   (save-buffer)
   (recompile))
 
