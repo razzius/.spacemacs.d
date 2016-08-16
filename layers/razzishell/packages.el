@@ -149,7 +149,7 @@
   (evil-define-key 'normal term-raw-map "p" 'term-paste)
   (evil-define-key 'normal term-raw-map "C-SPC" 'razzi/vertical-split-multi-term)
 
-  (evil-define-key 'insert term-raw-map (kbd "C-SPC") 'multi-term)
+  ;; (evil-define-key 'insert term-raw-map (kbd "C-SPC") 'multi-term)
   (evil-define-key 'insert term-raw-map (kbd "<tab>") 'term-send-tab)
 
   (evil-define-key 'insert term-raw-map

@@ -114,7 +114,7 @@
    ;; If non nil smooth scrolling (native-scrolling) is enabled. Smooth
    ;; scrolling overrides the default behavior of Emacs which recenters the
    ;; point when it reaches the top or bottom of the screen. (default t)
-   dotspacemacs-smooth-scrolling nil
+   dotspacemacs-smooth-scrolling t
    dotspacemacs-line-numbers t
    ;; If non-nil smartparens-strict-mode will be enabled in programming modes.
    ;; (default nil)
@@ -321,6 +321,7 @@ before packages are loaded."
     "." 'razzi/copy-paragraph
     "-" 'razzi/save-delete-close
     "DEL" 'razzi/restart-emacs
+    "ESC" 'kill-this-buffer
     "c r" 'razzi/recompile
     "f i" 'razzi/edit-init
     "h f" 'describe-function
@@ -351,6 +352,8 @@ before packages are loaded."
       (delq 'process-kill-buffer-query-function kill-buffer-query-functions)
 
     powerline-default-separator 'nil
+    vc-follow-symlinks t
+
     )
   (setq-default
     abbrev-mode t
