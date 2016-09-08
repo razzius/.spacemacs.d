@@ -7,6 +7,7 @@
       same-window-regexps (append same-window-regexps '("\*magit: .*\*" "\*magit-diff: .*\*"))
       magit-status-sections-hook
         (delete 'magit-insert-status-headers magit-status-sections-hook))
+    (define-key magit-status-mode-map (kbd "cc") 'razzi/magit-commit)
     ))
 
 (defun vc/init-git-gutter ()

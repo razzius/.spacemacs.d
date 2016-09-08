@@ -23,6 +23,15 @@
         magit
         ))
 
+(defun razzi/create-workspace ()
+  (interactive)
+  (eyebrowse-switch-to-window-config (+ 1 (eyebrowse--get 'last-slot))))
+
+(defun razzi/multi-term-workspace ()
+  (interactive)
+  (razzi/create-workspace)
+  (multi-term))
+
 (defun razzishell/pre-init-helm ()
   (spacemacs|use-package-add-hook helm
     :post-init
@@ -53,11 +62,11 @@
         "Send tab in term mode."
         (interactive)
         (term-send-raw-string "\t"))
-      (add-to-list 'term-bind-key-alist '("<tab>" . term-send-tab))
+      ;; (add-to-list 'term-bind-key-alist '("<tab>" . term-send-tab))
       ;; multi-term commands to create terminals and move through them.
-      (spacemacs/set-leader-keys-for-major-mode 'term-mode "c" 'multi-term)
-      (spacemacs/set-leader-keys-for-major-mode 'term-mode "p" 'multi-term-prev)
-      (spacemacs/set-leader-keys-for-major-mode 'term-mode "n" 'multi-term-next)
+      (spacemacs/set-leader-keys-for-major-mode 'term-mode "c" 'razzi/multi-term-workspace)
+      (spacemacs/set-leader-keys-for-major-mode 'term-mode "p" 'eyebrowse-next-window-config)
+      (spacemacs/set-leader-keys-for-major-mode 'term-mode "n" 'eyebrowse-prev-window-config)
 
       (when (configuration-layer/package-usedp 'projectile)
         (defun projectile-multi-term-in-root ()
@@ -136,8 +145,7 @@
       (add-hook 'term-mode-hook 'ansi-term-handle-close)
       (add-hook 'term-mode-hook (lambda () (linum-mode -1)))
 
-      (spacemacs/set-leader-keys
-        "'"   'shell-pop-multiterm))))
+      (spacemacs/set-leader-keys "'" 'razzi/multi-term-workspace))))
 
 (defun razzishell/init-term ()
   (defun term-send-tab ()

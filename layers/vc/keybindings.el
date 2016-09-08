@@ -21,5 +21,6 @@
 
 (define-key evil-normal-state-map (kbd "gs") 'razzi/save-and-status)
 (define-key evil-normal-state-map (kbd "gp") 'razzi/magit-push)
+(define-key evil-normal-state-map (kbd "gb") 'magit-blame)
 (define-key evil-normal-state-map (kbd "gl") 'razzi/magit-pull)
 (define-key evil-normal-state-map (kbd "g SPC") 'razzi/magit-commit)

@@ -3,6 +3,7 @@
     company
     company-flx
     yasnippet
+    hippie-exp
     ))
 
 (defun tab-complete ()
@@ -84,3 +85,19 @@
 ;;   (if (null company-candidates)
 ;;       (yas-abort-snippet)
 ;;     (company-abort)))
+
+(defun razzicompletion/init-hippie-exp ()
+  (use-package hippie-exp)
+    :init
+    (define-key evil-insert-state-map (kbd "<C-i>")
+      (make-hippie-expand-function '(
+        try-expand-line
+        try-expand-line-all-buffers)))
+
+    ;todo does this do anything?
+    (defadvice hippie-expand-substitute-string (after he-paredit-fix)
+      "Remove extra paren when expanding line in paredit"
+      (if (and smartparens-mode (equal (substring str -1) ")"))
+          (progn (backward-delete-char 1) (forward-char))))
+
+    (ad-activate 'hippie-expand-substitute-string))

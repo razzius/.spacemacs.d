@@ -33,7 +33,11 @@
 
 (define-abbrev-table 'css-mode-abbrev-table '())
 
+(define-abbrev-table 'debugger-mode-abbrev-table '())
+
 (define-abbrev-table 'diff-mode-abbrev-table '())
+
+(define-abbrev-table 'display-time-world-mode-abbrev-table '())
 
 (define-abbrev-table 'edebug-eval-mode-abbrev-table '())
 
@@ -59,7 +63,6 @@
 
 (define-abbrev-table 'global-abbrev-table
   '(
-    ("behavir" "behavior" nil 1)
     ("dicitonar" "dictionary" nil 1)
     ("fasle" "flase" nil 3)
     ("flase" "false" nil 3)
@@ -67,14 +70,12 @@
     ("helo" "hello" nil 1)
     ("hepl" "help" nil 1)
     ("imopt" "import" nil 1)
-    ("improvments" "improvements" nil 1)
     ("lenth" "length" nil 1)
     ("lgo" "log" nil 1)
     ("maek" "make" nil 1)
     ("psotgres" "postgres" nil 1)
-    ("somewhwere" "somewhere" nil 1)
     ("teh" "the" nil 1)
-    ("thi" "this" nil 1)
+    ("twaek" "tweak" nil 1)
    ))
 
 (define-abbrev-table 'grep-mode-abbrev-table '())
@@ -149,6 +150,8 @@
 
 (define-abbrev-table 'messages-buffer-mode-abbrev-table '())
 
+(define-abbrev-table 'neotree-mode-abbrev-table '())
+
 (define-abbrev-table 'objc-mode-abbrev-table
   '(
    ))
@@ -175,13 +178,17 @@
 
 (define-abbrev-table 'python-mode-abbrev-table '())
 
-(define-abbrev-table 'python-mode-skeleton-abbrev-table '())
+(define-abbrev-table 'python-mode-skeleton-abbrev-table
+  '(
+   ))
 
 (define-abbrev-table 'ruby-mode-abbrev-table '())
 
 (define-abbrev-table 'select-tags-table-mode-abbrev-table '())
 
 (define-abbrev-table 'sgml-mode-abbrev-table '())
+
+(define-abbrev-table 'sh-mode-abbrev-table '())
 
 (define-abbrev-table 'shell-mode-abbrev-table '())
 

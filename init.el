@@ -9,6 +9,7 @@
      emacs-lisp
      eyebrowse
      git
+     go
      html
      markdown
      python
@@ -35,6 +36,7 @@
 
      ;; org
      ;; spell-checking
+     (syntax-checking :variables syntax-checking-enable-tooltips nil)
      syntax-checking
      ;; version-control
      )
@@ -42,7 +44,7 @@
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '()
+   dotspacemacs-additional-packages '(multiple-cursors)
    dotspacemacs-excluded-packages '(anaconda-mode evil-escape)
    dotspacemacs-delete-orphan-packages t))
 
@@ -68,7 +70,7 @@
                          spacemacs-dark
                          zenburn)
    dotspacemacs-default-font '("Bitstream Vera Sans Mono"
-                               :size 18
+                               :size 17.9
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
@@ -134,7 +136,9 @@
 (defun dotspacemacs/user-init ()
   "This function is mostly useful for variables that need to be set
 before packages are loaded."
-  )
+  (setq
+   helm-mode-fuzzy-match t
+   helm-M-x-fuzzy-match t))
 
 (defun razzi/insert-newline-after()
   (interactive)
@@ -303,13 +307,20 @@ before packages are loaded."
   (save-buffer)
   (recompile))
 
+(defun razzi/evil-mc-quit-and-quit ()
+  (interactive)
+  (evil-mc-undo-all-cursors)
+  (keyboard-quit))
+
 (defun dotspacemacs/user-config ()
 
   (setq display-time-default-load-average nil)
   (display-time-mode)
-  ;; ???
-  ;; (when (get-buffer "*scratch*")
-  ;;   (kill-buffer "*scratch*"))
+  (spaceline-toggle-buffer-modified-off)
+  (global-evil-mc-mode 1)
+
+  (when (get-buffer "*scratch*")
+    (kill-buffer "*scratch*"))
 
   (set-face-background 'hl-line "black")
   (set-face-foreground 'font-lock-comment-face "grey")
@@ -322,14 +333,18 @@ before packages are loaded."
     "-" 'razzi/save-delete-close
     "DEL" 'razzi/restart-emacs
     "ESC" 'kill-this-buffer
+    "RET" 'razzi/switch-to-term-buffer
     "c r" 'razzi/recompile
     "f i" 'razzi/edit-init
     "h f" 'describe-function
     "h v" 'describe-variable
     "g g" 'helm-projectile-ag
+    "g f" 'razzi/file-at-point
     "i c" 'razzi/copy-paragraph
     "i d" 'razzi/put-debugger
     "o" 'razzi/put-after
+    "O" 'razzi/put-before
+    "r" 'helm-recentf
     "C-o" 'razzi/put-before
     "C-SPC" 'spacemacs//workspaces-eyebrowse-next-window-config-n
     ;; "o d" 'razzi/put-debugger
@@ -354,6 +369,8 @@ before packages are loaded."
     powerline-default-separator 'nil
     vc-follow-symlinks t
 
+    mc/always-run-for-all t
+    web-mode-markup-indent-offset 2
     )
   (setq-default
     abbrev-mode t
@@ -375,9 +392,11 @@ before packages are loaded."
   (define-key evil-normal-state-map (kbd "0") 'evil-first-non-blank)
   (define-key evil-normal-state-map (kbd "C") 'razzi/change-line)
   (define-key evil-normal-state-map (kbd "C-p") 'evil-paste-after)
+  (define-key evil-normal-state-map (kbd "C-g") 'razzi/evil-mc-quit-and-quit)
   (define-key evil-normal-state-map (kbd "C-SPC") 'spacemacs/workspaces-micro-state)
   (define-key evil-normal-state-map (kbd "D") 'razzi/kill-line-and-whitespace)
   (define-key evil-normal-state-map (kbd "Q") 'razzi/replay-q-macro)
+  (define-key evil-normal-state-map (kbd "RET") 'delete-other-windows)
   (define-key evil-normal-state-map (kbd "TAB") 'spacemacs/alternate-buffer)
   (define-key evil-normal-state-map (kbd "<backtab>") 'spacemacs/previous-useful-buffer)
   (define-key evil-normal-state-map (kbd "[ SPC") 'razzi/insert-newline-before)
@@ -387,6 +406,7 @@ before packages are loaded."
   (define-key evil-normal-state-map (kbd "^") 'evil-digit-argument-or-evil-beginning-of-line)
   (define-key evil-normal-state-map (kbd "gf") 'razzi/file-at-point)
   (define-key evil-normal-state-map (kbd "_") 'razzi/transpose-previous-line)
+  (define-key evil-normal-state-map (kbd "M-d") 'evil-mc-make-and-goto-next-match)
 
   (define-key evil-visual-state-map (kbd "!") 'sort-lines)
   (define-key evil-visual-state-map (kbd "$") 'razzi/almost-end-of-line)
@@ -396,6 +416,7 @@ before packages are loaded."
   (define-key evil-visual-state-map (kbd "]") 'razzi/surround-with-brackets)
   (define-key evil-visual-state-map (kbd "ae") 'mark-whole-buffer)
   (define-key evil-visual-state-map (kbd "il") 'razzi/mark-line-text)
+  (define-key evil-visual-state-map (kbd "M-d") 'mc/mark-next-symbol-like-this)
 
   (define-key evil-operator-state-map (kbd "SPC") 'evil-inner-symbol)
 
@@ -429,6 +450,8 @@ before packages are loaded."
       (let ((dir (file-name-directory filename)))
         (unless (file-exists-p dir)
           (make-directory dir)))))
+
+  (ad-activate 'find-file)
 
   )
 ; complain function which will put the string as a comment in a relevant config per mode
