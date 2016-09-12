@@ -453,6 +453,7 @@ before packages are loaded."
 
   (ad-activate 'find-file)
 
+  (run-with-idle-timer 1 t 'save-if-buffer-is-file)
   )
 ; complain function which will put the string as a comment in a relevant config per mode
 ; command to turn [x] into [\n    x\n]

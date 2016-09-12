@@ -61,12 +61,15 @@
       (let* (
             (termp (lambda (buf) (eq 'term-mode (buffer-local-value 'major-mode buf))))
             (term (-first termp (buffer-list))))
-        (switch-to-buffer term)
-        (end-of-buffer)
-        (term-send-left)
-        (evil-append 0 0 nil)
+        (if (null term)
+            (razzi/multi-term-workspace)
+          (progn
+            (switch-to-buffer term)
+            (end-of-buffer)
+            (term-send-left)
+            (evil-append 0 0 nil))
         )
-      )
+      ))
     )
     (spacemacs/set-leader-keys-for-major-mode 'term-mode "SPC" 'eyebrowse-last-window-config)
     (spacemacs/set-leader-keys-for-major-mode 'term-mode "TAB" 'spacemacs/alternate-buffer)
@@ -96,6 +99,7 @@
       (kbd "C-p") 'term-send-up
       (kbd "C-t") 'term-send-raw
       (kbd "C-w") 'term-send-raw
+      (kbd "C-v") 'term-send-forward-word
       (kbd "C-z") 'term-send-raw
       (kbd "M-v") 'term-paste
     )

@@ -11,5 +11,6 @@
     (evilified-state-evilify-map neotree-mode-map
       :mode neotree-mode
       :bindings
-      ;; (kbd "l") 'spacemacs/neotree-expand-or-open
+      (kbd "l") 'spacemacs/neotree-expand-or-open
+      (kbd "h") 'spacemacs/neotree-collapse-or-up
       (kbd ";") 'razzi/neotree-preview)))
