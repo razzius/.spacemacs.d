@@ -31,12 +31,13 @@
      ;; version-control
      ;rename to razzivc
      vc
+     osx
 
      ;; tl
 
      ;; org
      ;; spell-checking
-     (syntax-checking :variables syntax-checking-enable-tooltips nil)
+     ;; (syntax-checking :variables syntax-checking-enable-tooltips nil)
      syntax-checking
      ;; version-control
      )
@@ -45,7 +46,7 @@
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '(multiple-cursors)
-   dotspacemacs-excluded-packages '(anaconda-mode evil-escape)
+   dotspacemacs-excluded-packages '(anaconda-mode evil-escape eldoc)
    dotspacemacs-delete-orphan-packages t))
 
 (defun dotspacemacs/init ()
@@ -62,8 +63,8 @@
    ;; `dotspacemacs-startup-lists' doesn't include `recents'. (default 5)
    dotspacemacs-startup-recent-list-size 5
    dotspacemacs-themes '(
-                         monokai
                          leuven
+                         monokai
                          solarized-dark
                          spacemacs-light
                          solarized-light
@@ -292,10 +293,13 @@ before packages are loaded."
   (backward-char)
   (forward-char))
 
-(defun razzi/almost-end-of-buffer ()
-  (interactive)
-  (end-of-buffer)
-  (previous-line))
+(defun razzi/almost-end-of-buffer (arg)
+  (interactive "P")
+  (if (null arg)
+    (progn
+      (end-of-buffer)
+      (previous-line))
+    (evil-goto-line arg)))
 
 (defun razzi/replay-q-macro ()
   (interactive)
@@ -311,6 +315,16 @@ before packages are loaded."
   (interactive)
   (evil-mc-undo-all-cursors)
   (keyboard-quit))
+
+(defun prelude-copy-file-name-to-clipboard ()
+  "Copy the current buffer file name to the clipboard."
+  (interactive)
+  (let ((filename (if (equal major-mode 'dired-mode)
+                      default-directory
+                    (buffer-file-name))))
+    (when filename
+      (kill-new filename)
+      (message "Copied buffer file name '%s' to the clipboard." filename))))
 
 (defun dotspacemacs/user-config ()
 
@@ -336,6 +350,7 @@ before packages are loaded."
     "RET" 'razzi/switch-to-term-buffer
     "c r" 'razzi/recompile
     "f i" 'razzi/edit-init
+    "f SPC" 'prelude-copy-file-name-to-clipboard
     "h f" 'describe-function
     "h v" 'describe-variable
     "g g" 'helm-projectile-ag
@@ -346,6 +361,7 @@ before packages are loaded."
     "O" 'razzi/put-before
     "r" 'helm-recentf
     "C-o" 'razzi/put-before
+    "C-g" 'spacemacs/helm-project-smart-do-search-region-or-symbol
     "C-SPC" 'spacemacs//workspaces-eyebrowse-next-window-config-n
     ;; "o d" 'razzi/put-debugger
     "v" 'razzi/select-symbol)
@@ -354,6 +370,7 @@ before packages are loaded."
   (evil-set-initial-state 'text-mode 'insert)
 
   (setq
+    ns-pop-up-frames nil
     evil-regexp-search nil
     evil-cross-lines t
     evil-ex-substitute-global t
@@ -371,6 +388,8 @@ before packages are loaded."
 
     mc/always-run-for-all t
     web-mode-markup-indent-offset 2
+    mac-option-modifier 'super
+    mac-command-modifier 'meta
     )
   (setq-default
     abbrev-mode t
@@ -380,7 +399,7 @@ before packages are loaded."
   (global-set-key (kbd "C-`") 'describe-key)
 
   ; need to put this somewhere else
-  ;; (define-key evil-insert-state-map (kbd "C-c a") 'razzi/abbrev-or-add-global-abbrev)
+  (define-key evil-insert-state-map (kbd "C-c a") 'razzi/abbrev-or-add-global-abbrev)
   (define-key evil-insert-state-map (kbd "C-h") 'sp-backward-delete-char)
   (define-key evil-insert-state-map (kbd "C-l") 'sp-slurp-hybrid-sexp)
   ;; (define-key evil-insert-state-map (kbd "C-p") nil)
@@ -392,11 +411,14 @@ before packages are loaded."
   (define-key evil-normal-state-map (kbd "0") 'evil-first-non-blank)
   (define-key evil-normal-state-map (kbd "C") 'razzi/change-line)
   (define-key evil-normal-state-map (kbd "C-p") 'evil-paste-after)
+  (define-key evil-normal-state-map (kbd "M-`") 'other-window)
   (define-key evil-normal-state-map (kbd "C-g") 'razzi/evil-mc-quit-and-quit)
+  (define-key evil-normal-state-map (kbd "C-l") 'evil-window-right)
+  (define-key evil-normal-state-map (kbd "C-h") 'evil-window-left)
   (define-key evil-normal-state-map (kbd "C-SPC") 'spacemacs/workspaces-micro-state)
   (define-key evil-normal-state-map (kbd "D") 'razzi/kill-line-and-whitespace)
   (define-key evil-normal-state-map (kbd "Q") 'razzi/replay-q-macro)
-  (define-key evil-normal-state-map (kbd "RET") 'delete-other-windows)
+  ;; (define-key evil-normal-state-map (kbd "RET") 'delete-other-windows)
   (define-key evil-normal-state-map (kbd "TAB") 'spacemacs/alternate-buffer)
   (define-key evil-normal-state-map (kbd "<backtab>") 'spacemacs/previous-useful-buffer)
   (define-key evil-normal-state-map (kbd "[ SPC") 'razzi/insert-newline-before)
@@ -437,6 +459,7 @@ before packages are loaded."
      dired-recursive-deletes 'always)
     (define-key dired-mode-map (kbd "c") 'find-file)
     (define-key dired-mode-map (kbd "C-h") 'dired-up-directory)
+    (evil-define-key 'normal dired-mode-map (kbd "gs") 'magit-status)
     ;(dired-hide-details-mode)
     )
 
