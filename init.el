@@ -11,12 +11,14 @@
      shell-scripts
      clojure
      deft
+     elm
      emacs-lisp
      eyebrowse
      git
      go
      html
      markdown
+     osx
      python
      yaml
 
@@ -24,7 +26,8 @@
      ;;  :variables
       ;; python-enable-yapf-format-on-save t)
 
-     ;; razzishell
+     ; (coerce :location local)
+     razzishell
      razzilisp
      razziundohist
      razzineotree
@@ -136,7 +139,8 @@
    ;; `trailing' to delete only the whitespace at end of lines, `changed'to
    ;; delete only whitespace for changed lines or `nil' to disable cleanup.
    ;; (default nil)
-   dotspacemacs-whitespace-cleanup 'all
+   ;todo turn this off and replace with git hook(s)
+   dotspacemacs-whitespace-cleanup 'nil
    ))
 
 (defun dotspacemacs/user-init ()
@@ -166,6 +170,11 @@ before packages are loaded."
   (if (abbrev-expansion (thing-at-point 'word))
       (expand-abbrev)
     (inverse-add-global-abbrev 1)))
+
+(defun razzi/paste ()
+  (interactive)
+  (evil-paste-before 1)
+  (right-char))
 
 (defun razzi/transpose-previous-chars ()
   (interactive)
@@ -328,6 +337,10 @@ before packages are loaded."
   (save-buffer)
   (recompile))
 
+(defun razzi/file-at-point ()
+  (interactive)
+  (find-file-at-point (thing-at-point 'url)))
+
 (defun razzi/evil-mc-quit-and-quit ()
   (interactive)
   (evil-mc-undo-all-cursors)
@@ -409,11 +422,73 @@ before packages are loaded."
       (kill-new filename)
       (message "Copied buffer file name '%s' to the clipboard." filename))))
 
+(defun razzi/split-alternate-buffer ()
+  (interactive)
+  (split-window-right)
+  (spacemacs/alternate-buffer))
+
+; TODO refactor
+(defun razzi/star-isearch ()
+  (interactive)
+  (while (not (looking-at "[A-z]"))
+      (forward-char))
+
+  (let ((inhibit-redisplay 1)
+        (selection (evil-visual-state-p))
+        (visual-type (evil-visual-type))
+        (text (if (use-region-p)
+                (buffer-substring-no-properties (region-beginning) (region-end))
+                (thing-at-point 'symbol))))
+    ; Go to the start of the word if not in visual and not already at the start
+    (when (and (not selection)
+               (not (looking-at "\\_<")))
+      (backward-sexp))
+    (evil-exit-visual-state)
+    (isearch-mode t)
+    (isearch-yank-string text)
+    (isearch-done)
+    (evil-search-next)
+    (when (and
+            selection
+            (not (eq visual-type 'line)))
+      (evil-search-previous))))
+
+(defun razzi/pound-isearch ()
+  (interactive)
+  (while (not (looking-at "[A-z]"))
+      (backward-char))
+  (let ((inhibit-redisplay 1)
+        (selection (evil-visual-state-p))
+        (visual-type (evil-visual-type))
+        (text (if (use-region-p)
+                (buffer-substring-no-properties (region-beginning) (region-end))
+                (thing-at-point 'symbol))))
+    (when (and (not selection)
+               (not (looking-at "\\_<")))
+      (progn
+        (backward-sexp)
+        (if (eq ?' (char-before (point)))
+            (forward-char))))
+    (save-excursion
+      (isearch-mode nil)
+      (message text)
+      (isearch-yank-string text)
+      (isearch-done))
+    (evil-search-next)
+    (when (and
+            selection
+            (not (eq visual-type 'line)))
+      (evil-search-previous))))
+
 (defun dotspacemacs/user-config ()
 
   (setq display-time-default-load-average nil)
   (display-time-mode)
   (spaceline-toggle-buffer-modified-off)
+  (spaceline-toggle-buffer-size-off)
+  (spaceline-toggle-minor-modes-off)
+  (spaceline-toggle-major-mode-off)
+  (spaceline-toggle-buffer-encoding-abbrev-off)
   (global-evil-mc-mode 1)
 
   ;; (when (get-buffer "*scratch*")
@@ -435,6 +510,8 @@ before packages are loaded."
     "SPC" 'helm-M-x
     "ESC" 'kill-this-buffer
     "RET" 'razzi/split-after-comma
+    "RET" 'razzi/switch-to-term-buffer
+    "<backtab>" 'razzi/split-alternate-buffer
     "c r" 'razzi/recompile
     "f i" 'razzi/edit-init
     "f SPC" 'prelude-copy-file-name-to-clipboard
@@ -447,6 +524,8 @@ before packages are loaded."
     "i c" 'razzi/copy-paragraph
     "i d" 'razzi/put-debugger
     "i s" 'razzi/isort
+    ;; "g g" 'helm-projectile-ag
+    ;; "g f" 'razzi/file-at-point
     "o" 'razzi/put-after
     "O" 'razzi/put-before
     "r" 'helm-recentf
@@ -505,6 +584,7 @@ before packages are loaded."
   (define-key evil-insert-state-map (kbd "C-c a") 'razzi/abbrev-or-add-global-abbrev)
   (define-key evil-insert-state-map (kbd "C-h") 'sp-backward-delete-char)
   (define-key evil-insert-state-map (kbd "C-l") 'sp-slurp-hybrid-sexp)
+  (define-key evil-insert-state-map (kbd "M-v") 'razzi/paste)
   ;; (define-key evil-insert-state-map (kbd "C-p") nil)
   (define-key evil-insert-state-map (kbd "C-t") 'razzi/transpose-previous-chars)
   (define-key yas-minor-mode-map (kbd "TAB") 'yas-expand)
@@ -514,8 +594,11 @@ before packages are loaded."
   ; TODO skip tags buffer :[
   (define-key evil-normal-state-map (kbd "<backtab>") 'previous-buffer)
   (define-key evil-normal-state-map (kbd "C") 'razzi/change-line)
-  (define-key evil-normal-state-map (kbd "C-SPC") 'spacemacs/workspaces-micro-state)
+  (define-key evil-normal-state-map (kbd "C-a") 'evil-numbers/inc-at-pt)
+  (define-key evil-normal-state-map (kbd "C-p") 'evil-paste-after)
   (define-key evil-normal-state-map (kbd "C-g") 'razzi/evil-mc-quit-and-quit)
+  (define-key evil-normal-state-map (kbd "C-x") 'evil-numbers/dec-at-pt)
+  (define-key evil-normal-state-map (kbd "C-SPC") 'spacemacs/workspaces-micro-state)
   (define-key evil-normal-state-map (kbd "C-h") 'evil-window-left)
   (define-key evil-normal-state-map (kbd "C-l") 'evil-window-right)
   (define-key evil-normal-state-map (kbd "C-p") 'evil-paste-after)
@@ -523,6 +606,7 @@ before packages are loaded."
   (define-key evil-normal-state-map (kbd "G") 'razzi/almost-end-of-buffer)
   (define-key evil-normal-state-map (kbd "M-`") 'other-window)
   (define-key evil-normal-state-map (kbd "M-d") 'evil-mc-make-and-goto-next-match)
+  (define-key evil-normal-state-map (kbd "E") 'forward-symbol)
   (define-key evil-normal-state-map (kbd "Q") 'razzi/replay-q-macro)
   (define-key evil-normal-state-map (kbd "TAB") 'spacemacs/alternate-buffer)
   (define-key evil-normal-state-map (kbd "[ SPC") 'razzi/insert-newline-before)
@@ -530,14 +614,18 @@ before packages are loaded."
   (define-key evil-normal-state-map (kbd "] SPC") 'razzi/insert-newline-after)
   (define-key evil-normal-state-map (kbd "] c") 'git-gutter:next-hunk)
   (define-key evil-normal-state-map (kbd "^") 'evil-digit-argument-or-evil-beginning-of-line)
-  (define-key evil-normal-state-map (kbd "_") 'razzi/transpose-previous-line)
-  (define-key evil-normal-state-map (kbd "gf") 'razzi/file-at-point)
   (define-key evil-normal-state-map (kbd "g/") 'spacemacs/helm-project-smart-do-search-region-or-symbol)
   (define-key evil-normal-state-map (kbd "g]") 'evil-jump-to-tag)
   (define-key evil-normal-state-map (kbd "g[") 'helm-etags-select)
   (define-key evil-normal-state-map (kbd "n") 'razzi/next-and-center)
   (define-key evil-normal-state-map (kbd "N") 'razzi/previous-and-center)
   ;; (define-key evil-normal-state-map (kbd "RET") 'delete-other-windows)
+  (define-key evil-normal-state-map (kbd "*") 'razzi/star-isearch)
+  (define-key evil-normal-state-map (kbd "#") 'razzi/pound-isearch)
+  (define-key evil-normal-state-map (kbd "gf") 'razzi/file-at-point)
+  (define-key evil-normal-state-map (kbd "_") 'razzi/transpose-previous-line)
+  (define-key evil-normal-state-map (kbd "s-d") 'evil-mc-make-and-goto-next-match)
+  (define-key evil-normal-state-map (kbd "s-x") 'helm-M-x)
 
   (define-key evil-visual-state-map (kbd "!") 'sort-lines)
   (define-key evil-visual-state-map (kbd "$") 'razzi/almost-end-of-line)
@@ -545,11 +633,14 @@ before packages are loaded."
   (define-key evil-visual-state-map (kbd ")") 'razzi/surround-with-parens)
   (define-key evil-visual-state-map (kbd "\"") 'razzi/surround-with-double-quotes)
   (define-key evil-visual-state-map (kbd "]") 'razzi/surround-with-brackets)
+  (define-key evil-visual-state-map (kbd "E") 'forward-symbol)
   (define-key evil-visual-state-map (kbd "ae") 'mark-whole-buffer)
   (define-key evil-visual-state-map (kbd "il") 'razzi/mark-line-text)
   (define-key evil-visual-state-map (kbd "M-d") 'mc/mark-next-symbol-like-this)
 
   (define-key evil-operator-state-map (kbd "SPC") 'evil-inner-symbol)
+  (define-key evil-operator-state-map (kbd "E") 'forward-symbol)
+  (define-key evil-operator-state-map (kbd "ru") 'coerce-uppercase)
 
   (define-key minibuffer-local-map (kbd "C-j") 'exit-minibuffer)
 
@@ -599,3 +690,9 @@ before packages are loaded."
   )
 ; complain function which will put the string as a comment in a relevant config per mode
 ; command to turn [x] into [\n    x\n]
+;search current word
+;; company repeat
+;VV
+; todo do these work?
+(setq comint-move-point-for-output nil)
+(setq comint-scroll-show-maximum-output nil)

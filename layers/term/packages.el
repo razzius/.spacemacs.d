@@ -100,6 +100,7 @@
       (kbd "C-t") 'term-send-raw
       (kbd "C-w") 'term-send-raw
       (kbd "C-v") 'term-send-forward-word
+      (kbd "C-q") 'term-send-backward-word
       (kbd "C-z") 'term-send-raw
       (kbd "M-v") 'term-paste
     )
