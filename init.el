@@ -480,6 +480,17 @@ before packages are loaded."
             (not (eq visual-type 'line)))
       (evil-search-previous))))
 
+(defun razzi/coerce-uppercase (&optional start end)
+  (interactive "r")
+  ; if no selection, select current word
+  ;https://www.emacswiki.org/emacs/MarkCommands
+  (let (
+        (text (if (use-region-p)
+                  (buffer-substring-no-properties start end)
+                (thing-at-point 'symbol)))
+        )
+  ))
+
 (defun dotspacemacs/user-config ()
 
   (setq display-time-default-load-average nil)
@@ -640,7 +651,7 @@ before packages are loaded."
 
   (define-key evil-operator-state-map (kbd "SPC") 'evil-inner-symbol)
   (define-key evil-operator-state-map (kbd "E") 'forward-symbol)
-  (define-key evil-operator-state-map (kbd "ru") 'coerce-uppercase)
+  (define-key evil-operator-state-map (kbd "ru") 'razzi/coerce-uppercase)
 
   (define-key minibuffer-local-map (kbd "C-j") 'exit-minibuffer)
 
@@ -693,6 +704,7 @@ before packages are loaded."
 ;search current word
 ;; company repeat
 ;VV
+; todo use parinfer
 ; todo do these work?
 (setq comint-move-point-for-output nil)
 (setq comint-scroll-show-maximum-output nil)
