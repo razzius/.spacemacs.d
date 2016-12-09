@@ -4,6 +4,7 @@
    dotspacemacs-configuration-layer-path '("~/.spacemacs.d/layers/")
    dotspacemacs-configuration-layers
    '(
+     shell-scripts
      clojure
      deft
      emacs-lisp
@@ -19,7 +20,7 @@
      ;;  :variables
       ;; python-enable-yapf-format-on-save t)
 
-     razzishell
+     ;; razzishell
      razzilisp
      razziundohist
      razzineotree
@@ -37,8 +38,8 @@
 
      ;; org
      ;; spell-checking
-     ;; (syntax-checking :variables syntax-checking-enable-tooltips nil)
-     syntax-checking
+     (syntax-checking :variables syntax-checking-enable-tooltips nil)
+     ;; syntax-checking
      ;; version-control
      )
    ;; List of additional packages that will be installed without being
@@ -192,11 +193,17 @@ before packages are loaded."
   (transpose-lines 1)
   (forward-line -1))
 
-(defun razzi/transpose-previous-line ()
+(defun razzi/transpose-previous-line (arg)
   "Switch the current and previous lines"
-  (interactive)
-  (transpose-lines 1)
-  (forward-line -2))
+  (interactive "P")
+  (let (
+        (count (or arg 1))
+        (unused)
+        )
+    (dotimes (number count unused) (
+      progn
+      (transpose-lines 1)
+      (forward-line -2)))))
 
 (defun razzi/put-before ()
   (interactive)
@@ -225,6 +232,12 @@ before packages are loaded."
     ; TODO in python make this copy a method _or_ class!
     )
   )
+
+(defun razzi/put-debugger ()
+  (interactive)
+  (evil-insert-newline-below)
+  (indent-for-tab-command)
+  (insert "import ipdb; ipdb.set_trace()"))
 
 (defun razzi/restart-emacs ()
   (interactive)
@@ -316,6 +329,18 @@ before packages are loaded."
   (evil-mc-undo-all-cursors)
   (keyboard-quit))
 
+(defun razzi/copy-test-file-path ()
+  (interactive)
+  (let* (
+         (root (s-append "/" (s-chomp (shell-command-to-string "git root"))))
+         (relative-path (s-chop-prefix root (buffer-file-name)))
+         (module (s-replace "/" "." (file-name-sans-extension relative-path)))
+         )
+    (kill-new module)
+    (message "Copied module '%s' to the clipboard." module)
+    )
+  )
+
 (defun prelude-copy-file-name-to-clipboard ()
   "Copy the current buffer file name to the clipboard."
   (interactive)
@@ -336,9 +361,9 @@ before packages are loaded."
   (when (get-buffer "*scratch*")
     (kill-buffer "*scratch*"))
 
-  (set-face-background 'hl-line "black")
-  (set-face-foreground 'font-lock-comment-face "grey")
-  (set-face-foreground 'font-lock-doc-face "grey")
+  ;; (set-face-background 'hl-line "black")
+  (set-face-foreground 'font-lock-comment-face "dark grey")
+  (set-face-foreground 'font-lock-doc-face "teal")
   ;; (set-face-background 'hl-line "#d3e9ff")
   (evil-leader/set-key
     "," 'razzi/append-comma
@@ -346,11 +371,13 @@ before packages are loaded."
     "." 'razzi/copy-paragraph
     "-" 'razzi/save-delete-close
     "DEL" 'razzi/restart-emacs
+    "SPC" 'helm-M-x
     "ESC" 'kill-this-buffer
     "RET" 'razzi/switch-to-term-buffer
     "c r" 'razzi/recompile
     "f i" 'razzi/edit-init
     "f SPC" 'prelude-copy-file-name-to-clipboard
+    "f p" 'razzi/copy-test-file-path
     "h f" 'describe-function
     "h v" 'describe-variable
     "g g" 'helm-projectile-ag
@@ -374,6 +401,7 @@ before packages are loaded."
     evil-regexp-search nil
     evil-cross-lines t
     evil-ex-substitute-global t
+    custom-file "~/.emacs.d/custom.el"
 
     abbrev-file-name "~/.spacemacs.d/abbrev_defs.el"
     frame-title-format "%f"
@@ -407,28 +435,30 @@ before packages are loaded."
   (define-key yas-minor-mode-map (kbd "TAB") 'yas-expand)
 
   (define-key evil-normal-state-map (kbd "-") 'razzi/transpose-next-line)
-  (define-key evil-normal-state-map (kbd "G") 'razzi/almost-end-of-buffer)
   (define-key evil-normal-state-map (kbd "0") 'evil-first-non-blank)
+  (define-key evil-normal-state-map (kbd "<backtab>") 'previous-buffer)
   (define-key evil-normal-state-map (kbd "C") 'razzi/change-line)
-  (define-key evil-normal-state-map (kbd "C-p") 'evil-paste-after)
-  (define-key evil-normal-state-map (kbd "M-`") 'other-window)
-  (define-key evil-normal-state-map (kbd "C-g") 'razzi/evil-mc-quit-and-quit)
-  (define-key evil-normal-state-map (kbd "C-l") 'evil-window-right)
-  (define-key evil-normal-state-map (kbd "C-h") 'evil-window-left)
   (define-key evil-normal-state-map (kbd "C-SPC") 'spacemacs/workspaces-micro-state)
+  (define-key evil-normal-state-map (kbd "C-g") 'razzi/evil-mc-quit-and-quit)
+  (define-key evil-normal-state-map (kbd "C-h") 'evil-window-left)
+  (define-key evil-normal-state-map (kbd "C-l") 'evil-window-right)
+  (define-key evil-normal-state-map (kbd "C-p") 'evil-paste-after)
   (define-key evil-normal-state-map (kbd "D") 'razzi/kill-line-and-whitespace)
+  (define-key evil-normal-state-map (kbd "G") 'razzi/almost-end-of-buffer)
+  (define-key evil-normal-state-map (kbd "M-`") 'other-window)
+  (define-key evil-normal-state-map (kbd "M-d") 'evil-mc-make-and-goto-next-match)
   (define-key evil-normal-state-map (kbd "Q") 'razzi/replay-q-macro)
-  ;; (define-key evil-normal-state-map (kbd "RET") 'delete-other-windows)
   (define-key evil-normal-state-map (kbd "TAB") 'spacemacs/alternate-buffer)
-  (define-key evil-normal-state-map (kbd "<backtab>") 'spacemacs/previous-useful-buffer)
   (define-key evil-normal-state-map (kbd "[ SPC") 'razzi/insert-newline-before)
   (define-key evil-normal-state-map (kbd "[ c") 'git-gutter:previous-hunk)
   (define-key evil-normal-state-map (kbd "] SPC") 'razzi/insert-newline-after)
   (define-key evil-normal-state-map (kbd "] c") 'git-gutter:next-hunk)
   (define-key evil-normal-state-map (kbd "^") 'evil-digit-argument-or-evil-beginning-of-line)
-  (define-key evil-normal-state-map (kbd "gf") 'razzi/file-at-point)
   (define-key evil-normal-state-map (kbd "_") 'razzi/transpose-previous-line)
-  (define-key evil-normal-state-map (kbd "M-d") 'evil-mc-make-and-goto-next-match)
+  (define-key evil-normal-state-map (kbd "gf") 'razzi/file-at-point)
+  (define-key evil-normal-state-map (kbd "g]") 'evil-jump-to-tag)
+  (define-key evil-normal-state-map (kbd "g[") 'helm-etags-select)
+  ;; (define-key evil-normal-state-map (kbd "RET") 'delete-other-windows)
 
   (define-key evil-visual-state-map (kbd "!") 'sort-lines)
   (define-key evil-visual-state-map (kbd "$") 'razzi/almost-end-of-line)
@@ -464,6 +494,7 @@ before packages are loaded."
     )
 
   (add-hook 'evil-insert-state-exit-hook 'save-if-buffer-is-file)
+  (add-hook 'evil-insert-state-exit-hook 'expand-abbrev)
   (add-hook 'focus-out-hook 'garbage-collect)
   (add-hook 'focus-out-hook 'save-if-buffer-is-file)
 
@@ -476,7 +507,7 @@ before packages are loaded."
 
   (ad-activate 'find-file)
 
-  (run-with-idle-timer 1 t 'save-if-buffer-is-file)
+  ;; (run-with-idle-timer 1 t 'save-if-buffer-is-file)
   )
 ; complain function which will put the string as a comment in a relevant config per mode
 ; command to turn [x] into [\n    x\n]
