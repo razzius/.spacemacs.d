@@ -341,6 +341,11 @@ before packages are loaded."
     )
   )
 
+; todo
+(defun razzi/double-quotes-to-single ()
+  (interactive)
+  (evil-execute-macro 1 "cs\"'"))
+
 (defun prelude-copy-file-name-to-clipboard ()
   "Copy the current buffer file name to the clipboard."
   (interactive)
@@ -364,6 +369,8 @@ before packages are loaded."
   ;; (set-face-background 'hl-line "black")
   (set-face-foreground 'font-lock-comment-face "dark grey")
   (set-face-foreground 'font-lock-doc-face "teal")
+  (set-face-background 'magit-diff-context-highlight "light cyan")
+  (set-face-background 'magit-diff-hunk-heading-highlight "gray60")
   ;; (set-face-background 'hl-line "#d3e9ff")
   (evil-leader/set-key
     "," 'razzi/append-comma
@@ -387,8 +394,8 @@ before packages are loaded."
     "o" 'razzi/put-after
     "O" 'razzi/put-before
     "r" 'helm-recentf
+    "'" 'razzi/double-quotes-to-single
     "C-o" 'razzi/put-before
-    "C-g" 'spacemacs/helm-project-smart-do-search-region-or-symbol
     "C-SPC" 'spacemacs//workspaces-eyebrowse-next-window-config-n
     ;; "o d" 'razzi/put-debugger
     "v" 'razzi/select-symbol)
@@ -419,6 +426,9 @@ before packages are loaded."
     mac-option-modifier 'super
     mac-command-modifier 'meta
     )
+
+  (load custom-file 'noerror)
+
   (setq-default
     abbrev-mode t
     ;todo doesn't take effect
@@ -456,6 +466,7 @@ before packages are loaded."
   (define-key evil-normal-state-map (kbd "^") 'evil-digit-argument-or-evil-beginning-of-line)
   (define-key evil-normal-state-map (kbd "_") 'razzi/transpose-previous-line)
   (define-key evil-normal-state-map (kbd "gf") 'razzi/file-at-point)
+  (define-key evil-normal-state-map (kbd "g/") 'spacemacs/helm-project-smart-do-search-region-or-symbol)
   (define-key evil-normal-state-map (kbd "g]") 'evil-jump-to-tag)
   (define-key evil-normal-state-map (kbd "g[") 'helm-etags-select)
   ;; (define-key evil-normal-state-map (kbd "RET") 'delete-other-windows)

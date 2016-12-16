@@ -24,6 +24,7 @@
           company-dabbrev-ignore-case nil
           company-dabbrev-downcase nil)
     :config
+    (define-key company-active-map (kbd "C-w") nil)
     (spacemacs|diminish company-mode " ⓐ" " a")
   ))
 
