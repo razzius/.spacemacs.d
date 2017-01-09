@@ -5,6 +5,8 @@
 
 (define-abbrev-table 'Info-edit-mode-abbrev-table '())
 
+(define-abbrev-table 'Man-mode-abbrev-table '())
+
 (define-abbrev-table 'anaconda-mode-view-mode-abbrev-table '())
 
 (define-abbrev-table 'awk-mode-abbrev-table
@@ -77,12 +79,15 @@
     ("buciket" "bucket" nil 1)
     ("deined" "denied" nil 1)
     ("deniec" "denied" nil 1)
+    ("dictionay" "dictionary" nil 1)
+    ("disabld" "disabled" nil 1)
     ("dreictives" "directives" nil 1)
     ("elemet" "element" nil 1)
     ("fiel" "field" nil 1)
     ("fixtuer" "fixture" nil 1)
     ("functino" "function" nil 1)
     ("functon" "function" nil 1)
+    ("haev" "have" nil 1)
     ("homeonwer" "homeowner" nil 1)
     ("icnentive" "incentive" nil 1)
     ("imoprt" "import" nil 1)

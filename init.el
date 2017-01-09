@@ -346,6 +346,10 @@ before packages are loaded."
   (interactive)
   (evil-execute-macro 1 "cs\"'"))
 
+(defun razzi/git-push ()
+  (interactive)
+  (shell-command "git push"))
+
 (defun prelude-copy-file-name-to-clipboard ()
   "Copy the current buffer file name to the clipboard."
   (interactive)
@@ -387,8 +391,9 @@ before packages are loaded."
     "f p" 'razzi/copy-test-file-path
     "h f" 'describe-function
     "h v" 'describe-variable
-    "g g" 'helm-projectile-ag
+    "g g" 'magit-checkout
     "g f" 'razzi/file-at-point
+    "g p" 'razzi/git-push
     "i c" 'razzi/copy-paragraph
     "i d" 'razzi/put-debugger
     "o" 'razzi/put-after
