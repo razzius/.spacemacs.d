@@ -5,6 +5,8 @@
 
 (define-abbrev-table 'Info-edit-mode-abbrev-table '())
 
+(define-abbrev-table 'Man-mode-abbrev-table '())
+
 (define-abbrev-table 'anaconda-mode-view-mode-abbrev-table '())
 
 (define-abbrev-table 'awk-mode-abbrev-table '())
@@ -37,9 +39,15 @@
 
 (define-abbrev-table 'conf-xdefaults-mode-abbrev-table '())
 
+(define-abbrev-table 'debugger-mode-abbrev-table '())
+
 (define-abbrev-table 'diff-mode-abbrev-table '())
 
 (define-abbrev-table 'display-time-world-mode-abbrev-table '())
+
+(define-abbrev-table 'doctor-mode-abbrev-table '())
+
+(define-abbrev-table 'edebug-eval-mode-abbrev-table '())
 
 (define-abbrev-table 'edit-abbrevs-mode-abbrev-table '())
 
@@ -49,9 +57,17 @@
 
 (define-abbrev-table 'emacs-lisp-mode-abbrev-table '())
 
+(define-abbrev-table 'ert-results-mode-abbrev-table '())
+
+(define-abbrev-table 'ert-simple-view-mode-abbrev-table '())
+
+(define-abbrev-table 'eshell-mode-abbrev-table '())
+
 (define-abbrev-table 'evil-command-window-mode-abbrev-table '())
 
 (define-abbrev-table 'evil-list-view-mode-abbrev-table '())
+
+(define-abbrev-table 'fish-mode-abbrev-table '())
 
 (define-abbrev-table 'flycheck-error-list-mode-abbrev-table '())
 
@@ -61,11 +77,21 @@
 
 (define-abbrev-table 'global-abbrev-table
   '(
+    ("adderss" "address" nil 1)
     ("ahving" "having" nil 1)
     ("alowed" "allowed" nil 1)
+    ("alwasy" "always" nil 1)
     ("amoutn" "amount" nil 1)
+    ("analyssi" "analysis" nil 3)
+    ("anaylsis" "analysis" nil 1)
     ("availalbe" "available" nil 1)
+    ("avr" "var" nil 1)
     ("buciket" "bucket" nil 1)
+    ("cavnas" "canvas" nil 1)
+    ("conetxt" "context" nil 1)
+    ("contineu" "continue" nil 1)
+    ("creaet" "create" nil 1)
+    ("cretea" "create" nil 1)
     ("deined" "denied" nil 1)
     ("deniec" "denied" nil 1)
     ("dicitonar" "dictionary" nil 1)
@@ -77,15 +103,19 @@
     ("fasle" "flase" nil 3)
     ("fiel" "field" nil 1)
     ("fixtuer" "fixture" nil 1)
+    ("fixutres" "fixtures" nil 1)
     ("flase" "false" nil 3)
     ("functino" "function" nil 1)
     ("functon" "function" nil 1)
     ("garph" "graph" nil 1)
+    ("gren" "green" nil 1)
     ("haev" "have" nil 1)
     ("helo" "hello" nil 1)
     ("hepl" "help" nil 1)
+    ("hieght" "height" nil 2)
     ("hoep" "hope" nil 1)
     ("homeonwer" "homeowner" nil 1)
+    ("hte" "the" nil 1)
     ("icnentive" "incentive" nil 1)
     ("imoprt" "import" nil 1)
     ("imopt" "import" nil 1)
@@ -93,6 +123,7 @@
     ("incetnive" "incentive" nil 1)
     ("intpu" "input" nil 1)
     ("introspecetd" "introspected" nil 1)
+    ("jsoin" "json" nil 1)
     ("lenth" "length" nil 1)
     ("lgo" "log" nil 1)
     ("lgoging" "logging" nil 1)
@@ -100,25 +131,33 @@
     ("nullabe" "nullable" nil 1)
     ("organizatino" "organization" nil 1)
     ("orgnization" "organization" nil 1)
+    ("ouptut" "output" nil 1)
     ("overriden" "overridden" nil 1)
     ("overrie" "override" nil 1)
+    ("paylaod" "payload" nil 1)
     ("perimssion" "permission" nil 1)
     ("psotgres" "postgres" nil 1)
     ("qutoe" "quote" nil 2)
     ("reponse" "response" nil 1)
+    ("resonse" "response" nil 1)
     ("scoep" "scope" nil 1)
     ("seelcted" "selected" nil 1)
     ("seires" "series" nil 1)
+    ("soalr" "solar" nil 1)
     ("somethig" "something" nil 1)
     ("sstring" "string" nil 1)
     ("tabel" "table" nil 1)
     ("teh" "the" nil 1)
     ("thsee" "these" nil 1)
     ("toekn" "token" nil 1)
+    ("uage" "usage" nil 1)
     ("updaet" "update" nil 1)
     ("utilty" "utility" nil 1)
     ("valeu" "value" nil 1)
     ("vlaue" "value" nil 1)
+    ("vra" "var" nil 2)
+    ("wdith" "width" nil 1)
+    ("widht" "width" nil 3)
     ("wiht" "with" nil 1)
     ("yaer" "year" nil 1)
    ))
@@ -128,6 +167,8 @@
 (define-abbrev-table 'godoc-mode-abbrev-table '())
 
 (define-abbrev-table 'grep-mode-abbrev-table '())
+
+(define-abbrev-table 'helm-ag-mode-abbrev-table '())
 
 (define-abbrev-table 'helm-ag-mode-abbrev-table '())
 
@@ -148,6 +189,10 @@
 (define-abbrev-table 'image-dired-display-image-mode-abbrev-table '())
 
 (define-abbrev-table 'image-dired-thumbnail-mode-abbrev-table '())
+
+(define-abbrev-table 'imenu-list-major-mode-abbrev-table '())
+
+(define-abbrev-table 'inferior-emacs-lisp-mode-abbrev-table '())
 
 (define-abbrev-table 'inferior-python-mode-abbrev-table '())
 
@@ -209,6 +254,8 @@
 
 (define-abbrev-table 'pike-mode-abbrev-table '())
 
+(define-abbrev-table 'pip-requirements-mode-abbrev-table '())
+
 (define-abbrev-table 'process-menu-mode-abbrev-table '())
 
 (define-abbrev-table 'profiler-report-mode-abbrev-table '())
@@ -227,11 +274,21 @@
 
 (define-abbrev-table 'rxt-help-mode-abbrev-table '())
 
+(define-abbrev-table 'restclient-mode-abbrev-table '())
+
+(define-abbrev-table 'rst-mode-abbrev-table '())
+
+(define-abbrev-table 'rst-toc-mode-abbrev-table '())
+
+(define-abbrev-table 'ruby-mode-abbrev-table '())
+
 (define-abbrev-table 'scss-mode-abbrev-table '())
 
 (define-abbrev-table 'select-tags-table-mode-abbrev-table '())
 
 (define-abbrev-table 'sgml-mode-abbrev-table '())
+
+(define-abbrev-table 'sh-mode-abbrev-table '())
 
 (define-abbrev-table 'shell-mode-abbrev-table '())
 
@@ -254,6 +311,8 @@
 (define-abbrev-table 'vc-git-log-view-mode-abbrev-table '())
 
 (define-abbrev-table 'vc-git-region-history-mode-abbrev-table '())
+
+(define-abbrev-table 'xref--xref-buffer-mode-abbrev-table '())
 
 (define-abbrev-table 'web-mode-abbrev-table '())
 

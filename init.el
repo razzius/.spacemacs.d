@@ -4,16 +4,21 @@
    dotspacemacs-configuration-layer-path '("~/.spacemacs.d/layers/")
    dotspacemacs-configuration-layers
    '(
-     lua
-     erc
-     csv
-     sql
-     shell-scripts
      clojure
+     csv
      deft
      elm
+     erc
+     javascript
+     lua
+     shell-scripts
+     sql
+     swift
+     rust
+     ;; deft
+     ;; elm
      emacs-lisp
-     eyebrowse
+     ;; eyebrowse
      git
      go
      html
@@ -22,25 +27,24 @@
      python
      yaml
 
-     ;; (python
-     ;;  :variables
-      ;; python-enable-yapf-format-on-save t)
+     (python
+      ;; :variables
+      ;; python-enable-yapf-format-on-save t
+      )
 
      ; (coerce :location local)
      razzishell
-     razzilisp
-     razziundohist
+     ; razzilisp
+;     razziundohist
      razzineotree
 
-     (razzicompletion
-        :variables auto-completion-enable-snippets-in-popup t)
-     javascript
-     term
+    (razzicompletion
+       :variables auto-completion-enable-snippets-in-popup t)
      ;; version-control
      ;rename to razzivc
      vc
      osx
-
+     term
      ;; tl
 
      ;; org
@@ -49,10 +53,6 @@
      ;; syntax-checking
      ;; version-control
      )
-   ;; List of additional packages that will be installed without being
-   ;; wrapped in a layer. If you need some configuration for these
-   ;; packages, then consider creating a layer. You can also put the
-   ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '(multiple-cursors restclient flycheck-mypy virtualenvwrapper)
    dotspacemacs-excluded-packages '(anaconda-mode evil-escape eldoc)
    dotspacemacs-delete-orphan-packages t))
@@ -148,6 +148,7 @@
 before packages are loaded."
   (setq
    helm-mode-fuzzy-match t
+   helm-ff-newfile-prompt-p nil
    helm-M-x-fuzzy-match t))
 
 (defun razzi/insert-newline-after()
@@ -238,6 +239,7 @@ before packages are loaded."
 
 (defun razzi/copy-paragraph ()
   (interactive)
+  ;todo go to start of block
   (move-beginning-of-line nil)
   (let ((sentence (thing-at-point 'defun)))
     (insert sentence)
@@ -484,16 +486,49 @@ before packages are loaded."
   (interactive "r")
   ; if no selection, select current word
   ;https://www.emacswiki.org/emacs/MarkCommands
-  (let (
-        (text (if (use-region-p)
-                  (buffer-substring-no-properties start end)
-                (thing-at-point 'symbol)))
+  (if (not (use-region-p))
+      (let* ((range (evil-expand (point) (point) 'symbol))
+            (beg (evil-range-beginning range))
+            (end (evil-range-end range))
+            )
+        (message (int-to-string beg))
+        (message (int-to-string end))
+        (delete-region beg end)
         )
-  ))
+    (delete-region start end)))
+  ;; (let (
+  ;;       (text (if (use-region-p)
+  ;;                 (buffer-substring-no-properties start end)
+  ;;               (thing-at-point 'symbol)))
+  ;;       )
+  ;; ))
+
+(defun razzi/exit-insert ()
+  (interactive)
+  (expand-abbrev)
+  (evil-normal-state))
+
+(defun razzi/python-format ()
+  (interactive)
+  (shell-command (format "python_format.sh %s" (buffer-file-name)))
+  (revert-buffer nil t))
+
+(defun copy-file-name-to-clipboard ()
+  "Copy the current buffer file name to the clipboard."
+  (interactive)
+  (let ((filename (if (equal major-mode 'dired-mode)
+                      default-directory
+                    (buffer-file-name))))
+    (when filename
+      (kill-new filename)
+      (message "Copied buffer file name '%s' to the clipboard." filename))))
 
 (defun dotspacemacs/user-config ()
 
-  (setq display-time-default-load-average nil)
+  (setq
+   display-time-default-load-average nil
+   custom-file "~/.emacs.d/custom.el"
+   )
   (display-time-mode)
   (spaceline-toggle-buffer-modified-off)
   (spaceline-toggle-buffer-size-off)
@@ -525,8 +560,8 @@ before packages are loaded."
     "<backtab>" 'razzi/split-alternate-buffer
     "c r" 'razzi/recompile
     "f i" 'razzi/edit-init
-    "f SPC" 'prelude-copy-file-name-to-clipboard
     "f p" 'razzi/copy-test-file-path
+    "f SPC" 'copy-file-name-to-clipboard
     "h f" 'describe-function
     "h v" 'describe-variable
     "g g" 'magit-checkout
@@ -543,6 +578,8 @@ before packages are loaded."
     "'" 'razzi/double-quotes-to-single
     "C-o" 'razzi/put-before
     "C-SPC" 'spacemacs//workspaces-eyebrowse-next-window-config-n
+    ;; "ru" 'razzi/coerce-uppercase
+    "=" 'razzi/python-format
     ;; "o d" 'razzi/put-debugger
     "v" 'razzi/select-symbol)
 
@@ -598,6 +635,7 @@ before packages are loaded."
   (define-key evil-insert-state-map (kbd "M-v") 'razzi/paste)
   ;; (define-key evil-insert-state-map (kbd "C-p") nil)
   (define-key evil-insert-state-map (kbd "C-t") 'razzi/transpose-previous-chars)
+  (define-key evil-insert-state-map (kbd "<escape>") 'razzi/exit-insert)
   (define-key yas-minor-mode-map (kbd "TAB") 'yas-expand)
 
   (define-key evil-normal-state-map (kbd "-") 'razzi/transpose-next-line)
@@ -637,6 +675,7 @@ before packages are loaded."
   (define-key evil-normal-state-map (kbd "_") 'razzi/transpose-previous-line)
   (define-key evil-normal-state-map (kbd "s-d") 'evil-mc-make-and-goto-next-match)
   (define-key evil-normal-state-map (kbd "s-x") 'helm-M-x)
+  ;; (define-key evil-normal-state-map (kbd "ru") 'razzi/coerce-uppercase)
 
   (define-key evil-visual-state-map (kbd "!") 'sort-lines)
   (define-key evil-visual-state-map (kbd "$") 'razzi/almost-end-of-line)
@@ -651,7 +690,7 @@ before packages are loaded."
 
   (define-key evil-operator-state-map (kbd "SPC") 'evil-inner-symbol)
   (define-key evil-operator-state-map (kbd "E") 'forward-symbol)
-  (define-key evil-operator-state-map (kbd "ru") 'razzi/coerce-uppercase)
+  ;; (define-key evil-operator-state-map (kbd "ru") 'razzi/coerce-uppercase)
 
   (define-key minibuffer-local-map (kbd "C-j") 'exit-minibuffer)
 
