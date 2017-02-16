@@ -4,6 +4,7 @@
    dotspacemacs-configuration-layer-path '("~/.spacemacs.d/layers/")
    dotspacemacs-configuration-layers
    '(
+     sql
      shell-scripts
      clojure
      deft
@@ -46,7 +47,7 @@
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(multiple-cursors)
+   dotspacemacs-additional-packages '(multiple-cursors restclient flycheck-mypy)
    dotspacemacs-excluded-packages '(anaconda-mode evil-escape eldoc)
    dotspacemacs-delete-orphan-packages t))
 
@@ -350,6 +351,25 @@ before packages are loaded."
   (interactive)
   (shell-command "git push"))
 
+(defun always-yes (&rest _) t)
+
+(defun no-confirm (fun &rest args)
+  "Apply FUN to ARGS, skipping user confirmations."
+  (cl-letf (((symbol-function 'y-or-n-p) #'always-yes)
+            ((symbol-function 'yes-or-no-p) #'always-yes))
+      (apply fun args)))
+
+(defun razzi/isort ()
+  (interactive)
+  (shell-command (format "isort %s" (buffer-file-name)))
+  (no-confirm 'revert-buffer t t))
+
+(defun razzi/split-after-comma ()
+  (interactive)
+  (evil-find-char 1 ?,)
+  (evil-forward-char)
+  (evil-replace (point) (+ (point) 1) nil ?\n))
+
 (defun prelude-copy-file-name-to-clipboard ()
   "Copy the current buffer file name to the clipboard."
   (interactive)
@@ -367,8 +387,8 @@ before packages are loaded."
   (spaceline-toggle-buffer-modified-off)
   (global-evil-mc-mode 1)
 
-  (when (get-buffer "*scratch*")
-    (kill-buffer "*scratch*"))
+  ;; (when (get-buffer "*scratch*")
+  ;;   (kill-buffer "*scratch*"))
 
   ;; (set-face-background 'hl-line "black")
   (set-face-foreground 'font-lock-comment-face "dark grey")
@@ -384,7 +404,7 @@ before packages are loaded."
     "DEL" 'razzi/restart-emacs
     "SPC" 'helm-M-x
     "ESC" 'kill-this-buffer
-    "RET" 'razzi/switch-to-term-buffer
+    "RET" 'razzi/split-after-comma
     "c r" 'razzi/recompile
     "f i" 'razzi/edit-init
     "f SPC" 'prelude-copy-file-name-to-clipboard
@@ -396,6 +416,7 @@ before packages are loaded."
     "g p" 'razzi/git-push
     "i c" 'razzi/copy-paragraph
     "i d" 'razzi/put-debugger
+    "i s" 'razzi/isort
     "o" 'razzi/put-after
     "O" 'razzi/put-before
     "r" 'helm-recentf
@@ -514,6 +535,8 @@ before packages are loaded."
   (add-hook 'focus-out-hook 'garbage-collect)
   (add-hook 'focus-out-hook 'save-if-buffer-is-file)
 
+  (setq recentf-exclude '("TAGS"))
+
   (defadvice find-file (before make-directory-maybe (filename &optional wildcards) activate)
     "Create parent directory if not exists while visiting file."
     (unless (file-exists-p filename)
@@ -522,6 +545,7 @@ before packages are loaded."
           (make-directory dir)))))
 
   (ad-activate 'find-file)
+  (global-auto-revert-mode 1)
 
   ;; (run-with-idle-timer 1 t 'save-if-buffer-is-file)
   )
