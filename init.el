@@ -4,6 +4,8 @@
    dotspacemacs-configuration-layer-path '("~/.spacemacs.d/layers/")
    dotspacemacs-configuration-layers
    '(
+     erc
+     csv
      sql
      shell-scripts
      clojure
@@ -361,6 +363,7 @@ before packages are loaded."
 
 (defun razzi/isort ()
   (interactive)
+  (save-buffer)
   (shell-command (format "isort %s" (buffer-file-name)))
   (no-confirm 'revert-buffer t t))
 
@@ -530,7 +533,7 @@ before packages are loaded."
     ;(dired-hide-details-mode)
     )
 
-  (add-hook 'evil-insert-state-exit-hook 'save-if-buffer-is-file)
+  ;; (add-hook 'evil-insert-state-exit-hook 'save-if-buffer-is-file)
   (add-hook 'evil-insert-state-exit-hook 'expand-abbrev)
   (add-hook 'focus-out-hook 'garbage-collect)
   (add-hook 'focus-out-hook 'save-if-buffer-is-file)

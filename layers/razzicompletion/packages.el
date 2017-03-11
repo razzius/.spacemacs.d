@@ -25,6 +25,8 @@
           company-dabbrev-downcase nil)
     :config
     (define-key company-active-map (kbd "C-w") nil)
+    (define-key company-active-map (kbd "<return>") nil)
+    (define-key company-active-map (kbd "<tab>") 'company-complete-selection)
     (spacemacs|diminish company-mode " ⓐ" " a")
   ))
 
