@@ -373,6 +373,18 @@ before packages are loaded."
   (evil-forward-char)
   (evil-replace (point) (+ (point) 1) nil ?\n))
 
+(defun razzi/create-scratch-buffer ()
+   "create a scratch buffer"
+   (interactive)
+   (switch-to-buffer (get-buffer-create "*scratch*")))
+
+(defun razzi/put-paren ()
+  "fixme no macro"
+   (interactive)
+   (evil-execute-macro 1 "ox")
+   (evil-normal-state)
+   (evil-execute-macro 1 "r)<<"))
+
 (defun prelude-copy-file-name-to-clipboard ()
   "Copy the current buffer file name to the clipboard."
   (interactive)
@@ -402,6 +414,7 @@ before packages are loaded."
   (evil-leader/set-key
     "," 'razzi/append-comma
     "[" 'evil-open-above
+    ")" 'razzi/put-paren
     "." 'razzi/copy-paragraph
     "-" 'razzi/save-delete-close
     "DEL" 'razzi/restart-emacs
@@ -464,6 +477,7 @@ before packages are loaded."
     scroll-margin 0)
 
   (global-set-key (kbd "C-`") 'describe-key)
+  (setq auto-mode-alist (cons '("\\.rest$" . restclient-mode) auto-mode-alist))
 
   ; need to put this somewhere else
   (define-key evil-insert-state-map (kbd "C-c a") 'razzi/abbrev-or-add-global-abbrev)
