@@ -4,6 +4,7 @@
    dotspacemacs-configuration-layer-path '("~/.spacemacs.d/layers/")
    dotspacemacs-configuration-layers
    '(
+     lua
      erc
      csv
      sql
@@ -49,7 +50,7 @@
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(multiple-cursors restclient flycheck-mypy)
+   dotspacemacs-additional-packages '(multiple-cursors restclient flycheck-mypy virtualenvwrapper)
    dotspacemacs-excluded-packages '(anaconda-mode evil-escape eldoc)
    dotspacemacs-delete-orphan-packages t))
 
@@ -81,7 +82,7 @@
                                :powerline-scale 1.1)
    dotspacemacs-leader-key "SPC"
    dotspacemacs-emacs-leader-key "M-m"
-   dotspacemacs-major-mode-leader-key ","
+   dotspacemacs-major-mode-leader-key "M-,"
    dotspacemacs-major-mode-emacs-leader-key "C-SPC"
    dotspacemacs-distinguish-gui-tab t
    dotspacemacs-command-key ":"
@@ -385,6 +386,19 @@ before packages are loaded."
    (evil-normal-state)
    (evil-execute-macro 1 "r)<<"))
 
+(defun razzi/next-and-center ()
+  ; TODO only if off-screen
+  (interactive)
+  (let ((inhibit-redisplay t))
+    (evil-search-next 1)
+    (evil-scroll-line-to-center nil)))
+
+(defun razzi/previous-and-center ()
+  (interactive)
+  (let ((inhibit-redisplay t))
+    (evil-search-previous 1)
+    (evil-scroll-line-to-center nil)))
+
 (defun prelude-copy-file-name-to-clipboard ()
   "Copy the current buffer file name to the clipboard."
   (interactive)
@@ -443,7 +457,10 @@ before packages are loaded."
     "v" 'razzi/select-symbol)
 
   (evil-set-initial-state 'term-mode 'insert)
+  ; TODO make scratch markdown or something so that it starts in normal mode
   (evil-set-initial-state 'text-mode 'insert)
+
+  (mapc 'evil-declare-not-repeat '(razzi/next-and-center razzi/previous-and-center))
 
   (setq
     ns-pop-up-frames nil
@@ -476,7 +493,12 @@ before packages are loaded."
     ;todo doesn't take effect
     scroll-margin 0)
 
+  ; Todo make this work with console emacs
   (global-set-key (kbd "C-`") 'describe-key)
+  (if (display-graphic-p)
+      (enable-theme 'leuven)
+    (enable-theme 'spacemacs-dark))
+
   (setq auto-mode-alist (cons '("\\.rest$" . restclient-mode) auto-mode-alist))
 
   ; need to put this somewhere else
@@ -489,6 +511,7 @@ before packages are loaded."
 
   (define-key evil-normal-state-map (kbd "-") 'razzi/transpose-next-line)
   (define-key evil-normal-state-map (kbd "0") 'evil-first-non-blank)
+  ; TODO skip tags buffer :[
   (define-key evil-normal-state-map (kbd "<backtab>") 'previous-buffer)
   (define-key evil-normal-state-map (kbd "C") 'razzi/change-line)
   (define-key evil-normal-state-map (kbd "C-SPC") 'spacemacs/workspaces-micro-state)
@@ -512,6 +535,8 @@ before packages are loaded."
   (define-key evil-normal-state-map (kbd "g/") 'spacemacs/helm-project-smart-do-search-region-or-symbol)
   (define-key evil-normal-state-map (kbd "g]") 'evil-jump-to-tag)
   (define-key evil-normal-state-map (kbd "g[") 'helm-etags-select)
+  (define-key evil-normal-state-map (kbd "n") 'razzi/next-and-center)
+  (define-key evil-normal-state-map (kbd "N") 'razzi/previous-and-center)
   ;; (define-key evil-normal-state-map (kbd "RET") 'delete-other-windows)
 
   (define-key evil-visual-state-map (kbd "!") 'sort-lines)
@@ -549,8 +574,9 @@ before packages are loaded."
 
   ;; (add-hook 'evil-insert-state-exit-hook 'save-if-buffer-is-file)
   (add-hook 'evil-insert-state-exit-hook 'expand-abbrev)
-  (add-hook 'focus-out-hook 'garbage-collect)
   (add-hook 'focus-out-hook 'save-if-buffer-is-file)
+  (add-hook 'focus-out-hook 'garbage-collect)
+  (add-hook 'focus-out-hook 'evil-normal-state)
 
   (setq recentf-exclude '("TAGS"))
 
@@ -561,8 +587,13 @@ before packages are loaded."
         (unless (file-exists-p dir)
           (make-directory dir)))))
 
+  (defadvice spacemacs/check-large-file (around open-ctags-literally activate)
+    (flet ((y-or-n-p (&rest args) t))
+      ad-do-it))
+
   (ad-activate 'find-file)
   (global-auto-revert-mode 1)
+  (menu-bar-mode -1)
 
   ;; (run-with-idle-timer 1 t 'save-if-buffer-is-file)
   )
