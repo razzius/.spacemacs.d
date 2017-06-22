@@ -175,6 +175,25 @@ before packages are loaded."
   (evil-visual-char)
   (evil-inner-symbol))
 
+(defun razzi/voice ()
+  (interactive)
+  ;; (shell-command "swift ~/projects/swift_speech/r2.swift")
+  (start-process "voice" "voice" "swift" "/Users/razzi/projects/swift_speech/r2.swift")
+  )
+
+(defun razzi/dictate ()
+  (interactive)
+  ;; (shell-command "swift ~/projects/swift_speech/r2.swift")
+  (start-process "dictate" "dictate" "osascript" "/Users/razzi/projects/swift_speech/dictate.applescript")
+  This is a testSkinEscape
+  )
+
+(defun razzi/end-voice ()
+  (interactive)
+  ;; (shell-command "swift ~/projects/swift_speech/r2.swift")
+  (delete-process "voice")
+  )
+
 (defun razzi/abbrev-or-add-global-abbrev ()
   (interactive)
   (if (abbrev-expansion (thing-at-point 'word))
@@ -591,7 +610,7 @@ before packages are loaded."
     ;; "ru" 'razzi/coerce-uppercase
     "=" 'razzi/python-format
     ;; "o d" 'razzi/put-debugger
-    "v" 'razzi/select-symbol)
+    "v" 'razzi/voice)
 
   (evil-set-initial-state 'term-mode 'insert)
   ; TODO make scratch markdown or something so that it starts in normal mode
