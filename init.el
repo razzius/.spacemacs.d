@@ -9,12 +9,14 @@
      deft
      elm
      erc
+     fsharp
+     haskell
      javascript
      lua
+     rust
      shell-scripts
      sql
      swift
-     rust
      ;; deft
      ;; elm
      emacs-lisp
@@ -38,8 +40,8 @@
 ;     razziundohist
      razzineotree
 
-    (razzicompletion
-       :variables auto-completion-enable-snippets-in-popup t)
+    ;(razzicompletion
+    ;   :variables auto-completion-enable-snippets-in-popup t)
      ;; version-control
      ;rename to razzivc
      vc
@@ -53,8 +55,15 @@
      ;; syntax-checking
      ;; version-control
      )
-   dotspacemacs-additional-packages '(multiple-cursors restclient flycheck-mypy virtualenvwrapper)
    dotspacemacs-excluded-packages '(anaconda-mode evil-escape eldoc)
+   dotspacemacs-additional-packages '(
+     evil-terminal-cursor-changer
+     flycheck-mypy
+     multiple-cursors
+     pyenv-mode
+     restclient
+     virtualenvwrapper
+     )
    dotspacemacs-delete-orphan-packages t))
 
 (defun dotspacemacs/init ()
@@ -573,8 +582,9 @@ before packages are loaded."
     ;; "g g" 'helm-projectile-ag
     ;; "g f" 'razzi/file-at-point
     "o" 'razzi/put-after
+    ;; "q" 'evil-quit
     "O" 'razzi/put-before
-    "r" 'helm-recentf
+    ;; "r" 'helm-recentf
     "'" 'razzi/double-quotes-to-single
     "C-o" 'razzi/put-before
     "C-SPC" 'spacemacs//workspaces-eyebrowse-next-window-config-n
@@ -586,14 +596,19 @@ before packages are loaded."
   (evil-set-initial-state 'term-mode 'insert)
   ; TODO make scratch markdown or something so that it starts in normal mode
   (evil-set-initial-state 'text-mode 'insert)
+  (unless (display-graphic-p)
+          (require 'evil-terminal-cursor-changer)
+          (evil-terminal-cursor-changer-activate) ; or (etcc-on)
+          )
 
   (mapc 'evil-declare-not-repeat '(razzi/next-and-center razzi/previous-and-center))
 
   (setq
-    ns-pop-up-frames nil
-    evil-regexp-search nil
     evil-cross-lines t
     evil-ex-substitute-global t
+    evil-insert-state-cursor 'bar
+    evil-regexp-search nil
+    ns-pop-up-frames nil
     custom-file "~/.emacs.d/custom.el"
 
     abbrev-file-name "~/.spacemacs.d/abbrev_defs.el"
@@ -713,7 +728,16 @@ before packages are loaded."
     ;(dired-hide-details-mode)
     )
 
-  ;; (add-hook 'evil-insert-state-exit-hook 'save-if-buffer-is-file)
+  (use-package flycheck-mypy)
+  (use-package pyenv-mode)
+
+  (add-hook 'focus-out-hook 'save-if-buffer-is-file)
+  (pyenv-mode)
+  (pyenv-mode-set "3.6.0")
+  (setq python-shell-interpreter "python3.6")
+
+  (setq-default flycheck-disabled-checkers '(python-pylint python-pycompile))
+
   (add-hook 'evil-insert-state-exit-hook 'expand-abbrev)
   (add-hook 'focus-out-hook 'save-if-buffer-is-file)
   (add-hook 'focus-out-hook 'garbage-collect)
@@ -739,11 +763,6 @@ before packages are loaded."
   ;; (run-with-idle-timer 1 t 'save-if-buffer-is-file)
   )
 ; complain function which will put the string as a comment in a relevant config per mode
-; command to turn [x] into [\n    x\n]
-;search current word
-;; company repeat
-;VV
 ; todo use parinfer
-; todo do these work?
 (setq comint-move-point-for-output nil)
 (setq comint-scroll-show-maximum-output nil)
