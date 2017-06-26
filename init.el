@@ -4,21 +4,13 @@
    dotspacemacs-configuration-layer-path '("~/.spacemacs.d/layers/")
    dotspacemacs-configuration-layers
    '(
-     clojure
-     csv
-     deft
-     elm
-     erc
      fsharp
      haskell
-     javascript
      lua
      rust
      shell-scripts
      sql
      swift
-     ;; deft
-     ;; elm
      emacs-lisp
      ;; eyebrowse
      git
@@ -36,13 +28,13 @@
 
      ; (coerce :location local)
      razzishell
+     razzi-javascript
      ; razzilisp
 ;     razziundohist
      razzineotree
 
     ;(razzicompletion
     ;   :variables auto-completion-enable-snippets-in-popup t)
-     ;; version-control
      ;rename to razzivc
      vc
      osx
@@ -63,6 +55,7 @@
      pyenv-mode
      restclient
      virtualenvwrapper
+     apib-mode
      )
    dotspacemacs-delete-orphan-packages t))
 
@@ -667,12 +660,14 @@ before packages are loaded."
   (define-key evil-insert-state-map (kbd "C-h") 'sp-backward-delete-char)
   (define-key evil-insert-state-map (kbd "C-l") 'sp-slurp-hybrid-sexp)
   (define-key evil-insert-state-map (kbd "M-v") 'razzi/paste)
-  ;; (define-key evil-insert-state-map (kbd "C-p") nil)
+  (define-key evil-insert-state-map (kbd "M-RET") 'razzi/recompile)
   (define-key evil-insert-state-map (kbd "C-t") 'razzi/transpose-previous-chars)
   (define-key evil-insert-state-map (kbd "<escape>") 'razzi/exit-insert)
-  (define-key yas-minor-mode-map (kbd "TAB") 'yas-expand)
+  ;; needs to be in completion layer
+  ;; (define-key yas-minor-mode-map (kbd "TAB") 'yas-expand)
 
   (define-key evil-normal-state-map (kbd "-") 'razzi/transpose-next-line)
+  (define-key evil-normal-state-map (kbd "M-RET") 'razzi/recompile)
   (define-key evil-normal-state-map (kbd "0") 'evil-first-non-blank)
   ; TODO skip tags buffer :[
   (define-key evil-normal-state-map (kbd "<backtab>") 'previous-buffer)
@@ -721,6 +716,10 @@ before packages are loaded."
   (define-key evil-visual-state-map (kbd "ae") 'mark-whole-buffer)
   (define-key evil-visual-state-map (kbd "il") 'razzi/mark-line-text)
   (define-key evil-visual-state-map (kbd "M-d") 'mc/mark-next-symbol-like-this)
+
+  ;; TODO define keys more like this
+  ;; (razzi/define-keys evil-visual-state-map
+  ;;   "!" 'sort-lines)
 
   (define-key evil-operator-state-map (kbd "SPC") 'evil-inner-symbol)
   (define-key evil-operator-state-map (kbd "E") 'forward-symbol)
