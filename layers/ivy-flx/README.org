@@ -1,0 +1,15 @@
+#+TITLE: ivy-flx layer
+
+* Table of Contents                                        :TOC_4_gh:noexport:
+ - [[#decsription][Description]]
+ - [[#install][Install]]
+
+* Description
+This layer makes ivy use flx completion.
+It also makes flx start with no pattern and
+makes all selected text one color for easier readability.
+
+* Install
+To use this configuration layer, add it to your =~/.spacemacs=. You will need to
+add =ivy-flx= to the existing =dotspacemacs-configuration-layers= list in this
+file.
