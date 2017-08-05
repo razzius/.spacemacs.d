@@ -435,12 +435,35 @@ before packages are loaded."
     (evil-search-previous 1)
     (evil-scroll-line-to-center nil)))
 
-(defun prelude-copy-file-name-to-clipboard ()
-  "Copy the current buffer file name to the clipboard."
+(defun razzi/exit-insert-and-save ()
+  (interactive)
+  (evil-normal-state)
+  (save-buffer))
+
+(defun prelude-copy-file-path-to-clipboard ()
+  "Copy the current buffer file path to the clipboard."
   (interactive)
   (let ((filename (if (equal major-mode 'dired-mode)
                       default-directory
                     (buffer-file-name))))
+    (when filename
+      (kill-new filename)
+      (message "Copied buffer path '%s' to the clipboard." filename))))
+
+(defun prelude-eval-and-replace ()
+  "Replace the preceding sexp with its value."
+  (interactive)
+  (backward-kill-sexp)
+  (condition-case nil
+      (prin1 (eval (read (current-kill 0)))
+             (current-buffer))
+    (error (message "Invalid expression")
+           (insert (current-kill 0)))))
+
+(defun razzi/copy-file-name ()
+  "Copy the current buffer file name to the clipboard."
+  (interactive)
+  (let ((filename (file-name-nondirectory (buffer-file-name))))
     (when filename
       (kill-new filename)
       (message "Copied buffer file name '%s' to the clipboard." filename))))
@@ -581,6 +604,8 @@ before packages are loaded."
     "<backtab>" 'razzi/split-alternate-buffer
     "c r" 'razzi/recompile
     "f i" 'razzi/edit-init
+    "f SPC" 'prelude-copy-file-path-to-clipboard
+    "f RET" 'razzi/copy-file-name
     "f p" 'razzi/copy-test-file-path
     "f SPC" 'copy-file-name-to-clipboard
     "h f" 'describe-function
@@ -657,6 +682,7 @@ before packages are loaded."
 
   ; need to put this somewhere else
   (define-key evil-insert-state-map (kbd "C-c a") 'razzi/abbrev-or-add-global-abbrev)
+  (define-key evil-insert-state-map (kbd "M-s") 'razzi/exit-insert-and-save)
   (define-key evil-insert-state-map (kbd "C-h") 'sp-backward-delete-char)
   (define-key evil-insert-state-map (kbd "C-l") 'sp-slurp-hybrid-sexp)
   (define-key evil-insert-state-map (kbd "M-v") 'razzi/paste)
@@ -682,9 +708,12 @@ before packages are loaded."
   (define-key evil-normal-state-map (kbd "C-p") 'evil-paste-after)
   (define-key evil-normal-state-map (kbd "D") 'razzi/kill-line-and-whitespace)
   (define-key evil-normal-state-map (kbd "G") 'razzi/almost-end-of-buffer)
+  (define-key evil-normal-state-map (kbd "K") 'evil-previous-line) ; typo this one all the time
+  (define-key evil-normal-state-map (kbd "M-/") 'evilnc-comment-or-uncomment-lines)
   (define-key evil-normal-state-map (kbd "M-`") 'other-window)
   (define-key evil-normal-state-map (kbd "M-d") 'evil-mc-make-and-goto-next-match)
   (define-key evil-normal-state-map (kbd "E") 'forward-symbol)
+  (define-key evil-normal-state-map (kbd "M-s") 'save-buffer)
   (define-key evil-normal-state-map (kbd "Q") 'razzi/replay-q-macro)
   (define-key evil-normal-state-map (kbd "TAB") 'spacemacs/alternate-buffer)
   (define-key evil-normal-state-map (kbd "[ SPC") 'razzi/insert-newline-before)
@@ -777,6 +806,7 @@ before packages are loaded."
   (ad-activate 'find-file)
   (global-auto-revert-mode 1)
   (menu-bar-mode -1)
+  (global-subword-mode)
 
   ;; (run-with-idle-timer 1 t 'save-if-buffer-is-file)
   )
