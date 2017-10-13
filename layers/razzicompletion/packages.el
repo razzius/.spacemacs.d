@@ -40,12 +40,13 @@
 (defun razzicompletion/init-yasnippet ()
   (use-package yasnippet
     :init
-    (setq yas-snippet-dirs "~/.spacemacs.d/snippets")
+    (setq yas-snippet-dirs '("~/.spacemacs.d/snippets"))
+    ;; (setq yas-snippet-dirs "~/.spacemacs.d/snippets")
     (yas-global-mode)
     :config
-    (define-key yas-minor-mode-map (kbd "TAB") nil)
-    (define-key yas-minor-mode-map (kbd "<tab>") nil)
-    (define-key yas-minor-mode-map [tab] nil)
+    ;; (define-key yas-minor-mode-map (kbd "TAB") nil)
+    ;; (define-key yas-minor-mode-map (kbd "<tab>") nil)
+    ;; (define-key yas-minor-mode-map [tab] nil)
     (spacemacs|diminish yas-minor-mode " ⓨ" " y")
     ))
 

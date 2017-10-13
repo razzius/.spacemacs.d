@@ -4,6 +4,9 @@
    dotspacemacs-configuration-layer-path '("~/.spacemacs.d/layers/")
    dotspacemacs-configuration-layers
    '(
+     ruby
+     csv
+     javascript
      fsharp
      haskell
      lua
@@ -33,8 +36,8 @@
 ;     razziundohist
      razzineotree
 
-    ;(razzicompletion
-    ;   :variables auto-completion-enable-snippets-in-popup t)
+    (razzicompletion
+      :variables auto-completion-enable-snippets-in-popup t)
      ;rename to razzivc
      vc
      osx
@@ -571,6 +574,7 @@ before packages are loaded."
 
   (setq
    display-time-default-load-average nil
+   tags-add-tables t
    custom-file "~/.emacs.d/custom.el"
    )
   (display-time-mode)
@@ -600,7 +604,7 @@ before packages are loaded."
     "SPC" 'helm-M-x
     "ESC" 'kill-this-buffer
     "RET" 'razzi/split-after-comma
-    "RET" 'razzi/switch-to-term-buffer
+    ;; "RET" 'razzi/switch-to-term-buffer
     "<backtab>" 'razzi/split-alternate-buffer
     "c r" 'razzi/recompile
     "f i" 'razzi/edit-init
@@ -690,7 +694,7 @@ before packages are loaded."
   (define-key evil-insert-state-map (kbd "C-t") 'razzi/transpose-previous-chars)
   (define-key evil-insert-state-map (kbd "<escape>") 'razzi/exit-insert)
   ;; needs to be in completion layer
-  ;; (define-key yas-minor-mode-map (kbd "TAB") 'yas-expand)
+  (define-key yas-minor-mode-map (kbd "TAB") 'yas-expand)
 
   (define-key evil-normal-state-map (kbd "-") 'razzi/transpose-next-line)
   (define-key evil-normal-state-map (kbd "M-RET") 'razzi/recompile)
@@ -727,8 +731,8 @@ before packages are loaded."
   (define-key evil-normal-state-map (kbd "n") 'razzi/next-and-center)
   (define-key evil-normal-state-map (kbd "N") 'razzi/previous-and-center)
   ;; (define-key evil-normal-state-map (kbd "RET") 'delete-other-windows)
-  (define-key evil-normal-state-map (kbd "*") 'razzi/star-isearch)
-  (define-key evil-normal-state-map (kbd "#") 'razzi/pound-isearch)
+  ;; (define-key evil-normal-state-map (kbd "*") 'razzi/star-isearch)
+  ;; (define-key evil-normal-state-map (kbd "#") 'razzi/pound-isearch)
   (define-key evil-normal-state-map (kbd "gf") 'razzi/file-at-point)
   (define-key evil-normal-state-map (kbd "_") 'razzi/transpose-previous-line)
   (define-key evil-normal-state-map (kbd "s-d") 'evil-mc-make-and-goto-next-match)
@@ -814,3 +818,22 @@ before packages are loaded."
 ; todo use parinfer
 (setq comint-move-point-for-output nil)
 (setq comint-scroll-show-maximum-output nil)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+    (web-completion-data company-tern dash-functional tern company-cabal anaconda-mode xterm-color toml-mode swift-mode shell-pop racer multi-term intero hlint-refactor hindent helm-hoogle haskell-snippets fsharp-mode company-quickhelp flycheck-rust flycheck-haskell evil-terminal-cursor-changer company-ghci company-ghc ghc haskell-mode cmm-mode cargo rust-mode apib-mode yapfify yaml-mode ws-butler winum which-key web-mode volatile-highlights virtualenvwrapper vi-tilde-fringe uuidgen use-package toc-org tagedit sql-indent spaceline smeargle slim-mode scss-mode sass-mode reveal-in-osx-finder restclient restart-emacs rainbow-delimiters pyvenv pytest pyenv-mode py-isort pug-mode popwin pip-requirements persp-mode pcre2el pbcopy paradox osx-trash osx-dictionary orgit org-bullets open-junk-file neotree move-text mmm-mode markdown-toc magit-gitflow macrostep lua-mode lorem-ipsum live-py-mode linum-relative link-hint less-css-mode launchctl insert-shebang info+ indent-guide hy-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-pydoc helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-css-scss helm-ag google-translate golden-ratio go-guru go-eldoc gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter gh-md flycheck-pos-tip flycheck-mypy flx-ido fish-mode fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-ediff evil-args evil-anzu erc-yt erc-view-log erc-terminal-notifier erc-social-graph erc-image erc-hl-nicks emmet-mode elisp-slime-nav dumb-jump deft cython-mode csv-mode company-web company-shell company-go company-flx company-anaconda column-enforce-mode clj-refactor clean-aindent-mode cider-eval-sexp-fu auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+
+;; (defadvice call-interactively (after show-last-command activate)
+;;   "Shows the interactive command that was just run in the message area."
+;;   (unless (eq major-mode 'minibuffer-inactive-mode)
+;;     (message "Ran %s" (ad-get-arg 0))))
