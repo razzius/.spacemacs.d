@@ -2,19 +2,31 @@
   (setq-default
    dotspacemacs-distribution 'spacemacs;-base
    dotspacemacs-configuration-layers
-   '(razzi-evil
+   '(
+     rust
+     yaml
+     csv
+     javascript
+     go
+     html
+     shell-scripts
+     python
+     razzi-evil
+     ;; tabbar hmm maybe
+     spacemacs-layouts
      markdown
      ivy
-     ;; ivy-flx ; todo re-enable
-     ;; auto-completion
+     ivy-flx ; todo re-enable
+     auto-completion
      emacs-lisp
      git
      ;; org
-     ;; (shell :variables
-     ;;        shell-default-height 30
-     ;;        shell-default-position 'bottom)
+     (shell :variables
+            shell-default-shell 'ansi-term
+            shell-default-height 50
+            shell-default-position 'bottom)
      ;; spell-checking
-     ;; syntax-checking
+     syntax-checking
      ;; version-control
      razzi-magit
      razzi-api-blueprint
@@ -23,7 +35,7 @@
 
    dotspacemacs-additional-packages '()
    dotspacemacs-frozen-packages '()
-   dotspacemacs-excluded-packages '()
+   dotspacemacs-excluded-packages '(anaconda)
    dotspacemacs-install-packages 'used-only))
 
 (defun dotspacemacs/init ()
@@ -37,7 +49,7 @@ values."
    dotspacemacs-elpa-timeout 5
    dotspacemacs-check-for-update t
    dotspacemacs-elpa-subdirectory nil
-   dotspacemacs-editing-style 'vim
+   dotspacemacs-editing-style 'hybrid
    dotspacemacs-verbose-loading t
    dotspacemacs-startup-banner nil
    dotspacemacs-startup-lists '((recents . 5)
@@ -154,6 +166,11 @@ values."
   (setq custom-file "~/.emacs.d/custom.el")
   (load custom-file 'noerror))
 
+;; (defun buffer-file-name (&optional buffer)
+;;   (interactive)
+;;   "lol.el")
+;; (buffer-file-name)
+
 (defun dotspacemacs/user-config ()
   (setq
    evil-cross-lines t
@@ -163,4 +180,11 @@ values."
    mac-command-modifier 'meta
    mac-option-modifier 'super
    powerline-default-separator 'alternate
-   ns-pop-up-frames nil))
+   ns-pop-up-frames nil)
+
+  (define-key evil-hybrid-state-map (kbd "C-n") 'evil-complete-next)
+  (define-key evil-hybrid-state-map (kbd "C-w") 'backward-kill-word)
+  (define-key evil-hybrid-state-map (kbd "M-v") 'yank)
+  (define-key evil-hybrid-state-map (kbd "<tab>") 'yas-expand)
+  (define-key evil-normal-state-map (kbd "<C-tab>") 'previous-buffer)
+  (define-key evil-hybrid-state-map (kbd "C-h") 'delete-backward-char))

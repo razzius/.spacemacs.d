@@ -5,4 +5,4 @@
   (use-package evil-surround
     :config
     (global-evil-surround-mode 1)
-    (define-key evil-normal-state-map (kbd "s") 'evil-surround-region)))
+    (define-key evil-visual-state-map (kbd "s") 'evil-surround-region)))
