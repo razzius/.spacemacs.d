@@ -683,6 +683,7 @@ before packages are loaded."
     (enable-theme 'spacemacs-dark))
 
   (setq auto-mode-alist (cons '("\\.rest$" . restclient-mode) auto-mode-alist))
+  (setq auto-mode-alist (cons '("\\.js$" . web-mode) auto-mode-alist))
 
   ; need to put this somewhere else
   (define-key evil-insert-state-map (kbd "C-c a") 'razzi/abbrev-or-add-global-abbrev)
