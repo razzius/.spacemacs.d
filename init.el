@@ -804,6 +804,18 @@ before packages are loaded."
         (unless (file-exists-p dir)
           (make-directory dir)))))
 
+
+  (defun replace-control-g-with-nil (char)
+    "Make C-g read as nil so that `r C-g` cancels the replace."
+    (let ((control-g-char ?\a))
+      (if (eq char control-g-char)
+          (progn
+            (message "Quit")  ; Without calling message, the cursor stays looking like replace
+            nil)              ; Returning nil cancels the replace
+        char)))
+
+  (advice-add 'evil-read-key :filter-return 'replace-control-g-with-nil)
+
   (defadvice spacemacs/check-large-file (around open-ctags-literally activate)
     (flet ((y-or-n-p (&rest args) t))
       ad-do-it))
