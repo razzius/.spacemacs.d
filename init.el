@@ -42,6 +42,7 @@
      (syntax-checking :variables syntax-checking-enable-tooltips nil))
    dotspacemacs-excluded-packages '(anaconda-mode evil-escape eldoc archive-mode persp-mode)
    dotspacemacs-additional-packages '(
+                                      super-save
      evil-terminal-cursor-changer
      flycheck-mypy
      multiple-cursors
@@ -496,6 +497,7 @@ before packages are loaded."
 
   (abbrev-mode)
   (display-time-mode)
+  (super-save-mode)
 
   (global-auto-revert-mode 1)
   (global-evil-mc-mode 1)
@@ -599,7 +601,7 @@ before packages are loaded."
    "] c" 'git-gutter:next-hunk
    "^" 'evil-digit-argument-or-evil-beginning-of-line
    "_" 'razzi/transpose-previous-line
-   "c" (general-key-dispatch 'evil-change "ru" 'string-inflection-camelcase) ; todo visual c buggy now
+   ;; "c" (general-key-dispatch 'evil-change "ru" 'string-inflection-camelcase) ; todo visual c buggy now, and committing broken
    "g/" 'spacemacs/helm-project-smart-do-search-region-or-symbol
    "g[" 'helm-etags-select
    "g]" 'evil-jump-to-tag
@@ -641,7 +643,6 @@ before packages are loaded."
   (setq-default flycheck-disabled-checkers '(python-pylint python-pycompile))
 
   (add-hook 'evil-insert-state-exit-hook 'expand-abbrev)
-  (add-hook 'focus-out-hook 'save-if-buffer-is-file)
   (add-hook 'focus-out-hook 'garbage-collect)
   (add-hook 'term-mode-hook 'turn-off-evil-mode)
 
