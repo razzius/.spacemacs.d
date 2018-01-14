@@ -7,6 +7,10 @@
 
 (define-abbrev-table 'anaconda-mode-view-mode-abbrev-table '())
 
+(define-abbrev-table 'anaconda-view-mode-abbrev-table '())
+
+(define-abbrev-table 'apropos-mode-abbrev-table '())
+
 (define-abbrev-table 'bibtex-mode-abbrev-table '())
 
 (define-abbrev-table 'bookmark-bmenu-mode-abbrev-table '())
@@ -73,6 +77,8 @@
 
 (define-abbrev-table 'gfm-mode-abbrev-table '())
 
+(define-abbrev-table 'gfm-view-mode-abbrev-table '())
+
 (define-abbrev-table 'git-rebase-mode-abbrev-table '())
 
 (define-abbrev-table 'global-abbrev-table
@@ -90,7 +96,10 @@
     ("satte" "state" nil 2)
     ("stae" "state" nil 2)
     ("tyep" "type" nil 1)
+    ("widht" "width" nil 1)
    ))
+
+(define-abbrev-table 'gnus-group-mode-abbrev-table '())
 
 (define-abbrev-table 'grep-mode-abbrev-table '())
 
@@ -113,6 +122,8 @@
 (define-abbrev-table 'image-dired-display-image-mode-abbrev-table '())
 
 (define-abbrev-table 'image-dired-thumbnail-mode-abbrev-table '())
+
+(define-abbrev-table 'inf-clojure-mode-abbrev-table '())
 
 (define-abbrev-table 'inferior-python-mode-abbrev-table '())
 
@@ -151,6 +162,8 @@
 (define-abbrev-table 'magit-status-mode-abbrev-table '())
 
 (define-abbrev-table 'markdown-mode-abbrev-table '())
+
+(define-abbrev-table 'markdown-view-mode-abbrev-table '())
 
 (define-abbrev-table 'message-mode-abbrev-table '())
 
