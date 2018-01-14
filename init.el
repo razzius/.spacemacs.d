@@ -95,9 +95,6 @@
    dotspacemacs-helm-no-header t
    dotspacemacs-enable-paste-micro-state t
    dotspacemacs-fullscreen-at-startup nil
-   ;; If non nil `spacemacs/toggle-fullscreen' will not use native fullscreen.
-   ;; Use to disable fullscreen animations in OSX. (default nil)
-   dotspacemacs-fullscreen-use-non-native nil
    ;; If non nil the frame is maximized when Emacs starts up.
    ;; Takes effect only if `dotspacemacs-fullscreen-at-startup' is nil.
    ;; (default nil) (Emacs 24.4+ only)
@@ -143,12 +140,6 @@ before packages are loaded."
   (save-excursion
     (evil-insert-newline-above)
     (forward-line)))
-
-;todo currently unbound
-(defun razzi/select-symbol ()
-  (interactive)
-  (evil-visual-char)
-  (evil-inner-symbol))
 
 (defun razzi/voice ()
   (interactive)
@@ -283,6 +274,7 @@ before packages are loaded."
   (interactive)
   (find-file "~/.spacemacs.d/init.el"))
 
+; todo work with url as well
 (defun razzi/file-at-point ()
   (interactive)
   (find-file-at-point (ffap-file-at-point)))
@@ -315,10 +307,6 @@ before packages are loaded."
   (interactive)
   (save-buffer)
   (recompile))
-
-(defun razzi/file-at-point ()
-  (interactive)
-  (find-file-at-point (thing-at-point 'url)))
 
 (defun razzi/evil-mc-quit-and-quit ()
   (interactive)
@@ -475,8 +463,6 @@ before packages are loaded."
    evil-regexp-search nil
    ns-pop-up-frames nil
 
-   initial-major-mode 'clojure-mode ; not go into insert!!
-
    clojure-indent-style :always-indent
 
    abbrev-file-name "~/.spacemacs.d/abbrev_defs.el"
@@ -537,7 +523,6 @@ before packages are loaded."
     "h f" 'describe-function
     "h v" 'describe-variable
     "g g" 'magit-checkout
-    "g f" 'razzi/file-at-point
     "g p" 'razzi/git-push
     "i c" 'razzi/copy-paragraph
     "i d" 'razzi/put-debugger
@@ -549,8 +534,6 @@ before packages are loaded."
     "C-SPC" 'spacemacs//workspaces-eyebrowse-next-window-config-n
     "=" 'razzi/python-format
     "v" 'razzi/voice)
-
-  (evil-set-initial-state 'text-mode 'insert)
 
   (mapc 'evil-declare-not-repeat '(razzi/next-and-center razzi/previous-and-center))
 
