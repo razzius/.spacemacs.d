@@ -25,22 +25,23 @@
      yaml
 
      razzishell
+     razzi-clojure
      razzi-dired
+     razzi-helm
      razzi-isearch
      razzi-javascript
      razzi-projectile
-     razzi-helm
+     razzi-tab-completion
+     razzi-vc
      ; razzilisp
      razzineotree
+     razzicompletion
 
-    (razzicompletion
-      :variables auto-completion-enable-snippets-in-popup t)
-     razzi-vc
      term
 
      ;; org
      (syntax-checking :variables syntax-checking-enable-tooltips nil))
-   dotspacemacs-excluded-packages '(anaconda-mode evil-escape eldoc archive-mode persp-mode)
+   dotspacemacs-excluded-packages '(anaconda-mode evil-escape eldoc archive-mode)
    dotspacemacs-additional-packages '(
                                       super-save
      evil-terminal-cursor-changer
@@ -548,6 +549,7 @@ before packages are loaded."
    "C-h" 'sp-backward-delete-char
    "C-l" 'sp-slurp-hybrid-sexp
    "C-t" 'razzi/transpose-previous-chars
+   "<tab>" 'yas-expand
    "M-RET" 'razzi/recompile
    "M-l" 'sp-forward-sexp
    "M-s" 'razzi/exit-insert-and-save
@@ -584,7 +586,8 @@ before packages are loaded."
    "] c" 'git-gutter:next-hunk
    "^" 'evil-digit-argument-or-evil-beginning-of-line
    "_" 'razzi/transpose-previous-line
-   ;; "c" (general-key-dispatch 'evil-change "ru" 'string-inflection-camelcase) ; todo visual c buggy now, and committing broken
+   ; todo visual c buggy now, and committing broken
+   "c" (general-key-dispatch 'evil-change "ru" 'string-inflection-camelcase)
    "g/" 'spacemacs/helm-project-smart-do-search-region-or-symbol
    "g[" 'helm-etags-select
    "g]" 'evil-jump-to-tag
@@ -615,7 +618,8 @@ before packages are loaded."
 
   ;todo move to own layers
 
-  (define-key yas-minor-mode-map (kbd "TAB") 'yas-expand)
+  (company-tng-configure-default)
+  ;; (define-key yas-minor-mode-map (kbd "TAB") 'yas-expand)
 
   (use-package flycheck-mypy)
   (use-package pyenv-mode)
@@ -674,4 +678,3 @@ before packages are loaded."
 ; todo use parinfer
 
 ; when yyp copy 2 lines, keep cursor on same character
-; M-[ to eval ~current~ sexp somehow?

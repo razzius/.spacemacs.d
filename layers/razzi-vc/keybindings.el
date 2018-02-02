@@ -19,6 +19,9 @@
   (interactive)
   (magit-run-git "pull"))
 
+(general-define-key :keymaps 'magit-status-mode-map
+                    "c" (general-key-dispatch 'evil-change "c" 'razzi/magit-commit))
+
 (define-key evil-normal-state-map (kbd "gs") 'razzi/save-and-status)
 (define-key evil-normal-state-map (kbd "gp") 'razzi/magit-push)
 (define-key evil-normal-state-map (kbd "gb") 'magit-blame)
