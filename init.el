@@ -380,16 +380,6 @@ before packages are loaded."
   (evil-normal-state)
   (save-buffer))
 
-(defun prelude-copy-file-path-to-clipboard ()
-  "Copy the current buffer file path to the clipboard."
-  (interactive)
-  (let ((filename (if (equal major-mode 'dired-mode)
-                      default-directory
-                    (buffer-file-name))))
-    (when filename
-      (kill-new filename)
-      (message "Copied buffer path '%s' to the clipboard." filename))))
-
 (defun prelude-eval-and-replace ()
   "Replace the preceding sexp with its value."
   (interactive)
@@ -517,7 +507,6 @@ before packages are loaded."
     "<backtab>" 'razzi/split-alternate-buffer
     "c r" 'razzi/recompile
     "f i" 'razzi/edit-init
-    "f SPC" 'prelude-copy-file-path-to-clipboard
     "f RET" 'razzi/copy-file-name
     "f p" 'razzi/copy-test-file-path
     "f SPC" 'copy-file-name-to-clipboard
