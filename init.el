@@ -31,6 +31,7 @@
      razzi-isearch
      razzi-javascript
      razzi-projectile
+     razzi-python
      razzi-tab-completion
      razzi-vc
      ; razzilisp
