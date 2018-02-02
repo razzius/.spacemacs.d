@@ -120,6 +120,8 @@
    ;todo replace with git hook(s)
    dotspacemacs-whitespace-cleanup 'nil))
 
+(defun always-yes (&rest _) t)
+
 (defun dotspacemacs/user-init ()
   "This function is mostly useful for variables that need to be set
 before packages are loaded."
@@ -330,8 +332,6 @@ before packages are loaded."
 (defun razzi/git-push ()
   (interactive)
   (shell-command "git push"))
-
-(defun always-yes (&rest _) t)
 
 (defun no-confirm (fun &rest args)
   "Apply FUN to ARGS, skipping user confirmations."
@@ -667,14 +667,9 @@ before packages are loaded."
 
   (advice-add 'evil-read-key :filter-return 'razzi/replace-control-g-with-nil)
 
-  (defun yes-to-prompt (orig-fun &rest args)
-    "Respond yes to all prompts."
-    (let ((y-or-n-p (&rest args) t))
-      (apply orig-fun args)))
+  (advice-add 'spacemacs/check-large-file :around 'no-confirm))
 
-  (advice-add 'yes-to-prompt :around 'spacemacs/check-large-file))
 
 ; complain function which will put the string as a comment in a relevant config per mode
 ; todo use parinfer
-
 ; when yyp copy 2 lines, keep cursor on same character
