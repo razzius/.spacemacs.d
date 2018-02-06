@@ -598,8 +598,12 @@ before packages are loaded."
     "il" 'razzi/mark-line-text
     "M-d" 'mc/mark-next-symbol-like-this)
 
+  (evil-define-text-object whole-buffer (count &optional beginning end type)
+    (evil-range 0 (point-max)))
+
   (general-define-key :states 'operator
     "E" 'forward-symbol
+    "ae" 'whole-buffer
     "SPC" 'evil-inner-symbol)
 
   (define-key minibuffer-local-map (kbd "C-j") 'exit-minibuffer)
