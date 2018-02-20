@@ -90,6 +90,7 @@
       (kbd "A-<right>") 'term-send-forward-word
       (kbd "<S-tab>") 'iqbal-term-send-backtab
       (kbd "C-a") 'term-send-raw
+      (kbd "<tab>") (lambda () (interactive) (term-send-raw-string "\t"))
       (kbd "C-c") 'term-send-raw
       (kbd "C-d") 'razzi/eof
       (kbd "C-e") 'term-send-raw
@@ -99,12 +100,12 @@
       (kbd "C-p") 'term-send-up
       (kbd "C-t") 'term-send-raw
       (kbd "C-w") 'term-send-raw
+      (kbd "C-u") 'term-send-raw
       (kbd "C-v") 'term-send-forward-word
       (kbd "C-q") 'term-send-backward-word
+      (kbd "C-y") 'term-send-raw
       (kbd "C-z") 'term-send-raw
-      (kbd "M-v") 'term-paste
-    )
-  )
+      (kbd "M-v") 'term-paste))
 
 
 ;; (defun make-my-shell-output-read-only (text)

@@ -3,7 +3,7 @@
    dotspacemacs-distribution 'spacemacs
    dotspacemacs-configuration-layer-path '("~/.spacemacs.d/layers/")
    dotspacemacs-configuration-layers
-   '(
+   '(auto-completion
      clojure
      csv
      emacs-lisp
@@ -43,17 +43,18 @@
      ;; org
      (syntax-checking :variables syntax-checking-enable-tooltips nil))
    dotspacemacs-excluded-packages '(anaconda-mode evil-escape eldoc archive-mode)
-   dotspacemacs-additional-packages '(
-                                      super-save
-     evil-terminal-cursor-changer
-     flycheck-mypy
-     multiple-cursors
-     pyenv-mode
-     restclient
-     string-inflection
-     virtualenvwrapper
-     apib-mode
-     general)
+   dotspacemacs-additional-packages '(super-save
+                                      buffer-move
+                                      monroe
+                                      evil-terminal-cursor-changer
+                                      flycheck-mypy
+                                      multiple-cursors
+                                      pyenv-mode
+                                      restclient
+                                      string-inflection
+                                      virtualenvwrapper
+                                      apib-mode
+                                      general)
    dotspacemacs-delete-orphan-packages t))
 
 (defun dotspacemacs/init ()
@@ -100,7 +101,7 @@
    ;; If non nil the frame is maximized when Emacs starts up.
    ;; Takes effect only if `dotspacemacs-fullscreen-at-startup' is nil.
    ;; (default nil) (Emacs 24.4+ only)
-   dotspacemacs-maximized-at-startup t
+   dotspacemacs-maximized-at-startup nil
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's active or selected.
    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
@@ -120,8 +121,6 @@
    ;; (default nil)
    ;todo replace with git hook(s)
    dotspacemacs-whitespace-cleanup 'nil))
-
-(defun always-yes (&rest _) t)
 
 (defun dotspacemacs/user-init ()
   "This function is mostly useful for variables that need to be set
@@ -161,7 +160,9 @@ before packages are loaded."
 (defun razzi/abbrev-or-add-global-abbrev ()
   (interactive)
   (if (abbrev-expansion (thing-at-point 'word))
-      (expand-abbrev)
+      (progn
+        (expand-abbrev)
+        (message "Expanded"))
     (inverse-add-global-abbrev 1)))
 
 (defun razzi/paste ()
@@ -325,7 +326,7 @@ before packages are loaded."
     (kill-new module)
     (message "Copied module '%s' to the clipboard." module)))
 
-; todo
+; todo no macro
 (defun razzi/double-quotes-to-single ()
   (interactive)
   (evil-execute-macro 1 "cs\"'"))
@@ -334,12 +335,15 @@ before packages are loaded."
   (interactive)
   (shell-command "git push"))
 
+(defun always-yes (&rest _) t)
+
 (defun no-confirm (fun &rest args)
   "Apply FUN to ARGS, skipping user confirmations."
   (cl-letf (((symbol-function 'y-or-n-p) #'always-yes)
             ((symbol-function 'yes-or-no-p) #'always-yes))
       (apply fun args)))
 
+; move to python
 (defun razzi/isort ()
   (interactive)
   (save-buffer)
@@ -353,7 +357,6 @@ before packages are loaded."
   (evil-replace (point) (+ (point) 1) nil ?\n))
 
 (defun razzi/create-scratch-buffer ()
-   "create a scratch buffer"
    (interactive)
    (switch-to-buffer (get-buffer-create "*scratch*")))
 
@@ -453,6 +456,7 @@ before packages are loaded."
    evil-ex-substitute-global t
    evil-insert-state-cursor 'bar
    evil-regexp-search nil
+   evilmi-always-simple-jump t
    ns-pop-up-frames nil
 
    clojure-indent-style :always-indent
@@ -530,6 +534,8 @@ before packages are loaded."
 
   (global-set-key (kbd "C-`") 'describe-key)
 
+  (evil-set-initial-state 'term-mode 'insert)
+
   (add-to-list 'auto-mode-alist '("\\.rest$" . restclient-mode))
   (add-to-list 'auto-mode-alist '("\\.js$" . web-mode))
 
@@ -560,13 +566,16 @@ before packages are loaded."
    "D" 'razzi/kill-line-and-whitespace
    "E" 'forward-symbol
    "G" 'razzi/almost-end-of-buffer
-   "K" 'evil-previous-line ; typo this one all the tim
+   "K" 'evil-previous-line ; typo this one all the time
    "M-/" 'evilnc-comment-or-uncomment-lines
    "M-RET" 'razzi/recompile
    "M-`" 'other-window
    "M-d" 'evil-mc-make-and-goto-next-match
    "M-r" 'sp-raise-sexp
    "M-s" 'save-buffer
+   "M--" 'spacemacs/scale-down-font
+   "M-=" 'spacemacs/scale-up-font
+   "M-w" 'kill-this-buffer
    "N" 'razzi/previous-and-center
    "Q" 'razzi/replay-q-macro
    ;; "TAB" 'spacemacs/alternate-buffer
@@ -594,6 +603,7 @@ before packages are loaded."
     "\"" 'razzi/surround-with-double-quotes
     "]" 'razzi/surround-with-brackets
     "E" 'forward-symbol
+    "c" 'evil-change
     "ae" 'mark-whole-buffer
     "il" 'razzi/mark-line-text
     "M-d" 'mc/mark-next-symbol-like-this)
@@ -613,7 +623,6 @@ before packages are loaded."
   ;todo move to own layers
 
   (company-tng-configure-default)
-  ;; (define-key yas-minor-mode-map (kbd "TAB") 'yas-expand)
 
   (use-package flycheck-mypy)
   (use-package pyenv-mode)

@@ -1,5 +1,6 @@
 (defconst razzicompletion-packages
   '(yasnippet
+    company-flx
     hippie-exp))
 
 (defun tab-complete ()
@@ -9,7 +10,6 @@
       (company-simple-complete-next)))
 
 
-;; ??
 (defun razzicompletion/init-company-flx ()
   (use-package company-flx
     :init
