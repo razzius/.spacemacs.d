@@ -19,4 +19,5 @@
 
     (company-tng-configure-default)
     (define-key company-active-map (kbd "<tab>") 'tab-complete)
+    (define-key company-active-map (kbd "C-h") nil)
     (define-key company-active-map (kbd "C-w") nil)))

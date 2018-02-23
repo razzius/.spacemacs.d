@@ -34,6 +34,7 @@
      razzi-python
      razzi-tab-completion
      razzi-vc
+     razzi-dumb-jump
      ; razzilisp
      razzineotree
      razzicompletion
@@ -452,6 +453,7 @@ before packages are loaded."
    cider-allow-jack-in-without-project t
 
    recentf-exclude '("TAGS")
+   create-lockfiles nil
    evil-cross-lines t
    evil-ex-substitute-global t
    evil-insert-state-cursor 'bar
@@ -586,10 +588,12 @@ before packages are loaded."
    "^" 'evil-digit-argument-or-evil-beginning-of-line
    "_" 'razzi/transpose-previous-line
    ; todo visual c buggy now, and committing broken
-   "c" (general-key-dispatch 'evil-change "ru" 'string-inflection-camelcase)
+   "c" (general-key-dispatch 'evil-change
+         "ru" 'string-inflection-camelcase
+         "c" 'magit-commit) ; todo should be in vc layer
    "g/" 'spacemacs/helm-project-smart-do-search-region-or-symbol
    "g[" 'helm-etags-select
-   "g]" 'evil-jump-to-tag
+   "g]" 'dumb-jump-go
    "gf" 'razzi/file-at-point
    "n" 'razzi/next-and-center
    "s-d" 'evil-mc-make-and-goto-next-match
@@ -661,18 +665,21 @@ before packages are loaded."
 
   (defun razzi/replace-control-g-with-nil (char)
     "Make C-g read as nil so that `r C-g` cancels the replace."
-    (let ((control-g-char ?\a))
-      (if (eq char control-g-char)
-          (progn
-            (message "Quit")  ; Without calling message, the cursor stays looking like replace
-            nil)              ; Returning nil cancels the replace
-        char)))
+    (if (eq char ?\C-g)
+        (progn
+          (message "Quit")  ; Without calling message, the cursor stays looking like replace
+          nil)              ; Returning nil cancels the replace
+      char))
 
   (advice-add 'evil-read-key :filter-return 'razzi/replace-control-g-with-nil)
 
   (advice-add 'spacemacs/check-large-file :around 'no-confirm))
 
-
 ; complain function which will put the string as a comment in a relevant config per mode
 ; todo use parinfer
 ; when yyp copy 2 lines, keep cursor on same character
+; merge n and N from vim search with * and #
+; ui for perspectives, like tmux
+; fixup commit onto last commit that edited that line
+; c-t in helm
+; switch to hydra
