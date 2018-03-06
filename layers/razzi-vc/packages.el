@@ -35,6 +35,8 @@
     (git-gutter:linum-setup)
     (global-git-gutter-mode 1)
 
+    (setq magit-push-current-set-remote-if-missing nil)
+    (add-to-list 'magit-no-confirm 'stage-all-changes)
     (add-to-list 'git-gutter:update-hooks 'focus-in-hook)))
 
 (add-hook 'git-commit-mode-hook 'evil-insert-state)

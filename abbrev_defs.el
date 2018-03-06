@@ -10,12 +10,23 @@
 (define-abbrev-table 'anaconda-view-mode-abbrev-table '())
 
 (define-abbrev-table 'apropos-mode-abbrev-table '())
+(define-abbrev-table 'awk-mode-abbrev-table
+  '(
+   ))
 
 (define-abbrev-table 'bibtex-mode-abbrev-table '())
 
 (define-abbrev-table 'bookmark-bmenu-mode-abbrev-table '())
 
 (define-abbrev-table 'bookmark-edit-annotation-mode-abbrev-table '())
+
+(define-abbrev-table 'c++-mode-abbrev-table
+  '(
+   ))
+
+(define-abbrev-table 'c-mode-abbrev-table
+  '(
+   ))
 
 (define-abbrev-table 'calendar-mode-abbrev-table '())
 
@@ -83,16 +94,18 @@
 
 (define-abbrev-table 'global-abbrev-table
   '(
-    ("backwrd" "backward" nil 1)
     ("answred" "answered" nil 1)
+    ("aslo" "also" nil 1)
     ("chekc" "check" nil 1)
     ("cointaner" "container" nil 1)
     ("coutn" "count" nil 1)
     ("dodument" "document" nil 1)
+    ("ednif" "endif" nil 1)
     ("fales" "false" nil 1)
     ("hakcy" "hacky" nil 1)
     ("moutn" "mount" nil 1)
     ("otpions" "options" nil 1)
+    ("pst" "post" nil 1)
     ("satte" "state" nil 2)
     ("stae" "state" nil 2)
     ("tyep" "type" nil 1)
@@ -119,6 +132,8 @@
 
 (define-abbrev-table 'ibuffer-mode-abbrev-table '())
 
+(define-abbrev-table 'idl-mode-abbrev-table '())
+
 (define-abbrev-table 'image-dired-display-image-mode-abbrev-table '())
 
 (define-abbrev-table 'image-dired-thumbnail-mode-abbrev-table '())
@@ -126,6 +141,16 @@
 (define-abbrev-table 'inf-clojure-mode-abbrev-table '())
 
 (define-abbrev-table 'inferior-python-mode-abbrev-table '())
+
+(define-abbrev-table 'java-mode-abbrev-table
+  '(
+   ))
+
+(define-abbrev-table 'js-jsx-mode-abbrev-table '())
+
+(define-abbrev-table 'js-mode-abbrev-table '())
+
+(define-abbrev-table 'json-mode-abbrev-table '())
 
 (define-abbrev-table 'lisp-mode-abbrev-table '())
 
@@ -173,6 +198,12 @@
 
 (define-abbrev-table 'nrepl-messages-mode-abbrev-table '())
 
+(define-abbrev-table 'nxml-mode-abbrev-table '())
+
+(define-abbrev-table 'objc-mode-abbrev-table
+  '(
+   ))
+
 (define-abbrev-table 'occur-edit-mode-abbrev-table '())
 
 (define-abbrev-table 'occur-mode-abbrev-table '())
@@ -182,6 +213,10 @@
 (define-abbrev-table 'outline-mode-abbrev-table '())
 
 (define-abbrev-table 'package-menu-mode-abbrev-table '())
+
+(define-abbrev-table 'pike-mode-abbrev-table
+  '(
+   ))
 
 (define-abbrev-table 'process-menu-mode-abbrev-table '())
 

@@ -230,6 +230,7 @@ before packages are loaded."
 (defun razzi/copy-paragraph ()
   (interactive)
   ;todo go to start of block
+  ; can use regex: ^\S?
   (move-beginning-of-line nil)
   (let ((sentence (thing-at-point 'defun)))
     (insert sentence)
@@ -500,11 +501,11 @@ before packages are loaded."
   (set-face-background 'hl-line "#f3f9ff")
 
   (evil-leader/set-key
-    "," 'razzi/append-comma
+    "," 'razzi/append-comma ; only makes sense for python-like
     "\\" 'multi-term
     "[" 'evil-open-above
-    ")" 'razzi/put-paren
-    "." 'razzi/copy-paragraph
+    ")" 'razzi/put-paren ; this is janky but useful
+    "." 'razzi/copy-paragraph ; unused
     "-" 'razzi/save-delete-close
     "DEL" 'razzi/restart-emacs
     "TAB" 'spacemacs/alternate-buffer
@@ -558,7 +559,6 @@ before packages are loaded."
    "0" 'evil-first-non-blank
    "<backtab>" 'previous-buffer
    "C" 'razzi/change-line
-   "C-SPC" 'spacemacs/workspaces-micro-state
    "C-a" 'evil-numbers/inc-at-pt
    "C-g" 'razzi/evil-mc-quit-and-quit
    "C-h" 'evil-window-left
@@ -569,18 +569,17 @@ before packages are loaded."
    "E" 'forward-symbol
    "G" 'razzi/almost-end-of-buffer
    "K" 'evil-previous-line ; typo this one all the time
+   "M--" 'spacemacs/scale-down-font
    "M-/" 'evilnc-comment-or-uncomment-lines
+   "M-=" 'spacemacs/scale-up-font
    "M-RET" 'razzi/recompile
    "M-`" 'other-window
    "M-d" 'evil-mc-make-and-goto-next-match
    "M-r" 'sp-raise-sexp
    "M-s" 'save-buffer
-   "M--" 'spacemacs/scale-down-font
-   "M-=" 'spacemacs/scale-up-font
    "M-w" 'kill-this-buffer
    "N" 'razzi/previous-and-center
    "Q" 'razzi/replay-q-macro
-   ;; "TAB" 'spacemacs/alternate-buffer
    "[ SPC" 'razzi/insert-newline-before
    "[ c" 'git-gutter:previous-hunk
    "] SPC" 'razzi/insert-newline-after
@@ -598,6 +597,9 @@ before packages are loaded."
    "n" 'razzi/next-and-center
    "s-d" 'evil-mc-make-and-goto-next-match
    "s-x" 'helm-M-x)
+
+  ; special snowflake keybinding
+  (evil-define-key 'normal evil-mc-key-map (kbd "M-n") 'evil-mc-make-cursor-move-next-line)
 
   (general-define-key :states 'visual
     "!" 'sort-lines
@@ -683,3 +685,13 @@ before packages are loaded."
 ; fixup commit onto last commit that edited that line
 ; c-t in helm
 ; switch to hydra
+
+; todo multiple cursor change
+; maybe I should switch to iedit
+; asdf asdf
+;; (setq evil-mc-custom-known-commands
+;;       '((general-dispatch-evil-change . ((:default . evil-mc-execute-default-evil-change)))))
+; evilmc visual E and $ not working
+; q from split doesn't close the split until redraw?
+;don't show . and .. in helm
+; slurp markdown
