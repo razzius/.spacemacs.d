@@ -1,16 +1,12 @@
 (setq razzishell-packages
       '(
-        company
         helm
         multi-term
         (comint :location built-in)
         xterm-color
         shell
         shell-pop
-        term
-        esh-help
-        magit
-        ))
+        term))
 
 (defun razzi/create-workspace ()
   (interactive)
@@ -56,6 +52,8 @@
       (spacemacs/set-leader-keys-for-major-mode 'term-mode "c" 'razzi/multi-term-workspace)
       (spacemacs/set-leader-keys-for-major-mode 'term-mode "p" 'eyebrowse-next-window-config)
       (spacemacs/set-leader-keys-for-major-mode 'term-mode "n" 'eyebrowse-prev-window-config)
+
+      (define-key term-mode-map (kbd "<tab>") 'self-insert-command)
 
       (when (configuration-layer/package-usedp 'projectile)
         (defun projectile-multi-term-in-root ()
@@ -136,7 +134,7 @@
 
       (spacemacs/set-leader-keys "'" 'razzi/multi-term-workspace))))
 
-(defun razzishell/init-term ()
+(defun razzishell/post-init-term ()
   (defun term-send-tab ()
     "Send tab in term mode."
     (interactive)

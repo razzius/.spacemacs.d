@@ -83,8 +83,6 @@
    dotspacemacs-major-mode-emacs-leader-key "C-SPC"
    dotspacemacs-distinguish-gui-tab t
    dotspacemacs-command-key ":"
-   ;; Name of the default layout (default "Default")
-   dotspacemacs-default-layout-name "Default"
    ;; If non nil the default layout name is displayed in the mode-line.
    ;; (default nil)
    dotspacemacs-display-default-layout nil
@@ -103,14 +101,6 @@
    ;; Takes effect only if `dotspacemacs-fullscreen-at-startup' is nil.
    ;; (default nil) (Emacs 24.4+ only)
    dotspacemacs-maximized-at-startup nil
-   ;; A value from the range (0..100), in increasing opacity, which describes
-   ;; the transparency level of a frame when it's active or selected.
-   ;; Transparency can be toggled through `toggle-transparency'. (default 90)
-   dotspacemacs-active-transparency 100
-   ;; A value from the range (0..100), in increasing opacity, which describes
-   ;; the transparency level of a frame when it's inactive or deselected.
-   ;; Transparency can be toggled through `toggle-transparency'. (default 90)
-   dotspacemacs-inactive-transparency 90
    dotspacemacs-smooth-scrolling t
    dotspacemacs-line-numbers t
    dotspacemacs-smartparens-strict-mode t
@@ -126,11 +116,10 @@
 (defun dotspacemacs/user-init ()
   "This function is mostly useful for variables that need to be set
 before packages are loaded."
-  (setq
-   custom-file "~/.emacs.d/custom.el"
-   helm-mode-fuzzy-match t
-   helm-ff-newfile-prompt-p nil
-   helm-M-x-fuzzy-match t)
+  (setq custom-file "~/.emacs.d/custom.el"
+        helm-mode-fuzzy-match t
+        helm-ff-newfile-prompt-p nil
+        helm-M-x-fuzzy-match t)
   (load custom-file 'noerror))
 
 (defun razzi/insert-newline-after()
@@ -263,6 +252,10 @@ before packages are loaded."
   (interactive "r")
   (evil-surround-region start end nil ?'))
 
+(defun razzi/surround-with-backticks (start end)
+  (interactive "r")
+  (evil-surround-region start end nil ?`))
+
 (defun razzi/surround-with-double-quotes (start end)
   (interactive "r")
   (evil-surround-region start end nil ?\"))
@@ -300,11 +293,12 @@ before packages are loaded."
 
 (defun razzi/almost-end-of-buffer (arg)
   (interactive "P")
-  (if (null arg)
-    (progn
-      (end-of-buffer)
-      (previous-line))
-    (evil-goto-line arg)))
+  (let ((inhibit-message t))
+    (if (null arg)
+        (progn
+          (end-of-buffer)
+          (previous-line))
+      (evil-goto-line arg))))
 
 (defun razzi/replay-q-macro ()
   (interactive)
@@ -328,6 +322,14 @@ before packages are loaded."
     (kill-new module)
     (message "Copied module '%s' to the clipboard." module)))
 
+; todo refactor with above
+(defun razzi/copy-project-file-path ()
+  (interactive)
+  (let* ((root (s-append "/" (s-chomp (shell-command-to-string "git root"))))
+         (relative-path (s-chop-prefix root (buffer-file-name))))
+    (kill-new relative-path)
+    (message "Copied path '%s' to the clipboard." relative-path)))
+
 ; todo no macro
 (defun razzi/double-quotes-to-single ()
   (interactive)
@@ -345,12 +347,20 @@ before packages are loaded."
             ((symbol-function 'yes-or-no-p) #'always-yes))
       (apply fun args)))
 
+(defun razzi/run-script-on-file (command)
+  (save-buffer)
+  (shell-command command)
+  (no-confirm 'revert-buffer t t))
+
 ; move to python
+; fails silently
 (defun razzi/isort ()
   (interactive)
-  (save-buffer)
-  (shell-command (format "isort %s" (buffer-file-name)))
-  (no-confirm 'revert-buffer t t))
+  (razzi/run-script-on-file (format "isort %s" (buffer-file-name))))
+
+(defun razzi/importmagic ()
+  (interactive)
+  (razzi/run-script-on-file (format "importmagic %s" (buffer-file-name))))
 
 (defun razzi/split-after-comma ()
   (interactive)
@@ -447,7 +457,6 @@ before packages are loaded."
       (message "Copied buffer file name '%s' to the clipboard." filename))))
 
 (defun dotspacemacs/user-config ()
-
   (setq
    display-time-default-load-average nil
    tags-add-tables t
@@ -501,34 +510,37 @@ before packages are loaded."
   (set-face-background 'hl-line "#f3f9ff")
 
   (evil-leader/set-key
-    "," 'razzi/append-comma ; only makes sense for python-like
-    "\\" 'multi-term
-    "[" 'evil-open-above
+    "'" 'razzi/double-quotes-to-single
     ")" 'razzi/put-paren ; this is janky but useful
-    "." 'razzi/copy-paragraph ; unused
+    "," 'razzi/append-comma ; only makes sense for python-like
     "-" 'razzi/save-delete-close
-    "DEL" 'razzi/restart-emacs
-    "TAB" 'spacemacs/alternate-buffer
-    "SPC" 'helm-M-x
-    "ESC" 'kill-this-buffer
-    "RET" 'razzi/split-after-comma
+    "." 'razzi/copy-paragraph ; unused
     "<backtab>" 'razzi/split-alternate-buffer
+    "C-o" 'razzi/put-before
+    "DEL" 'razzi/restart-emacs
+    "ESC" 'kill-this-buffer
+    "O" 'razzi/put-before
+    "RET" 'razzi/split-after-comma
+    "SPC" 'helm-M-x
+    "TAB" 'spacemacs/alternate-buffer
+    "[" 'evil-open-above
+    "\\" 'multi-term
+    "]" '(lambda () (interactive) (evil-execute-macro 1 "ysiW]"))
     "c r" 'razzi/recompile
-    "f i" 'razzi/edit-init
-    "f RET" 'razzi/copy-file-name
-    "f p" 'razzi/copy-test-file-path
     "f SPC" 'copy-file-name-to-clipboard
-    "h f" 'describe-function
-    "h v" 'describe-variable
+    "f i" 'razzi/edit-init
+    "f n" 'razzi/copy-file-name
+    "f p" 'razzi/copy-test-file-path
+    "f RET" 'razzi/copy-project-file-path
     "g g" 'magit-checkout
     "g p" 'razzi/git-push
+    "h f" 'describe-function
+    "h v" 'describe-variable
     "i c" 'razzi/copy-paragraph
     "i d" 'razzi/put-debugger
+    "i m" 'razzi/importmagic
     "i s" 'razzi/isort
     "o" 'razzi/put-after
-    "O" 'razzi/put-before
-    "'" 'razzi/double-quotes-to-single
-    "C-o" 'razzi/put-before
     "C-SPC" 'spacemacs//workspaces-eyebrowse-next-window-config-n
     "=" 'razzi/python-format
     "v" 'razzi/voice)
@@ -570,6 +582,7 @@ before packages are loaded."
    "G" 'razzi/almost-end-of-buffer
    "K" 'evil-previous-line ; typo this one all the time
    "M--" 'spacemacs/scale-down-font
+   "M-0" 'spacemacs/reset-font-size
    "M-/" 'evilnc-comment-or-uncomment-lines
    "M-=" 'spacemacs/scale-up-font
    "M-RET" 'razzi/recompile
@@ -605,6 +618,7 @@ before packages are loaded."
     "!" 'sort-lines
     "$" 'razzi/almost-end-of-line
     "'" 'razzi/surround-with-single-quotes
+    "`" 'razzi/surround-with-backticks
     ")" 'razzi/surround-with-parens
     "\"" 'razzi/surround-with-double-quotes
     "]" 'razzi/surround-with-brackets
@@ -624,20 +638,7 @@ before packages are loaded."
 
   (define-key minibuffer-local-map (kbd "C-j") 'exit-minibuffer)
 
-  (define-key term-mode-map (kbd "<tab>") 'self-insert-command)
-
-  ;todo move to own layers
-
   (company-tng-configure-default)
-
-  (use-package flycheck-mypy)
-  (use-package pyenv-mode)
-
-  (pyenv-mode)
-  (pyenv-mode-set "3.6.0")
-  (setq python-shell-interpreter "python3.6")
-  (setq-default flycheck-disabled-checkers '(python-pylint python-pycompile))
-
   (add-hook 'evil-insert-state-exit-hook 'expand-abbrev)
   (add-hook 'focus-out-hook 'garbage-collect)
   (add-hook 'term-mode-hook 'turn-off-evil-mode)
@@ -695,3 +696,8 @@ before packages are loaded."
 ; q from split doesn't close the split until redraw?
 ;don't show . and .. in helm
 ; slurp markdown
+; don't restart django if im in debugger
+; eval current finds outer form in comment
+; spc ' throw quotes on the word
+; don't throw the comments all the way to the right
+; a function text object python

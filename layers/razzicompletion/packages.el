@@ -16,7 +16,7 @@
     (company-flx-mode)))
 
 
-(defun razzicompletion/init-yasnippet ()
+(defun razzicompletion/post-init-yasnippet ()
   (use-package yasnippet
     :init
     (setq yas-snippet-dirs '("~/.spacemacs.d/snippets"))
@@ -53,7 +53,7 @@
       (company-abort))
       (company-complete-selection)))
 
-(defun razzicompletion/init-hippie-exp ()
+(defun razzicompletion/post-init-hippie-exp ()
   (use-package hippie-exp)
     :init
     (define-key evil-insert-state-map (kbd "<C-i>")
