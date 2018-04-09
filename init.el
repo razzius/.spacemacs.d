@@ -414,6 +414,12 @@ before packages are loaded."
       (kill-new filename)
       (message "Copied buffer file name '%s' to the clipboard." filename))))
 
+(defun razzi/copy-file-dir ()
+  "Copy the current buffer directory to the clipboard."
+  (interactive)
+  (kill-new default-directory)
+  (message "Copied buffer directory '%s' to the clipboard." default-directory))
+
 (defun razzi/split-alternate-buffer ()
   (interactive)
   (split-window-right)
@@ -530,6 +536,7 @@ before packages are loaded."
     "f SPC" 'copy-file-name-to-clipboard
     "f i" 'razzi/edit-init
     "f n" 'razzi/copy-file-name
+    "f d" 'razzi/copy-file-dir
     "f p" 'razzi/copy-test-file-path
     "f RET" 'razzi/copy-project-file-path
     "g g" 'magit-checkout
