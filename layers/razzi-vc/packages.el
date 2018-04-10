@@ -8,7 +8,7 @@
     (add-hook 'git-commit-mode-hook 'evil-insert-state)
 
     (setq
-      same-window-regexps (append same-window-regexps '("\*magit: .*\*" "\*magit-diff: .*\*"))
+      same-window-regexps (append same-window-regexps '(".*magit: .*" "\*magit-diff: .*\*"))
       magit-push-current-set-remote-if-missing nil
       magit-commit-show-diff nil
       magit-status-sections-hook

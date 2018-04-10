@@ -3,25 +3,27 @@
    dotspacemacs-distribution 'spacemacs
    dotspacemacs-configuration-layer-path '("~/.spacemacs.d/layers/")
    dotspacemacs-configuration-layers
-   '(auto-completion
+   '(
+     auto-completion
      clojure
-     csv
+     ;; csv
      emacs-lisp
-     fsharp
+     ;; fsharp
      git
-     go
-     haskell
+     ;; go
+     ;; haskell
      html
      javascript
-     lua
+     ;; lua
      markdown
      osx
      python
-     ruby
-     rust
+     ;; ruby
+     ;; rust
      shell-scripts
      sql
-     swift
+     ;; swift
+     typescript
      yaml
 
      razzishell
@@ -36,6 +38,7 @@
      razzi-vc
      razzi-dumb-jump
      ; razzilisp
+     razzi-restclient
      razzineotree
      razzicompletion
 
@@ -51,7 +54,6 @@
                                       flycheck-mypy
                                       multiple-cursors
                                       pyenv-mode
-                                      restclient
                                       string-inflection
                                       virtualenvwrapper
                                       apib-mode
@@ -277,7 +279,7 @@ before packages are loaded."
 ; todo work with url as well
 (defun razzi/file-at-point ()
   (interactive)
-  (find-file-at-point (ffap-file-at-point)))
+  (find-file-at-point (thing-at-point 'filename t)))
 
 (defun razzi/mark-line-text ()
   (interactive)
@@ -448,6 +450,62 @@ before packages are loaded."
   (shell-command (format "python_format.sh %s" (buffer-file-name)))
   (revert-buffer nil t))
 
+(defun razzi/search-paste ()
+  (interactive)
+  (spacemacs/helm-project-smart-do-search)
+  ; how to yank into helm?
+  (yank))
+
+(defun razzi/monroe ()
+  (interactive)
+  (monroe "localhost:7888"))
+
+(defun copy-region-to-other-window (start end)
+  "Move selected text to other window"
+  (interactive "r")
+  (if (use-region-p)
+      (save-excursion
+        (kill-ring-save start end)
+        (other-window 1)
+        (yank)
+        (newline))
+    (message "No region selected")))
+
+(defun razzi/hackro ()
+  "Other window, go to bottom and into insert mode"
+  (interactive)
+  (other-window 1)
+  (evil-execute-macro 1 "GA"))
+
+(defun razzi/declare-extension-mode (extension mode)
+  (let ((pattern (s-concat "\\." extension "$")))
+    (add-to-list 'auto-mode-alist (cons pattern mode))))
+
+(defun toggle-window-split ()
+  (interactive)
+  (if (= (count-windows) 2)
+      (let* ((this-win-buffer (window-buffer))
+         (next-win-buffer (window-buffer (next-window)))
+         (this-win-edges (window-edges (selected-window)))
+         (next-win-edges (window-edges (next-window)))
+         (this-win-2nd (not (and (<= (car this-win-edges)
+                     (car next-win-edges))
+                     (<= (cadr this-win-edges)
+                     (cadr next-win-edges)))))
+         (splitter
+          (if (= (car this-win-edges)
+             (car (window-edges (next-window))))
+          'split-window-horizontally
+        'split-window-vertically)))
+    (delete-other-windows)
+    (let ((first-win (selected-window)))
+      (funcall splitter)
+      (if this-win-2nd (other-window 1))
+      (set-window-buffer (selected-window) this-win-buffer)
+      (set-window-buffer (next-window) next-win-buffer)
+      (select-window first-win)
+      (if this-win-2nd (other-window 1))))))
+
 (defun razzi/switch-to-other-buffer ()
   (interactive)
   (switch-to-buffer (cadr (buffer-list))))
@@ -461,6 +519,15 @@ before packages are loaded."
     (when filename
       (kill-new filename)
       (message "Copied buffer file name '%s' to the clipboard." filename))))
+
+; todo clojure style (defmacro let)
+;; (let [filename 1] (message filename))
+
+; vaguely better than copying and pasting manually
+(defun razzi/send-region-to-tmux (start end)
+  (interactive "r")
+  (setq tmux-fd "/dev/ttys001") ; todo hardcoded
+  (shell-command (s-concat "sudo writevt " tmux-fd " \"" (buffer-substring start end) "\"")))
 
 (defun dotspacemacs/user-config ()
   (setq
@@ -476,8 +543,11 @@ before packages are loaded."
    evil-regexp-search nil
    evilmi-always-simple-jump t
    ns-pop-up-frames nil
+   hl-todo-keyword-faces nil
 
    clojure-indent-style :always-indent
+   js2-strict-missing-semi-warning nil
+   python-indent-guess-indent-offset nil
 
    abbrev-file-name "~/.spacemacs.d/abbrev_defs.el"
    frame-title-format "%f"
@@ -549,8 +619,10 @@ before packages are loaded."
     "i s" 'razzi/isort
     "o" 'razzi/put-after
     "C-SPC" 'spacemacs//workspaces-eyebrowse-next-window-config-n
+    "v" 'razzi/search-paste
     "=" 'razzi/python-format
-    "v" 'razzi/voice)
+    ; "v" 'razzi/voice
+    )
 
   (mapc 'evil-declare-not-repeat '(razzi/next-and-center razzi/previous-and-center))
 
@@ -558,8 +630,7 @@ before packages are loaded."
 
   (evil-set-initial-state 'term-mode 'insert)
 
-  (add-to-list 'auto-mode-alist '("\\.rest$" . restclient-mode))
-  (add-to-list 'auto-mode-alist '("\\.js$" . web-mode))
+  (razzi/declare-extension-mode "js" 'js2-mode)
 
   (general-define-key :states 'insert
    "<escape>" 'razzi/exit-insert
@@ -650,20 +721,6 @@ before packages are loaded."
   (add-hook 'focus-out-hook 'garbage-collect)
   (add-hook 'term-mode-hook 'turn-off-evil-mode)
 
-  ; is this interfering with clojure c-p?
-  (evil-define-key 'insert cider-mode-map (kbd "C-p") 'cider-repl-backward-input)
-
-  (evil-define-key 'normal cider-mode-map
-    (kbd "C") 'razzi/change-line)
-
-  ; todo move to clojure config
-  (evil-define-key 'normal clojure-mode-map
-    (kbd "C") 'razzi/change-line)
-
-  (evil-define-key 'normal clojure-mode-map (kbd "M-j") 'razzi/open-sexp)
-  (evil-define-key 'normal clojure-mode-map (kbd "RET") 'razzi/open-sexp-eol)
-  (evil-define-key 'normal clojure-mode-map (kbd "M-s") 'save-buffer)
-
   (defun razzi/make-parent-directories (filename)
     "Create parent directory if not exists while visiting file."
     (unless (file-exists-p filename)
@@ -708,3 +765,7 @@ before packages are loaded."
 ; spc ' throw quotes on the word
 ; don't throw the comments all the way to the right
 ; a function text object python
+; o put comma when adding to python collection
+;https://github.com/andrewgodwin/channels-examples/tree/master/multichat
+; rename file doesn't work if moving in to directory
+; https://www.reddit.com/r/emacs/comments/3sd3ue/ask_remacs_sending_text_to_an_ansiterm_buffer/
