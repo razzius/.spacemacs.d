@@ -36,6 +36,7 @@
      razzi-python
      razzi-tab-completion
      razzi-vc
+     ;; razzi-voice
      razzi-dumb-jump
      ; razzilisp
      razzi-restclient
@@ -135,19 +136,6 @@ before packages are loaded."
   (save-excursion
     (evil-insert-newline-above)
     (forward-line)))
-
-(defun razzi/voice ()
-  (interactive)
-  ;; (shell-command "swift ~/projects/swift_speech/r2.swift")
-  (start-process "voice" "voice" "swift" "/Users/razzi/projects/swift_speech/r2.swift"))
-
-(defun razzi/dictate ()
-  (interactive)
-  (start-process "dictate" "dictate" "osascript" "/Users/razzi/projects/swift_speech/dictate.applescript"))
-
-(defun razzi/end-voice ()
-  (interactive)
-  (delete-process "voice"))
 
 (defun razzi/abbrev-or-add-global-abbrev ()
   (interactive)
@@ -620,9 +608,7 @@ before packages are loaded."
     "o" 'razzi/put-after
     "C-SPC" 'spacemacs//workspaces-eyebrowse-next-window-config-n
     "v" 'razzi/search-paste
-    "=" 'razzi/python-format
-    ; "v" 'razzi/voice
-    )
+    "=" 'razzi/python-format)
 
   (mapc 'evil-declare-not-repeat '(razzi/next-and-center razzi/previous-and-center))
 
