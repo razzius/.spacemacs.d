@@ -591,6 +591,8 @@ before packages are loaded."
     "\\" 'multi-term
     "]" '(lambda () (interactive) (evil-execute-macro 1 "ysiW]"))
     "c r" 'razzi/recompile
+    "e n" 'flycheck-next-error
+    "e p" 'flycheck-previous-error
     "f SPC" 'copy-file-name-to-clipboard
     "f i" 'razzi/edit-init
     "f n" 'razzi/copy-file-name
@@ -626,6 +628,7 @@ before packages are loaded."
    "C-t" 'razzi/transpose-previous-chars
    "<tab>" 'yas-expand
    "M-RET" 'razzi/recompile
+   "s-<backspace>" 'evil-delete-backward-word
    "M-l" 'sp-forward-sexp
    "M-s" 'razzi/exit-insert-and-save
    "M-v" 'razzi/paste)
