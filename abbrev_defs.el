@@ -9,7 +9,6 @@
 
 (define-abbrev-table 'anaconda-view-mode-abbrev-table '())
 
-(define-abbrev-table 'apropos-mode-abbrev-table '())
 (define-abbrev-table 'awk-mode-abbrev-table
   '(
    ))
@@ -82,6 +81,8 @@
 
 (define-abbrev-table 'evil-list-view-mode-abbrev-table '())
 
+(define-abbrev-table 'fish-mode-abbrev-table '())
+
 (define-abbrev-table 'flycheck-error-list-mode-abbrev-table '())
 
 (define-abbrev-table 'fundamental-mode-abbrev-table '())
@@ -98,11 +99,13 @@
     ("aslo" "also" nil 1)
     ("chekc" "check" nil 1)
     ("cointaner" "container" nil 1)
+    ("compoent" "component" nil 1)
     ("coutn" "count" nil 1)
     ("dodument" "document" nil 1)
     ("ednif" "endif" nil 1)
     ("fales" "false" nil 1)
     ("hakcy" "hacky" nil 1)
+    ("ins" "isn" nil 1)
     ("moutn" "mount" nil 1)
     ("otpions" "options" nil 1)
     ("pst" "post" nil 1)
@@ -150,7 +153,9 @@
 
 (define-abbrev-table 'js-mode-abbrev-table '())
 
-(define-abbrev-table 'json-mode-abbrev-table '())
+(define-abbrev-table 'js2-jsx-mode-abbrev-table '())
+
+(define-abbrev-table 'js2-mode-abbrev-table '())
 
 (define-abbrev-table 'lisp-mode-abbrev-table '())
 
@@ -198,8 +203,6 @@
 
 (define-abbrev-table 'nrepl-messages-mode-abbrev-table '())
 
-(define-abbrev-table 'nxml-mode-abbrev-table '())
-
 (define-abbrev-table 'objc-mode-abbrev-table
   '(
    ))
@@ -226,13 +229,13 @@
 
 (define-abbrev-table 'python-mode-abbrev-table '())
 
-(define-abbrev-table 'python-mode-skeleton-abbrev-table
-  '(
-   ))
+(define-abbrev-table 'python-mode-skeleton-abbrev-table '())
 
 (define-abbrev-table 'reb-lisp-mode-abbrev-table '())
 
 (define-abbrev-table 'reb-mode-abbrev-table '())
+
+(define-abbrev-table 'restclient-mode-abbrev-table '())
 
 (define-abbrev-table 'ruby-mode-abbrev-table '())
 
@@ -245,6 +248,10 @@
 (define-abbrev-table 'sgml-mode-abbrev-table '())
 
 (define-abbrev-table 'shell-mode-abbrev-table '())
+
+(define-abbrev-table 'skewer-clients-mode-abbrev-table '())
+
+(define-abbrev-table 'skewer-error-mode-abbrev-table '())
 
 (define-abbrev-table 'snippet-mode-abbrev-table '())
 
@@ -260,7 +267,15 @@
 
 (define-abbrev-table 'text-mode-abbrev-table '())
 
+(define-abbrev-table 'tide-project-errors-mode-abbrev-table '())
+
+(define-abbrev-table 'tide-references-mode-abbrev-table '())
+
+(define-abbrev-table 'typescript-mode-abbrev-table '())
+
 (define-abbrev-table 'url-cookie-mode-abbrev-table '())
+
+(define-abbrev-table 'use-package-statistics-mode-abbrev-table '())
 
 (define-abbrev-table 'vc-git-log-edit-mode-abbrev-table '())
 

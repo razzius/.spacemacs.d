@@ -100,9 +100,6 @@
    dotspacemacs-helm-no-header t
    dotspacemacs-enable-paste-micro-state t
    dotspacemacs-fullscreen-at-startup nil
-   ;; If non nil the frame is maximized when Emacs starts up.
-   ;; Takes effect only if `dotspacemacs-fullscreen-at-startup' is nil.
-   ;; (default nil) (Emacs 24.4+ only)
    dotspacemacs-maximized-at-startup nil
    dotspacemacs-smooth-scrolling t
    dotspacemacs-line-numbers t
@@ -264,7 +261,6 @@ before packages are loaded."
   (interactive)
   (find-file "~/.spacemacs.d/init.el"))
 
-; todo work with url as well
 (defun razzi/file-at-point ()
   (interactive)
   (find-file-at-point (thing-at-point 'filename t)))
