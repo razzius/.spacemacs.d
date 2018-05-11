@@ -52,6 +52,7 @@
                                       buffer-move
                                       monroe
                                       evil-terminal-cursor-changer
+                                      evil-multiedit
                                       flycheck-mypy
                                       multiple-cursors
                                       pyenv-mode
@@ -461,7 +462,7 @@ before packages are loaded."
   (other-window 1)
   (evil-execute-macro 1 "GA"))
 
-(defun razzi/declare-extension-mode (extension mode)
+(defun razzi/associate-extension-mode (extension mode)
   (let ((pattern (s-concat "\\." extension "$")))
     (add-to-list 'auto-mode-alist (cons pattern mode))))
 
@@ -493,6 +494,11 @@ before packages are loaded."
 (defun razzi/switch-to-other-buffer ()
   (interactive)
   (switch-to-buffer (cadr (buffer-list))))
+
+(defun razzi/match-and-next ()
+  (interactive)
+  (evil-multiedit-match-symbol-and-next)
+  (evil-multiedit-match-symbol-and-next))
 
 (defun copy-file-name-to-clipboard ()
   "Copy the current buffer file name to the clipboard."
@@ -602,7 +608,9 @@ before packages are loaded."
     "i c" 'razzi/copy-paragraph
     "i d" 'razzi/put-debugger
     "i m" 'razzi/importmagic
+    "i e" 'iedit-mode
     "i s" 'razzi/isort
+    "i b" 'blacken-buffer
     "o" 'razzi/put-after
     "C-SPC" 'spacemacs//workspaces-eyebrowse-next-window-config-n
     "v" 'razzi/search-paste
@@ -613,8 +621,6 @@ before packages are loaded."
   (global-set-key (kbd "C-`") 'describe-key)
 
   (evil-set-initial-state 'term-mode 'insert)
-
-  (razzi/declare-extension-mode "js" 'js2-mode)
 
   (general-define-key :states 'insert
    "<escape>" 'razzi/exit-insert
@@ -644,14 +650,19 @@ before packages are loaded."
    "E" 'forward-symbol
    "G" 'razzi/almost-end-of-buffer
    "K" 'evil-previous-line ; typo this one all the time
+   "M-a" 'mark-whole-buffer
    "M--" 'spacemacs/scale-down-font
    "M-0" 'spacemacs/reset-font-size
    "M-/" 'evilnc-comment-or-uncomment-lines
+   "M-l" 'evil-visual-line
    "M-=" 'spacemacs/scale-up-font
    "M-RET" 'razzi/recompile
    "M-`" 'other-window
    "M-d" 'evil-mc-make-and-goto-next-match
    "M-r" 'sp-raise-sexp
+   "M-n" 'razzi/match-and-next
+   "M-[" 'flycheck-previous-error
+   "M-]" 'flycheck-next-error
    "M-s" 'save-buffer
    "M-w" 'kill-this-buffer
    "N" 'razzi/previous-and-center
@@ -665,6 +676,8 @@ before packages are loaded."
    ; todo visual c buggy now, and committing broken
    "c" (general-key-dispatch 'evil-change
          "ru" 'string-inflection-camelcase
+         "rc" 'string-inflection-lower-camelcase
+         "rd" 'string-inflection-kebab-case
          "c" 'magit-commit) ; todo should be in vc layer
    "g/" 'spacemacs/helm-project-smart-do-search-region-or-symbol
    "g[" 'helm-etags-select
@@ -689,6 +702,7 @@ before packages are loaded."
     "c" 'evil-change
     "ae" 'mark-whole-buffer
     "il" 'razzi/mark-line-text
+    "M-l" 'evil-next-line
     "M-d" 'mc/mark-next-symbol-like-this)
 
   (evil-define-text-object whole-buffer (count &optional beginning end type)
@@ -732,15 +746,9 @@ before packages are loaded."
 ; when yyp copy 2 lines, keep cursor on same character
 ; merge n and N from vim search with * and #
 ; ui for perspectives, like tmux
-; fixup commit onto last commit that edited that line
+; ! fixup commit onto last commit that edited that line
 ; c-t in helm
 ; switch to hydra
-
-; todo multiple cursor change
-; maybe I should switch to iedit
-; asdf asdf
-;; (setq evil-mc-custom-known-commands
-;;       '((general-dispatch-evil-change . ((:default . evil-mc-execute-default-evil-change)))))
 ; evilmc visual E and $ not working
 ; q from split doesn't close the split until redraw?
 ;don't show . and .. in helm
@@ -751,6 +759,5 @@ before packages are loaded."
 ; don't throw the comments all the way to the right
 ; a function text object python
 ; o put comma when adding to python collection
-;https://github.com/andrewgodwin/channels-examples/tree/master/multichat
 ; rename file doesn't work if moving in to directory
 ; https://www.reddit.com/r/emacs/comments/3sd3ue/ask_remacs_sending_text_to_an_ansiterm_buffer/

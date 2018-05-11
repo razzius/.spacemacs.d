@@ -20,7 +20,9 @@
   (magit-run-git "pull"))
 
 (general-define-key :keymaps 'magit-status-mode-map
-                    "c" (general-key-dispatch 'evil-change "c" 'razzi/magit-commit))
+                    "c" (general-key-dispatch 'evil-change
+                          "c" 'razzi/magit-commit
+                          "e" 'magit-commit-extend))
 
 (magit-define-popup-action 'magit-push-popup ?p "Push current :D" 'razzi/magit-push)
 

@@ -3,4 +3,4 @@
 (defun razzi-restclient/init-restclient ()
   (use-package restclient
     :config
-    (razzi/declare-extension-mode "rest" 'restclient-mode)))
+    (razzi/associate-extension-mode "rest" 'restclient-mode)))
