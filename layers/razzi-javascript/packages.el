@@ -15,4 +15,5 @@
                     js2-highlight-level 3
                     js2-bounce-indent-p t
                     js2-mode-show-strict-warnings nil)))
+  (add-hook 'rjsx-mode-hook 'flycheck-mode)
   (razzi/associate-extension-mode "js" 'rjsx-mode))

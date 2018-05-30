@@ -47,7 +47,7 @@
 
      ;; org
      (syntax-checking :variables syntax-checking-enable-tooltips nil))
-   dotspacemacs-excluded-packages '(anaconda-mode evil-escape eldoc archive-mode)
+   dotspacemacs-excluded-packages '(anaconda-mode company-anaconda evil-escape eldoc archive-mode)
    dotspacemacs-additional-packages '(super-save
                                       buffer-move
                                       monroe
@@ -100,12 +100,13 @@
    ;; (default nil)
    dotspacemacs-helm-no-header t
    dotspacemacs-enable-paste-micro-state t
+   dotspacemacs-mode-line-theme 'spacemacs
    dotspacemacs-fullscreen-at-startup nil
    dotspacemacs-maximized-at-startup nil
    dotspacemacs-smooth-scrolling t
    dotspacemacs-line-numbers t
    dotspacemacs-smartparens-strict-mode t
-   dotspacemacs-search-tools '("ag" "pt" "ack" "grep")
+   dotspacemacs-search-tools '("rg" "ag" "pt" "ack" "grep")
    ;; Delete whitespace while saving buffer. Possible values are `all'
    ;; to aggressively delete empty line and long sequences of whitespace,
    ;; `trailing' to delete only the whitespace at end of lines, `changed'to
@@ -195,6 +196,10 @@ before packages are loaded."
     (indent-for-tab-command)
     (insert (s-trim (current-kill 0)))
     (forward-line)))
+
+(defun razzi/close-all-file-buffers ()
+  (interactive)
+  (mapc 'kill-buffer (buffer-list)))
 
 (defun razzi/put-after ()
   (interactive)
@@ -510,6 +515,12 @@ before packages are loaded."
       (kill-new filename)
       (message "Copied buffer file name '%s' to the clipboard." filename))))
 
+(defun razzi/yas-expand()
+  (interactive)
+  (yas-expand)
+  (if (eq (following-char) ?\s)
+      (delete-char 1)))
+
 ; todo clojure style (defmacro let)
 ;; (let [filename 1] (message filename))
 
@@ -566,7 +577,6 @@ before packages are loaded."
 
   (spaceline-toggle-buffer-encoding-abbrev-off)
   (spaceline-toggle-buffer-size-off)
-  (spaceline-toggle-major-mode-off)
   (spaceline-toggle-minor-modes-off)
 
   (set-face-foreground 'font-lock-comment-face "dark grey")
@@ -613,6 +623,7 @@ before packages are loaded."
     "i b" 'blacken-buffer
     "o" 'razzi/put-after
     "C-SPC" 'spacemacs//workspaces-eyebrowse-next-window-config-n
+    "q" 'razzi/close-all-file-buffers
     "v" 'razzi/search-paste
     "=" 'razzi/python-format)
 
@@ -628,7 +639,7 @@ before packages are loaded."
    "C-h" 'sp-backward-delete-char
    "C-l" 'sp-slurp-hybrid-sexp
    "C-t" 'razzi/transpose-previous-chars
-   "<tab>" 'yas-expand
+   "<tab>" 'razzi/yas-expand
    "M-RET" 'razzi/recompile
    "s-<backspace>" 'evil-delete-backward-word
    "M-l" 'sp-forward-sexp
@@ -646,11 +657,13 @@ before packages are loaded."
    "C-l" 'evil-window-right
    "C-p" 'evil-paste-after
    "C-x" 'evil-numbers/dec-at-pt
+   "C-;" 'evil-ex-nohighlight
    "D" 'razzi/kill-line-and-whitespace
    "E" 'forward-symbol
    "G" 'razzi/almost-end-of-buffer
    "K" 'evil-previous-line ; typo this one all the time
    "M-a" 'mark-whole-buffer
+   "M-c" 'evil-yank-line
    "M--" 'spacemacs/scale-down-font
    "M-0" 'spacemacs/reset-font-size
    "M-/" 'evilnc-comment-or-uncomment-lines
@@ -665,17 +678,20 @@ before packages are loaded."
    "M-]" 'flycheck-next-error
    "M-s" 'save-buffer
    "M-w" 'kill-this-buffer
-   "N" 'razzi/previous-and-center
+   "N" 'evil-search-previous
    "Q" 'razzi/replay-q-macro
+   "/" 'evil-search-forward
    "[ SPC" 'razzi/insert-newline-before
    "[ c" 'git-gutter:previous-hunk
    "] SPC" 'razzi/insert-newline-after
    "] c" 'git-gutter:next-hunk
    "^" 'evil-digit-argument-or-evil-beginning-of-line
    "_" 'razzi/transpose-previous-line
-   ; todo visual c buggy now, and committing broken
+   ; todo visual c buggy now
    "c" (general-key-dispatch 'evil-change
-         "ru" 'string-inflection-camelcase
+         "ru" 'string-inflection-upcase
+         "rs" 'string-inflection-underscore
+         "rt" 'string-inflection-camelcase
          "rc" 'string-inflection-lower-camelcase
          "rd" 'string-inflection-kebab-case
          "c" 'magit-commit) ; todo should be in vc layer
@@ -683,7 +699,7 @@ before packages are loaded."
    "g[" 'helm-etags-select
    "g]" 'dumb-jump-go
    "gf" 'razzi/file-at-point
-   "n" 'razzi/next-and-center
+   "n" 'evil-search-next
    "s-d" 'evil-mc-make-and-goto-next-match
    "s-x" 'helm-M-x)
 
@@ -703,6 +719,7 @@ before packages are loaded."
     "ae" 'mark-whole-buffer
     "il" 'razzi/mark-line-text
     "M-l" 'evil-next-line
+    "M-c" 'evil-yank
     "M-d" 'mc/mark-next-symbol-like-this)
 
   (evil-define-text-object whole-buffer (count &optional beginning end type)
@@ -760,4 +777,7 @@ before packages are loaded."
 ; a function text object python
 ; o put comma when adding to python collection
 ; rename file doesn't work if moving in to directory
+; rset
+; rlet
+; definteractive
 ; https://www.reddit.com/r/emacs/comments/3sd3ue/ask_remacs_sending_text_to_an_ansiterm_buffer/
