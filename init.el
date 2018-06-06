@@ -341,18 +341,22 @@ before packages are loaded."
 
 (defun razzi/run-script-on-file (command)
   (save-buffer)
-  (shell-command command)
+  (shell-command (concat command " " (buffer-file-name)))
   (no-confirm 'revert-buffer t t))
 
-; move to python
-; fails silently
+; TODO move to python
+; TODO fails silently
 (defun razzi/isort ()
   (interactive)
-  (razzi/run-script-on-file (format "isort %s" (buffer-file-name))))
+  (razzi/run-script-on-file "isort"))
 
 (defun razzi/importmagic ()
   (interactive)
-  (razzi/run-script-on-file (format "importmagic %s" (buffer-file-name))))
+  (razzi/run-script-on-file "importmagic"))
+
+(defun razzi/gray ()
+  (interactive)
+  (razzi/run-script-on-file "gray"))
 
 (defun razzi/split-after-comma ()
   (interactive)
@@ -521,6 +525,21 @@ before packages are loaded."
   (if (eq (following-char) ?\s)
       (delete-char 1)))
 
+(defun razzi/surround-paragraph()
+  (interactive)
+  ; blerg
+  (evil-execute-macro 1 "ysil<p"))
+  ;; (evil-visual-char)
+  ;; (evil-end-of-line)
+  ;; (evil-surround-region (region-beginning) (1+ (region-end)) 'line ?<)
+  ;; ;; (self-insert-command "p")
+  ;; (exit-minibuffer))
+
+(defun razzi/surround-div()
+  (interactive)
+  ; blerg
+  (evil-execute-macro 1 "ysil<div"))
+
 ; todo clojure style (defmacro let)
 ;; (let [filename 1] (message filename))
 
@@ -620,10 +639,12 @@ before packages are loaded."
     "i m" 'razzi/importmagic
     "i e" 'iedit-mode
     "i s" 'razzi/isort
+    "i g" 'razzi/gray
     "i b" 'blacken-buffer
     "o" 'razzi/put-after
     "C-SPC" 'spacemacs//workspaces-eyebrowse-next-window-config-n
-    "q" 'razzi/close-all-file-buffers
+    "q b" 'razzi/close-all-file-buffers
+    "q r" 'razzi/restart-emacs
     "v" 'razzi/search-paste
     "=" 'razzi/python-format)
 
@@ -677,6 +698,7 @@ before packages are loaded."
    "M-[" 'flycheck-previous-error
    "M-]" 'flycheck-next-error
    "M-s" 'save-buffer
+   "M-f" 'evil-ex-search-forward
    "M-w" 'kill-this-buffer
    "N" 'evil-search-previous
    "Q" 'razzi/replay-q-macro
@@ -695,6 +717,8 @@ before packages are loaded."
          "rc" 'string-inflection-lower-camelcase
          "rd" 'string-inflection-kebab-case
          "c" 'magit-commit) ; todo should be in vc layer
+   "M-, p" 'razzi/surround-paragraph
+   "M-, v" 'razzi/surround-div
    "g/" 'spacemacs/helm-project-smart-do-search-region-or-symbol
    "g[" 'helm-etags-select
    "g]" 'dumb-jump-go
