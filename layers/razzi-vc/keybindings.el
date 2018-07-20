@@ -19,10 +19,15 @@
   (interactive)
   (magit-run-git "pull"))
 
+(defun razzi/magit-reset-last ()
+  (interactive)
+  (magit-run-git "reset" "@^"))
+
 (general-define-key :keymaps 'magit-status-mode-map
                     "c" (general-key-dispatch 'evil-change
                           "c" 'razzi/magit-commit
-                          "e" 'magit-commit-extend))
+                          "e" 'magit-commit-extend)
+                    "@" 'razzi/magit-reset-last)
 
 (magit-define-popup-action 'magit-push-popup ?p "Push current :D" 'razzi/magit-push)
 
