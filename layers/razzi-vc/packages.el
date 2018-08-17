@@ -8,7 +8,7 @@
     (add-hook 'git-commit-mode-hook 'evil-insert-state)
 
     (setq
-      same-window-regexps (append same-window-regexps '(".*magit: .*" "\*magit-diff: .*\*"))
+      magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1
       magit-push-current-set-remote-if-missing nil
       magit-commit-show-diff nil
       magit-status-sections-hook
@@ -41,4 +41,3 @@
     (global-git-gutter-mode 1)
 
     (add-to-list 'git-gutter:update-hooks 'focus-in-hook)))
-

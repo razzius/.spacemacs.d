@@ -15,6 +15,10 @@
   (interactive)
   (magit-run-git "push"))
 
+(defun razzi/magit-push-heroku ()
+  (interactive)
+  (magit-run-git "push" "heroku" "master"))
+
 (defun razzi/magit-pull ()
   (interactive)
   (magit-run-git "pull"))
@@ -30,6 +34,7 @@
                     "@" 'razzi/magit-reset-last)
 
 (magit-define-popup-action 'magit-push-popup ?p "Push current :D" 'razzi/magit-push)
+(magit-define-popup-action 'magit-push-popup ?h "Push to heroku :O" 'razzi/magit-push-heroku)
 
 (define-key evil-normal-state-map (kbd "gs") 'razzi/save-and-status)
 (define-key evil-normal-state-map (kbd "gp") 'razzi/magit-push)

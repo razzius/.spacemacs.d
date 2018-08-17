@@ -16,7 +16,7 @@
 
 ;; Variables
 
-(spacemacs|defvar-company-backends eshell-mode)
+; (spacemacs|defvar-company-backends eshell-mode)
 
 (defvar razzishell-default-shell (if (eq window-system 'w32)
                                 'eshell

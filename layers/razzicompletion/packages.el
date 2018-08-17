@@ -3,18 +3,10 @@
     company-flx
     hippie-exp))
 
-(defun tab-complete ()
-  "Either cycle completion or expand snippet"
-  (interactive)
-  (if (null (yas-expand))
-      (company-simple-complete-next)))
-
-
 (defun razzicompletion/init-company-flx ()
   (use-package company-flx
     :init
     (company-flx-mode)))
-
 
 (defun razzicompletion/post-init-yasnippet ()
   (use-package yasnippet

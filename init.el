@@ -3,11 +3,12 @@
    dotspacemacs-distribution 'spacemacs
    dotspacemacs-configuration-layer-path '("~/.spacemacs.d/layers/")
    dotspacemacs-configuration-layers
-   '(
+   '(csv
      auto-completion
      clojure
      ;; csv
      emacs-lisp
+     lsp
      ;; fsharp
      git
      ;; go
@@ -17,7 +18,9 @@
      ;; lua
      markdown
      osx
-     python
+     (python :variables python-backend 'lsp)
+     ;; TODO get rid of lsp :()
+     ;; razzipython
      ;; ruby
      ;; rust
      shell-scripts
@@ -26,7 +29,10 @@
      typescript
      yaml
 
-     razzishell
+     shell
+     razzi-shell
+     ;; razzishell
+
      razzi-clojure
      razzi-dired
      razzi-helm
@@ -44,11 +50,15 @@
      razzicompletion
 
      term
+     ;; ivy someday
 
      ;; org
      (syntax-checking :variables syntax-checking-enable-tooltips nil))
-   dotspacemacs-excluded-packages '(anaconda-mode company-anaconda evil-escape eldoc archive-mode)
+   dotspacemacs-excluded-packages '(anaconda-mode company-anaconda evil-escape eldoc archive-mode lsp-ui auto-highlight-symbol)
    dotspacemacs-additional-packages '(super-save
+                                      cherry-blossom-theme
+                                      load-theme-buffer-local
+                                      pytest
                                       buffer-move
                                       monroe
                                       evil-terminal-cursor-changer
@@ -60,12 +70,13 @@
                                       virtualenvwrapper
                                       apib-mode
                                       general)
-   dotspacemacs-delete-orphan-packages t))
+   dotspacemacs-delete-orphan-packages nil))
 
 (defun dotspacemacs/init ()
   (setq-default
    dotspacemacs-editing-style 'vim
-   dotspacemacs-verbose-loading nil
+   dotspacemacs-enable-lazy-installation nil ; as long as I have a patched python layer
+   dotspacemacs-verbose-loading t
    dotspacemacs-startup-banner nil
    dotspacemacs-startup-lists '(recents projects)
    dotspacemacs-startup-recent-list-size 5
@@ -121,7 +132,9 @@ before packages are loaded."
   (setq custom-file "~/.emacs.d/custom.el"
         helm-mode-fuzzy-match t
         helm-ff-newfile-prompt-p nil
-        helm-M-x-fuzzy-match t)
+        helm-M-x-fuzzy-match t
+        ;; exec-path-from-shell-check-startup-files nil
+        )
   (load custom-file 'noerror))
 
 (defun razzi/insert-newline-after()
@@ -209,12 +222,19 @@ before packages are loaded."
     (insert (s-trim (current-kill 0)))
     (forward-line)))
 
+(defun razzi/get-current-paragraph ()
+  "hacky af"
+  (interactive)
+  (save-excursion
+    (evil-execute-macro 1 "vap")
+    (let ((text (buffer-substring-no-properties (region-beginning) (region-end))))
+      (evil-execute-macro 1 "vv")
+      text)))
+
 (defun razzi/copy-paragraph ()
   (interactive)
-  ;todo go to start of block
-  ; can use regex: ^\S?
   (move-beginning-of-line nil)
-  (let ((sentence (thing-at-point 'defun)))
+  (let ((sentence (razzi/get-current-paragraph)))
     (insert sentence)
     (insert "\n"))) ; TODO in python make this copy a method _or_ class!
 
@@ -303,6 +323,7 @@ before packages are loaded."
 
 (defun razzi/evil-mc-quit-and-quit ()
   (interactive)
+  (when (and (boundp 'iedit-mode) iedit-mode) (iedit-mode))
   (evil-mc-undo-all-cursors)
   (keyboard-quit))
 
@@ -354,6 +375,10 @@ before packages are loaded."
   (interactive)
   (razzi/run-script-on-file "importmagic"))
 
+(defun razzi/prettier ()
+  (interactive)
+  (razzi/run-script-on-file "prettier --write"))
+
 (defun razzi/gray ()
   (interactive)
   (razzi/run-script-on-file "gray"))
@@ -362,7 +387,11 @@ before packages are loaded."
   (interactive)
   (evil-find-char 1 ?,)
   (evil-forward-char)
-  (evil-replace (point) (+ (point) 1) nil ?\n))
+  (if (eq (following-char) ?\s)
+      (evil-replace (point) (+ (point) 1) nil ?\n)
+    (progn
+      (insert ?\n)
+      (indent-for-tab-command))))
 
 (defun razzi/create-scratch-buffer ()
    (interactive)
@@ -549,8 +578,23 @@ before packages are loaded."
   (setq tmux-fd "/dev/ttys001") ; todo hardcoded
   (shell-command (s-concat "sudo writevt " tmux-fd " \"" (buffer-substring start end) "\"")))
 
+(defun razzi/search-project-whole-word ()
+  (interactive)
+  ;todo
+  (evil-execute-macro 1 "g/")
+  (sleep-for 0 500)
+  (evil-execute-macro 1 "\b"))
+
+(defun razzi/swap-commented-out ()
+  (interactive)
+  (evilnc-comment-or-uncomment-lines 1)
+  (evil-next-line)
+  (evilnc-comment-or-uncomment-lines 1))
+
 (defun dotspacemacs/user-config ()
   (setq
+   shell-file-name "/bin/bash"
+   flycheck-python-flake8-executable "flake8"
    display-time-default-load-average nil
    tags-add-tables t
    cider-allow-jack-in-without-project t
@@ -602,10 +646,10 @@ before packages are loaded."
   (set-face-foreground 'font-lock-doc-face "teal")
   (set-face-background 'magit-diff-context-highlight "light cyan")
   (set-face-background 'magit-diff-hunk-heading-highlight "gray60")
-  (set-face-background 'hl-line "#f3f9ff")
+  ;; (set-face-background 'hl-line "#f3f9ff")
 
   (evil-leader/set-key
-    "'" 'razzi/double-quotes-to-single
+    ;; "'" 'razzi/double-quotes-to-single
     ")" 'razzi/put-paren ; this is janky but useful
     "," 'razzi/append-comma ; only makes sense for python-like
     "-" 'razzi/save-delete-close
@@ -637,6 +681,7 @@ before packages are loaded."
     "i c" 'razzi/copy-paragraph
     "i d" 'razzi/put-debugger
     "i m" 'razzi/importmagic
+    "i p" 'razzi/prettier
     "i e" 'iedit-mode
     "i s" 'razzi/isort
     "i g" 'razzi/gray
@@ -645,6 +690,7 @@ before packages are loaded."
     "C-SPC" 'spacemacs//workspaces-eyebrowse-next-window-config-n
     "q b" 'razzi/close-all-file-buffers
     "q r" 'razzi/restart-emacs
+    "t SPC" 'spacemacs/toggle-debug-on-error
     "v" 'razzi/search-paste
     "=" 'razzi/python-format)
 
@@ -661,7 +707,7 @@ before packages are loaded."
    "C-l" 'sp-slurp-hybrid-sexp
    "C-t" 'razzi/transpose-previous-chars
    "<tab>" 'razzi/yas-expand
-   "M-RET" 'razzi/recompile
+   "M-RET" 'lisp-state-eval-sexp-end-of-line
    "s-<backspace>" 'evil-delete-backward-word
    "M-l" 'sp-forward-sexp
    "M-s" 'razzi/exit-insert-and-save
@@ -672,6 +718,8 @@ before packages are loaded."
    "0" 'evil-first-non-blank
    "<backtab>" 'previous-buffer
    "C" 'razzi/change-line
+   "C-SPC j" 'evil-window-down
+   "C-SPC k" 'evil-window-up
    "C-a" 'evil-numbers/inc-at-pt
    "C-g" 'razzi/evil-mc-quit-and-quit
    "C-h" 'evil-window-left
@@ -688,9 +736,10 @@ before packages are loaded."
    "M--" 'spacemacs/scale-down-font
    "M-0" 'spacemacs/reset-font-size
    "M-/" 'evilnc-comment-or-uncomment-lines
+   "M-?" 'razzi/swap-commented-out
    "M-l" 'evil-visual-line
    "M-=" 'spacemacs/scale-up-font
-   "M-RET" 'razzi/recompile
+   "M-RET" 'lisp-state-eval-sexp-end-of-line
    "M-`" 'other-window
    "M-d" 'evil-mc-make-and-goto-next-match
    "M-r" 'sp-raise-sexp
@@ -717,18 +766,19 @@ before packages are loaded."
          "rc" 'string-inflection-lower-camelcase
          "rd" 'string-inflection-kebab-case
          "c" 'magit-commit) ; todo should be in vc layer
+   "<" (general-key-dispatch 'evil-shift-left
+         "p" 'razzi/surround-paragraph
+         "d" 'razzi/surround-div) ; todo should be in vc layer
    "M-, p" 'razzi/surround-paragraph
    "M-, v" 'razzi/surround-div
    "g/" 'spacemacs/helm-project-smart-do-search-region-or-symbol
+   "g." 'razzi/search-project-whole-word
    "g[" 'helm-etags-select
    "g]" 'dumb-jump-go
    "gf" 'razzi/file-at-point
    "n" 'evil-search-next
    "s-d" 'evil-mc-make-and-goto-next-match
    "s-x" 'helm-M-x)
-
-  ; special snowflake keybinding
-  (evil-define-key 'normal evil-mc-key-map (kbd "M-n") 'evil-mc-make-cursor-move-next-line)
 
   (general-define-key :states 'visual
     "!" 'sort-lines
@@ -756,10 +806,23 @@ before packages are loaded."
 
   (define-key minibuffer-local-map (kbd "C-j") 'exit-minibuffer)
 
-  (company-tng-configure-default)
+  ; :)))))))
+  (define-key helm-find-files-map (kbd "C-t") nil)
+  (define-key helm-map (kbd "C-t") nil)
+
+  ;; (company-tng-configure-default)
   (add-hook 'evil-insert-state-exit-hook 'expand-abbrev)
   (add-hook 'focus-out-hook 'garbage-collect)
   (add-hook 'term-mode-hook 'turn-off-evil-mode)
+
+  (defun razzi/dark-terminal ()
+    (setq buffer-face-mode-face '(:background "#000000"
+                                     :foreground "#FFFFFF"))
+    (buffer-face-mode)
+    (set-face-background 'hl-line nil)
+    (hl-line-mode nil))
+
+  ;; (add-hook 'term-mode-hook 'razzi/dark-terminal)
 
   (defun razzi/make-parent-directories (filename)
     "Create parent directory if not exists while visiting file."
@@ -778,6 +841,14 @@ before packages are loaded."
           nil)              ; Returning nil cancels the replace
       char))
 
+  (add-hook 'term-mode-hook (lambda nil
+                              (global-hl-line-mode -1)
+                              ;; (set-face-foreground 'term "white")
+                              ;; (set-face-background 'term "black")
+                              (load-theme-buffer-local 'cherry-blossom (current-buffer))))
+
+  ;; (remove-hook 'term-mode-hook (first term-mode-hook))
+
   (advice-add 'evil-read-key :filter-return 'razzi/replace-control-g-with-nil)
 
   (advice-add 'spacemacs/check-large-file :around 'no-confirm))
@@ -788,20 +859,20 @@ before packages are loaded."
 ; merge n and N from vim search with * and #
 ; ui for perspectives, like tmux
 ; ! fixup commit onto last commit that edited that line
-; c-t in helm
 ; switch to hydra
 ; evilmc visual E and $ not working
 ; q from split doesn't close the split until redraw?
 ;don't show . and .. in helm
 ; slurp markdown
-; don't restart django if im in debugger
 ; eval current finds outer form in comment
-; spc ' throw quotes on the word
+; ' throw quotes on the word
 ; don't throw the comments all the way to the right
 ; a function text object python
 ; o put comma when adding to python collection
 ; rename file doesn't work if moving in to directory
-; rset
-; rlet
 ; definteractive
 ; https://www.reddit.com/r/emacs/comments/3sd3ue/ask_remacs_sending_text_to_an_ansiterm_buffer/
+; tab shouldn't expand abbrevs when it's not on its own
+
+;; (set-face-background 'lsp-face-highlight-read nil)
+;; (set-face-background 'lsp-face-highlight-write nil)

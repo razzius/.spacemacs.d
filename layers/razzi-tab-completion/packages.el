@@ -1,4 +1,4 @@
-(defconst razzi-tab-completion-packages '(company))
+(defconst razzi-tab-completion-packages '(company yasnippet))
 
 (defun tab-complete ()
   "Either cycle completion or expand snippet"
@@ -6,7 +6,13 @@
   (if (null (yas-expand))
       (company-select-next)))
 
-(defun razzi-tab-completion/post-init-company ()
+(defun razzi-tab-completion/init-yasnippet ()
+  (use-package yasnippet
+    :init
+    (setq yas-snippet-dirs '("~/.spacemacs.d/snippets"))
+    (yas-global-mode)))
+
+(defun razzi-tab-completion/init-company ()
   (use-package company
     :init
     (setq company-idle-delay .12

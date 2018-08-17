@@ -11,6 +11,9 @@
 ; yes!!
 (setq cider-repl-pop-to-buffer-on-connect t)
 
+;(evil-define-key 'normal clojure-mode-map (kbd "M-j") 'razzi/open-sexp)
+;(evil-define-key 'normal clojure-mode-map (kbd "RET") 'razzi/open-sexp-eol)
+
 (defun cider-figwheel-repl ()
   (interactive)
   (save-some-buffers)

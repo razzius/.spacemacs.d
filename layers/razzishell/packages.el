@@ -146,7 +146,11 @@
 
   ;; (evil-define-key 'insert term-raw-map (kbd "C-SPC") 'multi-term)
   (evil-define-key 'insert term-raw-map (kbd "<tab>") 'term-send-tab)
+  (evil-define-key 'insert term-raw-map (kbd "M-DEL") (lambda () (interactive) (term-send-raw-string "\C-u")))
+  ;; (evil-define-key 'insert term-raw-map (kbd "M-DEL") 'term-send-raw)
   (evil-define-key 'insert term-raw-map (kbd "C-SPC \"") 'razzi/multi-term-below)
+  (evil-define-key 'insert term-raw-map (kbd "C-SPC p") 'eyebrowse-prev-window-config)
+  (evil-define-key 'insert term-raw-map (kbd "C-SPC n") 'eyebrowse-next-window-config)
 
   (evil-define-key 'insert term-raw-map
     (kbd "C-k") 'term-send-up
