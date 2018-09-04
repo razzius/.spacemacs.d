@@ -564,6 +564,10 @@ before packages are loaded."
   ;; ;; (self-insert-command "p")
   ;; (exit-minibuffer))
 
+(defun razzi/surround-h2()
+  (interactive) ; blerg
+  (evil-execute-macro 1 "ysil<h2"))
+
 (defun razzi/surround-div()
   (interactive)
   ; blerg
@@ -590,6 +594,64 @@ before packages are loaded."
   (evilnc-comment-or-uncomment-lines 1)
   (evil-next-line)
   (evilnc-comment-or-uncomment-lines 1))
+
+(defun razzi/star-isearch ()
+  (interactive)
+  (while (not (looking-at "[A-z]"))
+    (forward-char))
+
+  (let ((inhibit-redisplay 1)
+        (selection (evil-visual-state-p))
+        (visual-type (evil-visual-type))
+        (text (if (use-region-p)
+                  (buffer-substring-no-properties (region-beginning) (region-end))
+                (thing-at-point 'symbol))))
+                                        ; Go to the start of the word if not in visual and not already at the start
+    (when (and (not selection)
+               (not (looking-at "\\_<")))
+      (backward-sexp))
+    (evil-exit-visual-state)
+    (isearch-mode t)
+    (isearch-yank-string text)
+    (isearch-done)
+    (evil-search-next)
+    (when (and
+           selection
+           (not (eq visual-type 'line)))
+      (evil-search-previous))))
+
+(defun razzi/pound-isearch ()
+  (interactive)
+  (while (not (looking-at "[A-z]"))
+    (backward-char))
+  (let ((inhibit-redisplay 1)
+        (selection (evil-visual-state-p))
+        (visual-type (evil-visual-type))
+        (text (if (use-region-p)
+                  (buffer-substring-no-properties (region-beginning) (region-end))
+                (thing-at-point 'symbol))))
+    (when (and (not selection)
+               (not (looking-at "\\_<")))
+      (progn
+        (backward-sexp)
+        (if (eq ?' (char-before (point)))
+            (forward-char))))
+    (save-excursion
+      (isearch-mode nil)
+      (message text)
+      (isearch-yank-string text)
+      (isearch-done))
+    (evil-search-next)
+    (when (and
+           selection
+           (not (eq visual-type 'line)))
+      (evil-search-previous))))
+
+(defun razzi/delete-delimiters ()
+  (interactive)
+  (if (-contains? '(?\{ ?\} ?\( ?\)) (following-char))
+      (evil-execute-macro 1 "%mx%dl`xdl")
+    (evil-delete-char (point) (+ (point) 1))))
 
 (defun dotspacemacs/user-config ()
   (setq
@@ -758,6 +820,8 @@ before packages are loaded."
    "] c" 'git-gutter:next-hunk
    "^" 'evil-digit-argument-or-evil-beginning-of-line
    "_" 'razzi/transpose-previous-line
+   "*" 'razzi/star-isearch
+   "#" 'razzi/pound-isearch
    ; todo visual c buggy now
    "c" (general-key-dispatch 'evil-change
          "ru" 'string-inflection-upcase
@@ -768,6 +832,7 @@ before packages are loaded."
          "c" 'magit-commit) ; todo should be in vc layer
    "<" (general-key-dispatch 'evil-shift-left
          "p" 'razzi/surround-paragraph
+         "2" 'razzi/surround-h2
          "d" 'razzi/surround-div) ; todo should be in vc layer
    "M-, p" 'razzi/surround-paragraph
    "M-, v" 'razzi/surround-div
@@ -777,6 +842,7 @@ before packages are loaded."
    "g]" 'dumb-jump-go
    "gf" 'razzi/file-at-point
    "n" 'evil-search-next
+   "x" 'razzi/delete-delimiters
    "s-d" 'evil-mc-make-and-goto-next-match
    "s-x" 'helm-M-x)
 
@@ -856,7 +922,6 @@ before packages are loaded."
 ; complain function which will put the string as a comment in a relevant config per mode
 ; todo use parinfer
 ; when yyp copy 2 lines, keep cursor on same character
-; merge n and N from vim search with * and #
 ; ui for perspectives, like tmux
 ; ! fixup commit onto last commit that edited that line
 ; switch to hydra
@@ -876,3 +941,7 @@ before packages are loaded."
 
 ;; (set-face-background 'lsp-face-highlight-read nil)
 ;; (set-face-background 'lsp-face-highlight-write nil)
+;; even if saved, M-s re-run linter...
+;; clipboard link
+;; cr<space> split into words
+;; j shouldn't go to far left margin in lisp
