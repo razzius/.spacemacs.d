@@ -18,7 +18,7 @@
      ;; lua
      markdown
      osx
-     (python :variables python-backend 'lsp)
+     (python :variables python-backend nil)
      ;; TODO get rid of lsp :()
      ;; razzipython
      ;; ruby
@@ -536,6 +536,7 @@ before packages are loaded."
 (defun razzi/match-and-next ()
   (interactive)
   (evil-multiedit-match-symbol-and-next)
+
   (evil-multiedit-match-symbol-and-next))
 
 (defun copy-file-name-to-clipboard ()
@@ -655,6 +656,7 @@ before packages are loaded."
 
 (defun dotspacemacs/user-config ()
   (setq
+   evil-search-module 'evil-search
    shell-file-name "/bin/bash"
    flycheck-python-flake8-executable "flake8"
    display-time-default-load-average nil
@@ -667,6 +669,7 @@ before packages are loaded."
    evil-ex-substitute-global t
    evil-insert-state-cursor 'bar
    evil-regexp-search nil
+   ;; evil-regexp-search t
    evilmi-always-simple-jump t
    ns-pop-up-frames nil
    hl-todo-keyword-faces nil
@@ -675,6 +678,7 @@ before packages are loaded."
    js2-strict-missing-semi-warning nil
    python-indent-guess-indent-offset nil
 
+   search-upper-case t
    abbrev-file-name "~/.spacemacs.d/abbrev_defs.el"
    frame-title-format "%f"
 
@@ -802,6 +806,7 @@ before packages are loaded."
    "M-l" 'evil-visual-line
    "M-=" 'spacemacs/scale-up-font
    "M-RET" 'lisp-state-eval-sexp-end-of-line
+   "M-'" 'spacemacs/eval-current-form-sp
    "M-`" 'other-window
    "M-d" 'evil-mc-make-and-goto-next-match
    "M-r" 'sp-raise-sexp
@@ -937,7 +942,7 @@ before packages are loaded."
 ; rename file doesn't work if moving in to directory
 ; definteractive
 ; https://www.reddit.com/r/emacs/comments/3sd3ue/ask_remacs_sending_text_to_an_ansiterm_buffer/
-; tab shouldn't expand abbrevs when it's not on its own
+; !! tab shouldn't expand abbrevs when it's not on its own
 
 ;; (set-face-background 'lsp-face-highlight-read nil)
 ;; (set-face-background 'lsp-face-highlight-write nil)
@@ -945,3 +950,5 @@ before packages are loaded."
 ;; clipboard link
 ;; cr<space> split into words
 ;; j shouldn't go to far left margin in lisp
+; tab completion shouldn't work with c-n c-p
+; way to search for whole word on * and even symbols only not constant strings for example

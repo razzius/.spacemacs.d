@@ -77,42 +77,38 @@
 
 (define-abbrev-table 'emacs-lisp-mode-abbrev-table '())
 
+(define-abbrev-table 'epa-info-mode-abbrev-table '())
+
+(define-abbrev-table 'epa-key-list-mode-abbrev-table '())
+
+(define-abbrev-table 'epa-key-mode-abbrev-table '())
+
 (define-abbrev-table 'evil-command-window-mode-abbrev-table '())
 
 (define-abbrev-table 'evil-list-view-mode-abbrev-table '())
 
-(define-abbrev-table 'fish-mode-abbrev-table '())
-
 (define-abbrev-table 'flycheck-error-list-mode-abbrev-table '())
 
 (define-abbrev-table 'fundamental-mode-abbrev-table '())
-
-(define-abbrev-table 'gfm-mode-abbrev-table '())
-
-(define-abbrev-table 'gfm-view-mode-abbrev-table '())
 
 (define-abbrev-table 'git-rebase-mode-abbrev-table '())
 
 (define-abbrev-table 'global-abbrev-table
   '(
     ("answred" "answered" nil 1)
-    ("aslo" "also" nil 1)
     ("chekc" "check" nil 1)
     ("cointaner" "container" nil 1)
-    ("compoent" "component" nil 1)
     ("coutn" "count" nil 1)
     ("dodument" "document" nil 1)
-    ("ednif" "endif" nil 1)
+    ("edtior" "editor" nil 1)
     ("fales" "false" nil 1)
     ("hakcy" "hacky" nil 1)
     ("ins" "isn" nil 1)
+    ("javascritp" "javascript" nil 1)
     ("moutn" "mount" nil 1)
-    ("otpions" "options" nil 1)
-    ("pst" "post" nil 1)
+    ("pyton" "python" nil 1)
     ("satte" "state" nil 2)
     ("stae" "state" nil 2)
-    ("tyep" "type" nil 1)
-    ("widht" "width" nil 1)
    ))
 
 (define-abbrev-table 'gnus-group-mode-abbrev-table '())
@@ -140,6 +136,8 @@
 (define-abbrev-table 'image-dired-display-image-mode-abbrev-table '())
 
 (define-abbrev-table 'image-dired-thumbnail-mode-abbrev-table '())
+
+(define-abbrev-table 'imenu-list-major-mode-abbrev-table '())
 
 (define-abbrev-table 'inf-clojure-mode-abbrev-table '())
 
@@ -191,10 +189,6 @@
 
 (define-abbrev-table 'magit-status-mode-abbrev-table '())
 
-(define-abbrev-table 'markdown-mode-abbrev-table '())
-
-(define-abbrev-table 'markdown-view-mode-abbrev-table '())
-
 (define-abbrev-table 'message-mode-abbrev-table '())
 
 (define-abbrev-table 'messages-buffer-mode-abbrev-table '())
@@ -214,6 +208,8 @@
 (define-abbrev-table 'org-mode-abbrev-table '())
 
 (define-abbrev-table 'outline-mode-abbrev-table '())
+
+(define-abbrev-table 'overseer-buffer-mode-abbrev-table '())
 
 (define-abbrev-table 'package-menu-mode-abbrev-table '())
 
@@ -236,6 +232,8 @@
 (define-abbrev-table 'reb-mode-abbrev-table '())
 
 (define-abbrev-table 'restclient-mode-abbrev-table '())
+
+(define-abbrev-table 'rjsx-mode-abbrev-table '())
 
 (define-abbrev-table 'ruby-mode-abbrev-table '())
 
@@ -267,11 +265,7 @@
 
 (define-abbrev-table 'text-mode-abbrev-table '())
 
-(define-abbrev-table 'tide-project-errors-mode-abbrev-table '())
-
-(define-abbrev-table 'tide-references-mode-abbrev-table '())
-
-(define-abbrev-table 'typescript-mode-abbrev-table '())
+(define-abbrev-table 'typescript-tsx-mode-abbrev-table '())
 
 (define-abbrev-table 'url-cookie-mode-abbrev-table '())
 
@@ -282,8 +276,6 @@
 (define-abbrev-table 'vc-git-log-view-mode-abbrev-table '())
 
 (define-abbrev-table 'vc-git-region-history-mode-abbrev-table '())
-
-(define-abbrev-table 'web-mode-abbrev-table '())
 
 (define-abbrev-table 'xref--xref-buffer-mode-abbrev-table '())
 
