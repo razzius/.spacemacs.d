@@ -21,7 +21,7 @@
     helm-cscope
     helm-gtags
     (helm-pydoc :requires helm)
-    importmagic
+    ;; importmagic
     live-py-mode
     (nose :location local)
     org
@@ -135,14 +135,14 @@
 
 
 
-(defun razzipython/init-importmagic ()
-  (use-package importmagic
-    :defer t
-    :init
-    (progn
-      (add-hook 'python-mode-hook 'importmagic-mode)
-      (spacemacs/set-leader-keys-for-major-mode 'python-mode
-        "rf" 'importmagic-fix-symbol-at-point))))
+;; (defun razzipython/init-importmagic ()
+;;   (use-package importmagic
+;;     :defer t
+;;     :init
+;;     (progn
+;;       (add-hook 'python-mode-hook 'importmagic-mode)
+;;       (spacemacs/set-leader-keys-for-major-mode 'python-mode
+;;         "rf" 'importmagic-fix-symbol-at-point))))
 
 (defun razzipython/init-live-py-mode ()
   (use-package live-py-mode

@@ -87,7 +87,7 @@
                          solarized-light
                          spacemacs-dark
                          zenburn)
-   dotspacemacs-default-font '("Bitstream Vera Sans Mono"
+   dotspacemacs-default-font '("Source Code Pro"
                                :size 17.9
                                :weight normal
                                :width normal
@@ -297,11 +297,10 @@ before packages are loaded."
   (set-mark-command nil)
   (back-to-indentation))
 
-(defun razzi/almost-end-of-line ()
-  (interactive)
-  (move-end-of-line 1)
-  (backward-char)
-  (forward-char))
+;; (defun razzi/almost-end-of-line (start end)
+;;   (interactive "r")
+;;   (evil-end-of-line 1)
+;;   (evil-execute-macro 1 "$h"))
 
 (defun razzi/almost-end-of-buffer (arg)
   (interactive "P")
@@ -324,7 +323,7 @@ before packages are loaded."
 (defun razzi/evil-mc-quit-and-quit ()
   (interactive)
   (when (and (boundp 'iedit-mode) iedit-mode) (iedit-mode))
-  (evil-mc-undo-all-cursors)
+  ;; (evil-mc-undo-all-cursors)
   (keyboard-quit))
 
 (defun razzi/copy-test-file-path ()
@@ -700,7 +699,7 @@ before packages are loaded."
   (super-save-mode)
 
   (global-auto-revert-mode 1)
-  (global-evil-mc-mode 1)
+  ;; (global-evil-mc-mode 1)
   (global-subword-mode)
   (menu-bar-mode -1)
 
@@ -758,6 +757,7 @@ before packages are loaded."
     "q r" 'razzi/restart-emacs
     "t SPC" 'spacemacs/toggle-debug-on-error
     "v" 'razzi/search-paste
+    "w o" 'other-window
     "=" 'razzi/python-format)
 
   (mapc 'evil-declare-not-repeat '(razzi/next-and-center razzi/previous-and-center))
@@ -847,13 +847,24 @@ before packages are loaded."
    "g]" 'dumb-jump-go
    "gf" 'razzi/file-at-point
    "n" 'evil-search-next
-   "x" 'razzi/delete-delimiters
+   ;; "x" 'razzi/delete-delimiters
    "s-d" 'evil-mc-make-and-goto-next-match
    "s-x" 'helm-M-x)
 
+  ;; (general-define-key :states 'visual "$" nil)
+
+  (evil-define-motion evil-last-non-blank (count)
+    "Move the cursor to the last non-blank character
+on the current line. If COUNT is given, move COUNT - 1
+lines downward first."
+    :type inclusive
+    (evil-end-of-line count)
+    (re-search-backward "^\\|[^[:space:]]")
+    (setq evil-this-type (if (eolp) 'exclusive 'inclusive)))
+
   (general-define-key :states 'visual
     "!" 'sort-lines
-    "$" 'razzi/almost-end-of-line
+    "$" 'evil-last-non-blank
     "'" 'razzi/surround-with-single-quotes
     "`" 'razzi/surround-with-backticks
     ")" 'razzi/surround-with-parens

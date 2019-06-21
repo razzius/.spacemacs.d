@@ -29,15 +29,15 @@
         magit-insert-unpushed-to-upstream
         magit-insert-unpushed-to-pushremote))))
 
-(defun razzi-vc/init-git-gutter ()
-  (use-package git-gutter
-    :config
-    (spacemacs|diminish git-gutter-mode " ")
-    (setq
-      git-gutter:update-interval .4
-      git-gutter:hide-gutter t)
+;; (defun razzi-vc/init-git-gutter ()
+;;   (use-package git-gutter
+;;     :config
+;;     (spacemacs|diminish git-gutter-mode " ")
+;;     (setq
+;;       git-gutter:update-interval .4
+;;       git-gutter:hide-gutter t)
 
-    (git-gutter:linum-setup)
-    (global-git-gutter-mode 1)
+;;     (git-gutter:linum-setup)
+;;     (global-git-gutter-mode 1)
 
-    (add-to-list 'git-gutter:update-hooks 'focus-in-hook)))
+;;     (add-to-list 'git-gutter:update-hooks 'focus-in-hook)))
