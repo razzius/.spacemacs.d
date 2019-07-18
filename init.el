@@ -54,7 +54,7 @@
 
      ;; org
      (syntax-checking :variables syntax-checking-enable-tooltips nil))
-   dotspacemacs-excluded-packages '(anaconda-mode company-anaconda evil-escape eldoc archive-mode lsp-ui auto-highlight-symbol)
+   dotspacemacs-excluded-packages '(anaconda-mode company-anaconda evil-escape eldoc archive-mode lsp-ui auto-highlight-symbol editorconfig)
    dotspacemacs-additional-packages '(super-save
                                       cherry-blossom-theme
                                       load-theme-buffer-local
@@ -243,6 +243,10 @@ before packages are loaded."
   (evil-insert-newline-below)
   (indent-for-tab-command)
   (insert "import ipdb; ipdb.set_trace()"))
+
+(defun razzi/put-uuid ()
+  (interactive)
+  (insert (uuidgen-4)))
 
 (defun razzi/restart-emacs ()
   (interactive)
@@ -661,6 +665,7 @@ before packages are loaded."
    display-time-default-load-average nil
    tags-add-tables t
    cider-allow-jack-in-without-project t
+   exec-path (append exec-path '("node_modules/.bin"))
 
    recentf-exclude '("TAGS")
    create-lockfiles nil
@@ -747,6 +752,7 @@ before packages are loaded."
     "i d" 'razzi/put-debugger
     "i m" 'razzi/importmagic
     "i p" 'razzi/prettier
+    "i u" 'razzi/put-uuid
     "i e" 'iedit-mode
     "i s" 'razzi/isort
     "i g" 'razzi/gray
@@ -809,6 +815,7 @@ before packages are loaded."
    "M-'" 'spacemacs/eval-current-form-sp
    "M-`" 'other-window
    "M-d" 'evil-mc-make-and-goto-next-match
+   "M-p" 'helm-projectile-find-file
    "M-r" 'sp-raise-sexp
    "M-n" 'razzi/match-and-next
    "M-[" 'flycheck-previous-error
@@ -838,13 +845,14 @@ before packages are loaded."
    "<" (general-key-dispatch 'evil-shift-left
          "p" 'razzi/surround-paragraph
          "2" 'razzi/surround-h2
-         "d" 'razzi/surround-div) ; todo should be in vc layer
+         "d" 'razzi/surround-div) ; todo should be in html layer
    "M-, p" 'razzi/surround-paragraph
    "M-, v" 'razzi/surround-div
+   "gb" 'magit-blame-addition
    "g/" 'spacemacs/helm-project-smart-do-search-region-or-symbol
    "g." 'razzi/search-project-whole-word
    "g[" 'helm-etags-select
-   "g]" 'dumb-jump-go
+   "g]" '(lambda () (interactive) (dumb-jump-go) (evil-scroll-line-to-center nil))
    "gf" 'razzi/file-at-point
    "n" 'evil-search-next
    ;; "x" 'razzi/delete-delimiters
@@ -913,6 +921,7 @@ lines downward first."
         (unless (file-exists-p dir)
           (make-directory dir)))))
 
+  ;; doesn't work
   (advice-add 'find-file :before 'razzi/make-parent-directories)
 
   (defun razzi/replace-control-g-with-nil (char)
@@ -963,3 +972,8 @@ lines downward first."
 ;; j shouldn't go to far left margin in lisp
 ; tab completion shouldn't work with c-n c-p
 ; way to search for whole word on * and even symbols only not constant strings for example
+
+; interactive ask for keybinding
+; json lint
+; c-r-SPC to sep into spaces
+; auto prettier on save

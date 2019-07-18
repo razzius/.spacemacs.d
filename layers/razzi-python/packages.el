@@ -5,5 +5,9 @@
 
 (setq-default flycheck-disabled-checkers '(python-pylint python-pycompile))
 
+(setq blacken-executable "gray")
+
 (defun razzi-python/init-blacken ()
-  (use-package blacken))
+  (use-package blacken
+    :config
+    (add-hook 'python-mode-hook 'blacken-mode)))
