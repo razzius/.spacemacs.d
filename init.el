@@ -242,7 +242,7 @@ before packages are loaded."
   (interactive)
   (evil-insert-newline-below)
   (indent-for-tab-command)
-  (insert "import ipdb; ipdb.set_trace()"))
+  (insert "__import__('ipdb').set_trace()"))
 
 (defun razzi/put-uuid ()
   (interactive)
@@ -977,3 +977,4 @@ lines downward first."
 ; json lint
 ; c-r-SPC to sep into spaces
 ; auto prettier on save
+; g c spc comment paragraph
