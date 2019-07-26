@@ -368,6 +368,16 @@ before packages are loaded."
   (shell-command (concat command " " (buffer-file-name)))
   (no-confirm 'revert-buffer t t))
 
+(defun razzi/import-this ()
+  (interactive)
+  (save-buffer)
+  ;; (shell-command-to-string "git root")
+  (kill-new
+   (shell-command-to-string
+    (string-join
+     (list "import_it.py" (thing-at-point 'symbol) (shell-command-to-string "git root"))
+     " "))))
+
 ; TODO move to python
 ; TODO fails silently
 (defun razzi/isort ()
@@ -502,6 +512,10 @@ before packages are loaded."
   (interactive)
   (other-window 1)
   (evil-execute-macro 1 "GA"))
+
+(defun razzi-previous-useful-buffer ()
+  (interactive)
+  (switch-to-buffer (nth 2 (seq-filter #'buffer-file-name (buffer-list)))))
 
 (defun razzi/associate-extension-mode (extension mode)
   (let ((pattern (s-concat "\\." extension "$")))
@@ -750,6 +764,7 @@ before packages are loaded."
     "h v" 'describe-variable
     "i c" 'razzi/copy-paragraph
     "i d" 'razzi/put-debugger
+    "i i" 'razzi/import-this
     "i m" 'razzi/importmagic
     "i p" 'razzi/prettier
     "i u" 'razzi/put-uuid
@@ -773,6 +788,8 @@ before packages are loaded."
   (evil-set-initial-state 'term-mode 'insert)
 
   (general-define-key :states 'insert
+                      "-" '(lambda () (interactive) (insert "_"))
+                      "_" '(lambda () (interactive) (insert "-"))
    "<escape>" 'razzi/exit-insert
    "C-c a" 'razzi/abbrev-or-add-global-abbrev
    "C-h" 'sp-backward-delete-char
@@ -786,9 +803,10 @@ before packages are loaded."
    "M-v" 'razzi/paste)
 
   (general-define-key :states 'normal
+  "<tab>" (lambda () (interactive)) ; sometimes I hit this by mistake; causes syntax errors
    "-" 'razzi/transpose-next-line
    "0" 'evil-first-non-blank
-   "<backtab>" 'previous-buffer
+   "<backtab>" 'razzi-previous-useful-buffer
    "C" 'razzi/change-line
    "C-SPC j" 'evil-window-down
    "C-SPC k" 'evil-window-up
@@ -978,3 +996,4 @@ lines downward first."
 ; c-r-SPC to sep into spaces
 ; auto prettier on save
 ; g c spc comment paragraph
+; kill buffer switch to useful buffer

@@ -11,4 +11,5 @@
 (defun razzi-python/init-blacken ()
   (use-package blacken
     :config
-    (add-hook 'python-mode-hook 'blacken-mode)))
+                                        ;(add-hook 'python-mode-hook 'blacken-mode)
+    ))
