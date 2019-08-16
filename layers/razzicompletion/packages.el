@@ -53,6 +53,10 @@
         try-expand-line
         try-expand-line-all-buffers)))
 
+    (unbind-key "C-p" evil-insert-state-map)
+    ;; (define-key evil-insert-state-map [remap evil-complete-previous] 'evil-complete-previous)
+    (define-key evil-insert-state-map (kbd "C-p") 'evil-complete-previous)
+
     ;todo does this do anything?
     (defadvice hippie-expand-substitute-string (after he-paredit-fix)
       "Remove extra paren when expanding line in paredit"

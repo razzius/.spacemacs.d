@@ -8,7 +8,7 @@
      clojure
      ;; csv
      emacs-lisp
-     lsp
+     ;; lsp
      ;; fsharp
      git
      ;; go
@@ -20,7 +20,7 @@
      osx
      (python :variables python-backend nil)
      ;; TODO get rid of lsp :()
-     ;; razzipython
+     razzipython
      ;; ruby
      ;; rust
      shell-scripts
@@ -56,6 +56,9 @@
      (syntax-checking :variables syntax-checking-enable-tooltips nil))
    dotspacemacs-excluded-packages '(anaconda-mode company-anaconda evil-escape eldoc archive-mode lsp-ui auto-highlight-symbol editorconfig)
    dotspacemacs-additional-packages '(super-save
+                                      elpy
+                                      python-test
+                                      smartparens
                                       cherry-blossom-theme
                                       load-theme-buffer-local
                                       pytest
@@ -143,6 +146,16 @@ before packages are loaded."
     (evil-insert-newline-below)
     (forward-line -1)))
 
+(defun razzi/toggle-true-false ()
+  (interactive)
+  "fixme nomacro"
+  (if (s-equals? (thing-at-point 'word t) "False")
+      (progn (evil-execute-macro 1 "diw")
+             (insert "True"))
+    (progn (evil-execute-macro 1 "diw")
+           (insert "False")))
+  (evil-normal-state))
+
 (defun razzi/insert-newline-before()
   (interactive)
   (save-excursion
@@ -183,7 +196,7 @@ before packages are loaded."
 
 (defun save-if-buffer-is-file ()
   (if (and buffer-file-name (buffer-modified-p))
-    (save-buffer)))
+      (save-buffer)))
 
 (defun razzi/transpose-next-line ()
   "Switch the current and next lines"
@@ -330,13 +343,24 @@ before packages are loaded."
   ;; (evil-mc-undo-all-cursors)
   (keyboard-quit))
 
+(defun razzi/get-python-module ()
+  (let* ((root (s-append "/" (s-chomp (shell-command-to-string "git root"))))
+         (relative-path (s-chop-prefix root (buffer-file-name))))
+    (s-replace "/" "." (file-name-sans-extension relative-path))))
+
 (defun razzi/copy-test-file-path ()
   (interactive)
-  (let* ((root (s-append "/" (s-chomp (shell-command-to-string "git root"))))
-         (relative-path (s-chop-prefix root (buffer-file-name)))
-         (module (s-replace "/" "." (file-name-sans-extension relative-path))))
+  (let ((module (razzi/get-python-module)))
     (kill-new module)
     (message "Copied module '%s' to the clipboard." module)))
+
+(defun razzi/copy-test-method-path ()
+  (interactive)
+  (let* ((module (razzi/get-python-module))
+         (method (nose-py-testable))
+         (path (format "%s.%s" module method)))
+    (kill-new path)
+    (message "Copied path '%s' to the clipboard." path)))
 
 ; todo refactor with above
 (defun razzi/copy-project-file-path ()
@@ -361,28 +385,43 @@ before packages are loaded."
   "Apply FUN to ARGS, skipping user confirmations."
   (cl-letf (((symbol-function 'y-or-n-p) #'always-yes)
             ((symbol-function 'yes-or-no-p) #'always-yes))
-      (apply fun args)))
+    (apply fun args)))
 
 (defun razzi/run-script-on-file (command)
   (save-buffer)
   (shell-command (concat command " " (buffer-file-name)))
   (no-confirm 'revert-buffer t t))
 
+(defun razzi/get-import-path ()
+  (shell-command-to-string
+   (string-join
+    (list "import_it.py" (thing-at-point 'symbol) (shell-command-to-string "git root"))
+    " ")))
+
 (defun razzi/import-this ()
   (interactive)
   (save-buffer)
   ;; (shell-command-to-string "git root")
-  (kill-new
-   (shell-command-to-string
-    (string-join
-     (list "import_it.py" (thing-at-point 'symbol) (shell-command-to-string "git root"))
-     " "))))
+  (let ((import-path (razzi/get-import-path)))
+    (progn
+      (save-excursion
+        (goto-char (point-min))
+        (insert import-path))
+      (razzi/isort))))
+
+(defun razzi/import-this-copy ()
+  (interactive)
+  (kill-new (s-trim (razzi/get-import-path))))
 
 ; TODO move to python
 ; TODO fails silently
 (defun razzi/isort ()
   (interactive)
   (razzi/run-script-on-file "isort"))
+
+(defun razzi/autoflake ()
+  (interactive)
+  (razzi/run-script-on-file "autoflake --remove-all-unused-imports -i"))
 
 (defun razzi/importmagic ()
   (interactive)
@@ -407,15 +446,15 @@ before packages are loaded."
       (indent-for-tab-command))))
 
 (defun razzi/create-scratch-buffer ()
-   (interactive)
-   (switch-to-buffer (get-buffer-create "*scratch*")))
+  (interactive)
+  (switch-to-buffer (get-buffer-create "*scratch*")))
 
 (defun razzi/put-paren ()
   "fixme no macro"
-   (interactive)
-   (evil-execute-macro 1 "ox")
-   (evil-normal-state)
-   (evil-execute-macro 1 "r)<<"))
+  (interactive)
+  (evil-execute-macro 1 "ox")
+  (evil-normal-state)
+  (evil-execute-macro 1 "r)<<"))
 
 (defun razzi/next-and-center ()
   (interactive)
@@ -451,6 +490,12 @@ before packages are loaded."
     (when filename
       (kill-new filename)
       (message "Copied buffer file name '%s' to the clipboard." filename))))
+
+(defun razzi/file-access-from-clipboard ()
+  "Copy the current buffer file name to the clipboard."
+  (interactive)
+  (find-file (s-join "/" (mapcar 's-trim (list (shell-command-to-string "git root")
+                                               (current-kill 0))))))
 
 (defun razzi/copy-file-dir ()
   "Copy the current buffer directory to the clipboard."
@@ -488,9 +533,13 @@ before packages are loaded."
 
 (defun razzi/search-paste ()
   (interactive)
-  (spacemacs/helm-project-smart-do-search)
-  ; how to yank into helm?
-  (yank))
+  (minibuffer-with-setup-hook '(lambda () (yank))
+    (spacemacs/helm-project-smart-do-search)))
+
+(defun razzi/search-non-test ()
+  (interactive)
+  (minibuffer-with-setup-hook '(lambda () (insert "-Ttpy -tpy "))
+    (spacemacs/helm-project-smart-do-search)))
 
 (defun razzi/monroe ()
   (interactive)
@@ -574,13 +623,13 @@ before packages are loaded."
 
 (defun razzi/surround-paragraph()
   (interactive)
-  ; blerg
+                                        ; blerg
   (evil-execute-macro 1 "ysil<p"))
-  ;; (evil-visual-char)
-  ;; (evil-end-of-line)
-  ;; (evil-surround-region (region-beginning) (1+ (region-end)) 'line ?<)
-  ;; ;; (self-insert-command "p")
-  ;; (exit-minibuffer))
+;; (evil-visual-char)
+;; (evil-end-of-line)
+;; (evil-surround-region (region-beginning) (1+ (region-end)) 'line ?<)
+;; ;; (self-insert-command "p")
+;; (exit-minibuffer))
 
 (defun razzi/surround-h2()
   (interactive) ; blerg
@@ -588,13 +637,13 @@ before packages are loaded."
 
 (defun razzi/surround-div()
   (interactive)
-  ; blerg
+                                        ; blerg
   (evil-execute-macro 1 "ysil<div"))
 
-; todo clojure style (defmacro let)
+                                        ; todo clojure style (defmacro let)
 ;; (let [filename 1] (message filename))
 
-; vaguely better than copying and pasting manually
+                                        ; vaguely better than copying and pasting manually
 (defun razzi/send-region-to-tmux (start end)
   (interactive "r")
   (setq tmux-fd "/dev/ttys001") ; todo hardcoded
@@ -703,7 +752,7 @@ before packages are loaded."
    save-abbrevs 'silently
    confirm-nonexistent-file-or-buffer nil
    kill-buffer-query-functions
-     (delq 'process-kill-buffer-query-function kill-buffer-query-functions)
+   (delq 'process-kill-buffer-query-function kill-buffer-query-functions)
 
    powerline-default-separator 'nil
    vc-follow-symlinks t
@@ -738,6 +787,7 @@ before packages are loaded."
     "," 'razzi/append-comma ; only makes sense for python-like
     "-" 'razzi/save-delete-close
     "." 'razzi/copy-paragraph ; unused
+    "`" 'razzi/toggle-true-false ; unused
     "<backtab>" 'razzi/split-alternate-buffer
     "C-o" 'razzi/put-before
     "DEL" 'razzi/restart-emacs
@@ -750,13 +800,17 @@ before packages are loaded."
     "\\" 'multi-term
     "]" '(lambda () (interactive) (evil-execute-macro 1 "ysiW]"))
     "c r" 'razzi/recompile
+    "d d" '(lambda () (interactive) (funcall 'describe-variable (variable-at-point)))
     "e n" 'flycheck-next-error
     "e p" 'flycheck-previous-error
     "f SPC" 'copy-file-name-to-clipboard
+    "f a" 'razzi/file-access-from-clipboard
     "f i" 'razzi/edit-init
     "f n" 'razzi/copy-file-name
     "f d" 'razzi/copy-file-dir
     "f p" 'razzi/copy-test-file-path
+    "f r" 'helm-mini
+    "f u" 'razzi/copy-test-method-path
     "f RET" 'razzi/copy-project-file-path
     "g g" 'magit-checkout
     "g p" 'razzi/git-push
@@ -765,117 +819,124 @@ before packages are loaded."
     "i c" 'razzi/copy-paragraph
     "i d" 'razzi/put-debugger
     "i i" 'razzi/import-this
+    "i y" 'razzi/import-this-copy
     "i m" 'razzi/importmagic
-    "i p" 'razzi/prettier
+    "i f" 'razzi/prettier ; could be more generic
     "i u" 'razzi/put-uuid
     "i e" 'iedit-mode
     "i s" 'razzi/isort
+    "i a" 'razzi/autoflake
     "i g" 'razzi/gray
     "i b" 'blacken-buffer
     "o" 'razzi/put-after
     "C-SPC" 'spacemacs//workspaces-eyebrowse-next-window-config-n
     "q b" 'razzi/close-all-file-buffers
     "q r" 'razzi/restart-emacs
+    "s /" 'razzi/search-non-test
+    "t t" 'elpy-test
     "t SPC" 'spacemacs/toggle-debug-on-error
     "v" 'razzi/search-paste
     "w o" 'other-window
     "=" 'razzi/python-format)
 
-  (mapc 'evil-declare-not-repeat '(razzi/next-and-center razzi/previous-and-center))
+  (mapc 'evil-declare-not-repeat '(razzi/next-and-center razzi/previous-and-center flycheck-next-error flycheck-previous-error))
 
   (global-set-key (kbd "C-`") 'describe-key)
 
   (evil-set-initial-state 'term-mode 'insert)
 
   (general-define-key :states 'insert
-                      "-" '(lambda () (interactive) (insert "_"))
-                      "_" '(lambda () (interactive) (insert "-"))
-   "<escape>" 'razzi/exit-insert
-   "C-c a" 'razzi/abbrev-or-add-global-abbrev
-   "C-h" 'sp-backward-delete-char
-   "C-l" 'sp-slurp-hybrid-sexp
-   "C-t" 'razzi/transpose-previous-chars
-   "<tab>" 'razzi/yas-expand
-   "M-RET" 'lisp-state-eval-sexp-end-of-line
-   "s-<backspace>" 'evil-delete-backward-word
-   "M-l" 'sp-forward-sexp
-   "M-s" 'razzi/exit-insert-and-save
-   "M-v" 'razzi/paste)
+                      ;; "-" '(lambda () (interactive) (insert "_"))
+                      ;; "_" '(lambda () (interactive) (insert "-"))
+                      "<escape>" 'razzi/exit-insert
+                      "C-c a" 'razzi/abbrev-or-add-global-abbrev
+                      "C-h" 'sp-backward-delete-char
+                      "C-l" 'sp-slurp-hybrid-sexp
+                      "C-t" 'razzi/transpose-previous-chars
+                      "C-p" 'evil-complete-previous
+                      "<tab>" 'razzi/yas-expand
+                      "M-RET" 'lisp-state-eval-sexp-end-of-line
+                      "s-<backspace>" 'evil-delete-backward-word
+                      "M-l" 'sp-forward-sexp
+                      "M-i" 'razzi/yas-expand
+                      "M-s" 'razzi/exit-insert-and-save
+                      "M-v" 'razzi/paste)
 
   (general-define-key :states 'normal
-  "<tab>" (lambda () (interactive)) ; sometimes I hit this by mistake; causes syntax errors
-   "-" 'razzi/transpose-next-line
-   "0" 'evil-first-non-blank
-   "<backtab>" 'razzi-previous-useful-buffer
-   "C" 'razzi/change-line
-   "C-SPC j" 'evil-window-down
-   "C-SPC k" 'evil-window-up
-   "C-a" 'evil-numbers/inc-at-pt
-   "C-g" 'razzi/evil-mc-quit-and-quit
-   "C-h" 'evil-window-left
-   "C-l" 'evil-window-right
-   "C-p" 'evil-paste-after
-   "C-x" 'evil-numbers/dec-at-pt
-   "C-;" 'evil-ex-nohighlight
-   "D" 'razzi/kill-line-and-whitespace
-   "E" 'forward-symbol
-   "G" 'razzi/almost-end-of-buffer
-   "K" 'evil-previous-line ; typo this one all the time
-   "M-a" 'mark-whole-buffer
-   "M-c" 'evil-yank-line
-   "M--" 'spacemacs/scale-down-font
-   "M-0" 'spacemacs/reset-font-size
-   "M-/" 'evilnc-comment-or-uncomment-lines
-   "M-?" 'razzi/swap-commented-out
-   "M-l" 'evil-visual-line
-   "M-=" 'spacemacs/scale-up-font
-   "M-RET" 'lisp-state-eval-sexp-end-of-line
-   "M-'" 'spacemacs/eval-current-form-sp
-   "M-`" 'other-window
-   "M-d" 'evil-mc-make-and-goto-next-match
-   "M-p" 'helm-projectile-find-file
-   "M-r" 'sp-raise-sexp
-   "M-n" 'razzi/match-and-next
-   "M-[" 'flycheck-previous-error
-   "M-]" 'flycheck-next-error
-   "M-s" 'save-buffer
-   "M-f" 'evil-ex-search-forward
-   "M-w" 'kill-this-buffer
-   "N" 'evil-search-previous
-   "Q" 'razzi/replay-q-macro
-   "/" 'evil-search-forward
-   "[ SPC" 'razzi/insert-newline-before
-   "[ c" 'git-gutter:previous-hunk
-   "] SPC" 'razzi/insert-newline-after
-   "] c" 'git-gutter:next-hunk
-   "^" 'evil-digit-argument-or-evil-beginning-of-line
-   "_" 'razzi/transpose-previous-line
-   "*" 'razzi/star-isearch
-   "#" 'razzi/pound-isearch
-   ; todo visual c buggy now
-   "c" (general-key-dispatch 'evil-change
-         "ru" 'string-inflection-upcase
-         "rs" 'string-inflection-underscore
-         "rt" 'string-inflection-camelcase
-         "rc" 'string-inflection-lower-camelcase
-         "rd" 'string-inflection-kebab-case
-         "c" 'magit-commit) ; todo should be in vc layer
-   "<" (general-key-dispatch 'evil-shift-left
-         "p" 'razzi/surround-paragraph
-         "2" 'razzi/surround-h2
-         "d" 'razzi/surround-div) ; todo should be in html layer
-   "M-, p" 'razzi/surround-paragraph
-   "M-, v" 'razzi/surround-div
-   "gb" 'magit-blame-addition
-   "g/" 'spacemacs/helm-project-smart-do-search-region-or-symbol
-   "g." 'razzi/search-project-whole-word
-   "g[" 'helm-etags-select
-   "g]" '(lambda () (interactive) (dumb-jump-go) (evil-scroll-line-to-center nil))
-   "gf" 'razzi/file-at-point
-   "n" 'evil-search-next
-   ;; "x" 'razzi/delete-delimiters
-   "s-d" 'evil-mc-make-and-goto-next-match
-   "s-x" 'helm-M-x)
+                      "<tab>" (lambda () (interactive)) ; sometimes I hit this by mistake; causes syntax errors
+                      "-" 'razzi/transpose-next-line
+                      "0" 'evil-first-non-blank
+                      "<backtab>" 'razzi-previous-useful-buffer
+                      "C" 'razzi/change-line
+                      "C-SPC j" 'evil-window-down
+                      "C-SPC k" 'evil-window-up
+                      "C-a" 'evil-numbers/inc-at-pt
+                      "C-g" 'razzi/evil-mc-quit-and-quit
+                      "C-h" 'evil-window-left
+                      "C-l" 'evil-window-right
+                      "C-p" 'evil-paste-after
+                      "C-x" 'evil-numbers/dec-at-pt
+                      "C-;" 'evil-ex-nohighlight
+                      "D" 'razzi/kill-line-and-whitespace
+                      "E" 'forward-symbol
+                      "G" 'razzi/almost-end-of-buffer
+                      "K" 'evil-previous-line ; typo this one all the time
+                      "M-a" 'mark-whole-buffer
+                      "M-c" 'evil-yank-line
+                      "M--" 'spacemacs/scale-down-font
+                      "M-0" 'spacemacs/reset-font-size
+                      "M-/" 'evilnc-comment-or-uncomment-lines
+                      "M-?" 'razzi/swap-commented-out
+                      "M-l" 'evil-visual-line
+                      "M-=" 'spacemacs/scale-up-font
+                      "M-RET" 'lisp-state-eval-sexp-end-of-line
+                      "M-'" 'spacemacs/eval-current-form-sp
+                      "M-`" 'other-window
+                      "M-d" 'evil-mc-make-and-goto-next-match
+                      "M-p" 'helm-projectile-find-file
+                      "M-r" 'sp-raise-sexp
+                      "M-n" 'razzi/match-and-next
+                      "M-[" 'flycheck-previous-error
+                      "M-]" 'flycheck-next-error
+                      "M-s" 'save-buffer
+                      "M-f" 'evil-ex-search-forward
+                      "M-w" 'kill-this-buffer
+                      "N" 'evil-search-previous
+                      "Q" 'razzi/replay-q-macro
+                      "/" 'evil-search-forward
+                      "[ SPC" 'razzi/insert-newline-before
+                      "[ c" 'git-gutter:previous-hunk
+                      "] SPC" 'razzi/insert-newline-after
+                      "] c" 'git-gutter:next-hunk
+                      "^" 'evil-digit-argument-or-evil-beginning-of-line
+                      "_" 'razzi/transpose-previous-line
+                      "*" 'razzi/star-isearch
+                      "#" 'razzi/pound-isearch
+                                        ; todo visual c buggy now
+                      "c" (general-key-dispatch 'evil-change
+                            "d" 'find-file
+                            "ru" 'string-inflection-upcase
+                            "rs" 'string-inflection-underscore
+                            "rt" 'string-inflection-camelcase
+                            "rc" 'string-inflection-lower-camelcase
+                            "rd" 'string-inflection-kebab-case
+                            "c" 'magit-commit) ; todo should be in vc layer
+                      "<" (general-key-dispatch 'evil-shift-left
+                            "p" 'razzi/surround-paragraph
+                            "2" 'razzi/surround-h2
+                            "d" 'razzi/surround-div) ; todo should be in html layer
+                      "M-, p" 'razzi/surround-paragraph
+                      "M-, v" 'razzi/surround-div
+                      "gb" 'magit-blame-addition
+                      "g/" 'spacemacs/helm-project-smart-do-search-region-or-symbol
+                      "g." 'razzi/search-project-whole-word
+                      "g[" 'helm-etags-select
+                      "g]" '(lambda () (interactive) (dumb-jump-go) (evil-scroll-line-to-center nil))
+                      "gf" 'razzi/file-at-point
+                      "n" 'evil-search-next
+                      ;; "x" 'razzi/delete-delimiters
+                      "s-d" 'evil-mc-make-and-goto-next-match
+                      "s-x" 'helm-M-x)
 
   ;; (general-define-key :states 'visual "$" nil)
 
@@ -889,34 +950,37 @@ lines downward first."
     (setq evil-this-type (if (eolp) 'exclusive 'inclusive)))
 
   (general-define-key :states 'visual
-    "!" 'sort-lines
-    "$" 'evil-last-non-blank
-    "'" 'razzi/surround-with-single-quotes
-    "`" 'razzi/surround-with-backticks
-    ")" 'razzi/surround-with-parens
-    "\"" 'razzi/surround-with-double-quotes
-    "]" 'razzi/surround-with-brackets
-    "E" 'forward-symbol
-    "c" 'evil-change
-    "ae" 'mark-whole-buffer
-    "il" 'razzi/mark-line-text
-    "M-l" 'evil-next-line
-    "M-c" 'evil-yank
-    "M-d" 'mc/mark-next-symbol-like-this)
+                      "!" 'sort-lines
+                      "$" 'evil-last-non-blank
+                      "'" 'razzi/surround-with-single-quotes
+                      "`" 'razzi/surround-with-backticks
+                      ")" 'razzi/surround-with-parens
+                      "\"" 'razzi/surround-with-double-quotes
+                      "]" 'razzi/surround-with-brackets
+                      "E" 'forward-symbol
+                      "c" 'evil-change
+                      "ae" 'mark-whole-buffer
+                      "il" 'razzi/mark-line-text
+                      "M-l" 'evil-next-line
+                      "M-c" 'evil-yank
+                      "<" 'evil-shift-left
+                      "M-d" 'mc/mark-next-symbol-like-this)
 
   (evil-define-text-object whole-buffer (count &optional beginning end type)
     (evil-range 0 (point-max)))
 
   (general-define-key :states 'operator
-    "E" 'forward-symbol
-    "ae" 'whole-buffer
-    "SPC" 'evil-inner-symbol)
+                      "E" 'forward-symbol
+                      "ae" 'whole-buffer
+                      "SPC" 'evil-inner-symbol)
 
   (define-key minibuffer-local-map (kbd "C-j") 'exit-minibuffer)
 
-  ; :)))))))
+                                        ; :)))))))
   (define-key helm-find-files-map (kbd "C-t") nil)
   (define-key helm-map (kbd "C-t") nil)
+
+  ;; (define-key helm-do-ag-map (kbd "M-v") 'yank)
 
   ;; (company-tng-configure-default)
   (add-hook 'evil-insert-state-exit-hook 'expand-abbrev)
@@ -925,7 +989,7 @@ lines downward first."
 
   (defun razzi/dark-terminal ()
     (setq buffer-face-mode-face '(:background "#000000"
-                                     :foreground "#FFFFFF"))
+                                              :foreground "#FFFFFF"))
     (buffer-face-mode)
     (set-face-background 'hl-line nil)
     (hl-line-mode nil))
@@ -942,6 +1006,9 @@ lines downward first."
   ;; doesn't work
   (advice-add 'find-file :before 'razzi/make-parent-directories)
 
+  (define-key minibuffer-local-map (kbd "M-v") 'yank)
+  (define-key global-map (kbd "M-v") 'yank)
+
   (defun razzi/replace-control-g-with-nil (char)
     "Make C-g read as nil so that `r C-g` cancels the replace."
     (if (eq char ?\C-g)
@@ -949,6 +1016,17 @@ lines downward first."
           (message "Quit")  ; Without calling message, the cursor stays looking like replace
           nil)              ; Returning nil cancels the replace
       char))
+
+                                        ; doesn't work with ipdb
+  ;; (setq compilation-finish-function
+  ;;       (lambda (buf str)
+  ;;         (if (null (string-match ".*exited abnormally.*" str))
+  ;;             ;;no errors, make the compilation window go away in a few seconds
+  ;;             (progn
+  ;;               (run-at-time
+  ;;                 "2 sec" nil 'delete-windows-on
+  ;;                 (get-buffer-create "*compilation*"))
+  ;;               (message "No Compilation Errors!")))))
 
   (add-hook 'term-mode-hook (lambda nil
                               (global-hl-line-mode -1)
@@ -981,6 +1059,7 @@ lines downward first."
 ; definteractive
 ; https://www.reddit.com/r/emacs/comments/3sd3ue/ask_remacs_sending_text_to_an_ansiterm_buffer/
 ; !! tab shouldn't expand abbrevs when it's not on its own
+(setenv "RIPGREP_CONFIG_PATH" (expand-file-name "~/.rgrc"))
 
 ;; (set-face-background 'lsp-face-highlight-read nil)
 ;; (set-face-background 'lsp-face-highlight-write nil)
@@ -988,12 +1067,17 @@ lines downward first."
 ;; clipboard link
 ;; cr<space> split into words
 ;; j shouldn't go to far left margin in lisp
-; tab completion shouldn't work with c-n c-p
-; way to search for whole word on * and even symbols only not constant strings for example
+                                        ; way to search for whole word on * and even symbols only not constant strings for example
 
-; interactive ask for keybinding
-; json lint
-; c-r-SPC to sep into spaces
-; auto prettier on save
-; g c spc comment paragraph
-; kill buffer switch to useful buffer
+                                        ; interactive ask for keybinding
+                                        ; json lint
+                                        ; c-r-SPC to sep into spaces
+                                        ; auto prettier on save
+                                        ; g c spc comment paragraph
+                                        ; kill buffer switch to useful buffer
+                                        ; spc ` toggle true false
+                                        ; switch to prev buffer should not go to one open in other window
+                                        ; C reindents...
+
+;; magit-diff-visit-worktree-file
+                                        ;previous useful buffer just cycles between 3 buffers

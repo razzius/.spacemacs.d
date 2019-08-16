@@ -166,7 +166,8 @@
                nosetests-module
                nosetests-pdb-module
                nosetests-suite
-               nosetests-pdb-suite)
+               nosetests-pdb-suite
+               nose-py-testable)
     :init (spacemacs//bind-python-testing-keys)
     :config
     (progn
