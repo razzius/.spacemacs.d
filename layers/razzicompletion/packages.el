@@ -63,4 +63,4 @@
       (if (and smartparens-mode (equal (substring str -1) ")"))
           (progn (backward-delete-char 1) (forward-char))))
 
-    (ad-activate 'hippie-expand-substitute-string))
+    (advice-add 'razzi-expand-line :after 'hippie-expand-substitute-string))

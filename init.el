@@ -1036,8 +1036,6 @@ lines downward first."
 
   ;; (remove-hook 'term-mode-hook (first term-mode-hook))
 
-  (advice-add 'evil-read-key :filter-return 'razzi/replace-control-g-with-nil)
-
   (advice-add 'spacemacs/check-large-file :around 'no-confirm))
 
 ; complain function which will put the string as a comment in a relevant config per mode
@@ -1051,19 +1049,16 @@ lines downward first."
 ;don't show . and .. in helm
 ; slurp markdown
 ; eval current finds outer form in comment
-; ' throw quotes on the word
 ; don't throw the comments all the way to the right
 ; a function text object python
 ; o put comma when adding to python collection
 ; rename file doesn't work if moving in to directory
-; definteractive
 ; https://www.reddit.com/r/emacs/comments/3sd3ue/ask_remacs_sending_text_to_an_ansiterm_buffer/
 ; !! tab shouldn't expand abbrevs when it's not on its own
 (setenv "RIPGREP_CONFIG_PATH" (expand-file-name "~/.rgrc"))
 
 ;; (set-face-background 'lsp-face-highlight-read nil)
 ;; (set-face-background 'lsp-face-highlight-write nil)
-;; even if saved, M-s re-run linter...
 ;; clipboard link
 ;; cr<space> split into words
 ;; j shouldn't go to far left margin in lisp
