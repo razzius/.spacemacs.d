@@ -1,4 +1,4 @@
-(defconst razzi-python-packages '(blacken))
+(defconst razzi-python-packages '(blacken flycheck-mypy))
 
 (add-hook 'python-mode-hook (lambda ()
                               (setq evil-shift-width 4)))
@@ -13,3 +13,9 @@
     :config
                                         ;(add-hook 'python-mode-hook 'blacken-mode)
     ))
+
+(defun razzi-python/init-flycheck-mypy ()
+  (use-package flycheck-mypy
+    :config
+    (setq flycheck-python-mypy-args '("--ignore-missing-imports" "--follow-imports=silent"))
+    (flycheck-add-next-checker 'python-flake8 'python-mypy)))

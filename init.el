@@ -66,7 +66,6 @@
                                       monroe
                                       evil-terminal-cursor-changer
                                       evil-multiedit
-                                      flycheck-mypy
                                       multiple-cursors
                                       pyenv-mode
                                       string-inflection
@@ -392,11 +391,25 @@ before packages are loaded."
   (shell-command (concat command " " (buffer-file-name)))
   (no-confirm 'revert-buffer t t))
 
+(defun razzi/buffer-string-for-buffer (buffer)
+  (with-current-buffer buffer
+    (buffer-string)))
+
 (defun razzi/get-import-path ()
-  (shell-command-to-string
-   (string-join
-    (list "import_it.py" (thing-at-point 'symbol) (shell-command-to-string "git root"))
-    " ")))
+  (when (get-buffer "*import_it-output*")
+    (with-current-buffer "*import_it-output*"
+      (erase-buffer)))
+
+  (call-process
+     "import_it"
+     nil
+     '("*import_it-output*" "*import_it-error*")
+     nil
+     (thing-at-point 'symbol) (shell-command-to-string "git root"))
+
+  (razzi/buffer-string-for-buffer "*import_it-output*")
+
+  (razzi/autoflake))
 
 (defun razzi/import-this ()
   (interactive)
