@@ -3,10 +3,10 @@
    dotspacemacs-distribution 'spacemacs
    dotspacemacs-configuration-layer-path '("~/.spacemacs.d/layers/")
    dotspacemacs-configuration-layers
-   '(csv
-     auto-completion
+   '(auto-completion
      clojure
      ;; csv
+     ;; blahp
      emacs-lisp
      ;; lsp
      ;; fsharp
@@ -20,7 +20,7 @@
      osx
      (python :variables python-backend nil)
      ;; TODO get rid of lsp :()
-     razzipython
+     ;; razzipython
      ;; ruby
      ;; rust
      shell-scripts
@@ -43,6 +43,7 @@
      razzi-python
      razzi-tab-completion
      razzi-vc
+
      ;; razzi-voice
      razzi-dumb-jump
      ; razzilisp
@@ -55,16 +56,18 @@
 
      ;; org
      (syntax-checking :variables syntax-checking-enable-tooltips nil))
-   dotspacemacs-excluded-packages '(anaconda-mode company-anaconda evil-escape eldoc archive-mode lsp-ui auto-highlight-symbol editorconfig)
+   dotspacemacs-excluded-packages '(org anaconda-mode company-anaconda evil-escape eldoc archive-mode lsp-ui auto-highlight-symbol editorconfig)
    dotspacemacs-additional-packages '(super-save
+                                      ;; add-node-modules-path
                                       elpy
                                       python-test
                                       smartparens
                                       cherry-blossom-theme
                                       load-theme-buffer-local
+                                      flow-js2-mode
                                       pytest
                                       buffer-move
-                                      monroe
+                                      helm-rg
                                       evil-terminal-cursor-changer
                                       evil-multiedit
                                       multiple-cursors
@@ -73,7 +76,8 @@
                                       virtualenvwrapper
                                       apib-mode
                                       general)
-   dotspacemacs-delete-orphan-packages nil))
+   dotspacemacs-install-packages 'used-only
+   dotspacemacs-delete-orphan-packages t))
 
 (defun dotspacemacs/init ()
   (setq-default
@@ -742,7 +746,6 @@ before packages are loaded."
    display-time-default-load-average nil
    tags-add-tables t
    cider-allow-jack-in-without-project t
-   exec-path (append exec-path '("node_modules/.bin"))
 
    recentf-exclude '("TAGS")
    create-lockfiles nil
@@ -760,7 +763,7 @@ before packages are loaded."
    python-indent-guess-indent-offset nil
 
    search-upper-case t
-   abbrev-file-name "~/.spacemacs.d/abbrev_defs.el"
+   abbrev-file-name "~/.emacs.d/abbrev_defs.el"
    frame-title-format "%f"
 
    save-abbrevs 'silently
@@ -791,8 +794,6 @@ before packages are loaded."
 
   (set-face-foreground 'font-lock-comment-face "dark grey")
   (set-face-foreground 'font-lock-doc-face "teal")
-  (set-face-background 'magit-diff-context-highlight "light cyan")
-  (set-face-background 'magit-diff-hunk-heading-highlight "gray60")
   ;; (set-face-background 'hl-line "#f3f9ff")
 
   (evil-leader/set-key
@@ -991,10 +992,6 @@ lines downward first."
 
   (define-key minibuffer-local-map (kbd "C-j") 'exit-minibuffer)
 
-                                        ; :)))))))
-  (define-key helm-find-files-map (kbd "C-t") nil)
-  (define-key helm-map (kbd "C-t") nil)
-
   ;; (define-key helm-do-ag-map (kbd "M-v") 'yank)
 
   ;; (company-tng-configure-default)
@@ -1024,15 +1021,7 @@ lines downward first."
   (define-key minibuffer-local-map (kbd "M-v") 'yank)
   (define-key global-map (kbd "M-v") 'yank)
 
-  (defun razzi/replace-control-g-with-nil (char)
-    "Make C-g read as nil so that `r C-g` cancels the replace."
-    (if (eq char ?\C-g)
-        (progn
-          (message "Quit")  ; Without calling message, the cursor stays looking like replace
-          nil)              ; Returning nil cancels the replace
-      char))
-
-                                        ; doesn't work with ipdb
+  ; doesn't work with ipdb
   ;; (setq compilation-finish-function
   ;;       (lambda (buf str)
   ;;         (if (null (string-match ".*exited abnormally.*" str))
@@ -1091,3 +1080,4 @@ lines downward first."
 
 ;; magit-diff-visit-worktree-file
                                         ;previous useful buffer just cycles between 3 buffers
+;m-i autocomplete line
