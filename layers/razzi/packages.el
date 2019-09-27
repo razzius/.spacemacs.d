@@ -1,3 +1,4 @@
-(defconst razzi-packages '())
+(defconst razzi-packages '(evil))
 
-(load-file "~/forks/razzi.el/razzi.el")
+(defun razzi/post-init-evil ()
+  (load-file "~/forks/razzi.el/razzi.el"))

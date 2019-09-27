@@ -909,10 +909,10 @@ before packages are loaded."
                       "M-d" 'evil-mc-make-and-goto-next-match
                       "M-p" 'helm-projectile-find-file
                       "M-r" 'sp-raise-sexp
+                      "M-s" 'razzi-flycheck-and-save-buffer
                       "M-n" 'razzi/match-and-next
                       "M-[" 'flycheck-previous-error
                       "M-]" 'flycheck-next-error
-                      "M-s" 'save-buffer
                       "M-f" 'evil-ex-search-forward
                       "M-w" 'kill-this-buffer
                       "N" 'evil-search-previous
@@ -975,6 +975,7 @@ lines downward first."
                       "c" 'evil-change
                       "ae" 'mark-whole-buffer
                       "il" 'razzi/mark-line-text
+                      "M-RET" 'eval-region
                       "M-l" 'evil-next-line
                       "M-c" 'evil-yank
                       "<" 'evil-shift-left
