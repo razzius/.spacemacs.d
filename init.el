@@ -33,6 +33,7 @@
      razzi-shell
      ;; razzishell
 
+     razzi
      razzi-clojure
      razzi-dired
      razzi-helm
