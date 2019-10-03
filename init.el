@@ -146,15 +146,21 @@ before packages are loaded."
     (evil-insert-newline-below)
     (forward-line -1)))
 
+(defun aget (key alist)
+  (cdr (assoc key alist)))
+
 (defun razzi/toggle-true-false ()
   (interactive)
   "fixme nomacro"
-  (if (s-equals? (thing-at-point 'word t) "False")
-      (progn (evil-execute-macro 1 "diw")
-             (insert "True"))
-    (progn (evil-execute-macro 1 "diw")
-           (insert "False")))
-  (evil-normal-state))
+  (let* ((word (thing-at-point 'word t))
+         (replacements '(("False" . "True")
+                         ("True" . "False")
+                         ("true" . "false")
+                         ("false" . "true")))
+         (replacement (aget word replacements)))
+    (evil-with-single-undo
+      (evil-execute-macro 1 "diw")
+      (insert replacement))))
 
 (defun razzi/insert-newline-before()
   (interactive)
@@ -362,11 +368,22 @@ before packages are loaded."
     (kill-new path)
     (message "Copied path '%s' to the clipboard." path)))
 
+(defun razzi/copy-pytest-method-path ()
+  (interactive)
+  (let* ((project-path (razzi/project-file-path))
+         (method (s-replace "." "::" (nose-py-testable)))
+         (path (format "%s::%s" project-path method)))
+    (kill-new (format "pytest %s" path))
+    (message "Copied pytest command with path '%s' to the clipboard." path)))
+
+(defun razzi/project-file-path ()
+  (let ((root (s-append "/" (s-chomp (shell-command-to-string "git root")))))
+    (s-chop-prefix root (buffer-file-name))))
+
 ; todo refactor with above
 (defun razzi/copy-project-file-path ()
   (interactive)
-  (let* ((root (s-append "/" (s-chomp (shell-command-to-string "git root"))))
-         (relative-path (s-chop-prefix root (buffer-file-name))))
+  (let ((relative-path (razzi/project-file-path)))
     (kill-new relative-path)
     (message "Copied path '%s' to the clipboard." relative-path)))
 
@@ -421,7 +438,8 @@ before packages are loaded."
       (save-excursion
         (goto-char (point-min))
         (insert import-path))
-      (razzi/isort))))
+      (razzi/isort)
+      (razzi/autoflake))))
 
 (defun razzi/import-this-copy ()
   (interactive)
@@ -1085,7 +1103,6 @@ lines downward first."
                                         ; auto prettier on save
                                         ; g c spc comment paragraph
                                         ; kill buffer switch to useful buffer
-                                        ; spc ` toggle true false
                                         ; switch to prev buffer should not go to one open in other window
                                         ; C reindents...
 
