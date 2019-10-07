@@ -1,4 +1,4 @@
-(defconst razzi-python-packages '(blacken flycheck-mypy))
+(defconst razzi-python-packages '(blacken elpy flycheck-mypy))
 
 (add-hook 'python-mode-hook (lambda ()
                               (setq evil-shift-width 4)))
@@ -7,6 +7,10 @@
 
 (setq blacken-executable "gray")
 (setq flycheck-flake8rc "~/.config/flake8")
+
+(defun razzi-python/init-elpy ()
+  (use-package elpy
+    :config (elpy-enable)))
 
 (defun razzi-python/init-blacken ()
   (use-package blacken

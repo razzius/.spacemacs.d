@@ -841,6 +841,7 @@ before packages are loaded."
     "f n" 'razzi/copy-file-name
     "f d" 'razzi/copy-file-dir
     "f p" 'razzi/copy-test-file-path
+    "f ;" 'razzi/copy-pytest-method-path
     "f r" 'helm-mini
     "f u" 'razzi/copy-test-method-path
     "f RET" 'razzi/copy-project-file-path
@@ -891,6 +892,7 @@ before packages are loaded."
                       "s-<backspace>" 'evil-delete-backward-word
                       "M-l" 'sp-forward-sexp
                       "M-i" 'razzi/yas-expand
+                      "M-p" 'hippie-expand
                       "M-s" 'razzi/exit-insert-and-save
                       "M-v" 'razzi/paste)
 
@@ -964,6 +966,7 @@ before packages are loaded."
                       "g." 'razzi/search-project-whole-word
                       "g[" 'helm-etags-select
                       "g]" '(lambda () (interactive) (dumb-jump-go) (evil-scroll-line-to-center nil))
+                      "g\\" 'dumb-jump-go-prompt
                       "gf" 'razzi/file-at-point
                       "n" 'evil-search-next
                       ;; "x" 'razzi/delete-delimiters
@@ -1042,14 +1045,6 @@ lines downward first."
   (define-key minibuffer-local-map (kbd "M-v") 'yank)
   (define-key global-map (kbd "M-v") 'yank)
 
-  (defun razzi/replace-control-g-with-nil (char)
-    "Make C-g read as nil so that `r C-g` cancels the replace."
-    (if (eq char ?\C-g)
-        (progn
-          (message "Quit")  ; Without calling message, the cursor stays looking like replace
-          nil)              ; Returning nil cancels the replace
-      char))
-
                                         ; doesn't work with ipdb
   ;; (setq compilation-finish-function
   ;;       (lambda (buf str)
@@ -1108,3 +1103,17 @@ lines downward first."
 
 ;; magit-diff-visit-worktree-file
                                         ;previous useful buffer just cycles between 3 buffers
+; spc w j says minibuffer is inactive when I want to go to top from bottom
+; dont do the stuff with org mode with tab keys
+; disable lisp state keybinding that I hit sometimes
+;; disable this M-j runs the command markdown-move-down, which is an interactive compiled Lisp
+; making an abbrev
+
+;; brak
+;; bakr
+;; bark
+
+;; brak -> bark
+;; bakr -> bark
+; spc n t make snippet like def test_|(self):
+; working in magit diff view leads to resetting to top of diff
