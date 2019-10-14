@@ -1,1083 +1,505 @@
 (defun dotspacemacs/layers ()
+  "Layer configuration:
+This function should only modify configuration layer settings."
   (setq-default
+   ;; Base distribution to use. This is a layer contained in the directory
+   ;; `+distribution'. For now available distributions are `spacemacs-base'
+   ;; or `spacemacs'. (default 'spacemacs)
    dotspacemacs-distribution 'spacemacs
-   dotspacemacs-configuration-layer-path '("~/.spacemacs.d/layers/")
-   dotspacemacs-configuration-layers
-   '(auto-completion
-     clojure
-     ;; csv
-     ;; blahp
-     emacs-lisp
-     ;; lsp
-     ;; fsharp
-     git
-     ;; go
-     ;; haskell
-     html
-     javascript
-     ;; lua
-     markdown
-     osx
-     (python :variables python-backend nil)
-     ;; TODO get rid of lsp :()
-     ;; razzipython
-     ;; ruby
-     ;; rust
-     shell-scripts
-     sql
-     ;; swift
-     typescript
-     yaml
 
-     shell
-     razzi-shell
-     ;; razzishell
+   ;; Lazy installation of layers (i.e. layers are installed only when a file
+   ;; with a supported type is opened). Possible values are `all', `unused'
+   ;; and `nil'. `unused' will lazy install only unused layers (i.e. layers
+   ;; not listed in variable `dotspacemacs-configuration-layers'), `all' will
+   ;; lazy install any layer that support lazy installation even the layers
+   ;; listed in `dotspacemacs-configuration-layers'. `nil' disable the lazy
+   ;; installation feature and you have to explicitly list a layer in the
+   ;; variable `dotspacemacs-configuration-layers' to install it.
+   ;; (default 'unused)
+   dotspacemacs-enable-lazy-installation 'unused
+
+   ;; If non-nil then Spacemacs will ask for confirmation before installing
+   ;; a layer lazily. (default t)
+   dotspacemacs-ask-for-lazy-installation t
+
+   ;; List of additional paths where to look for configuration layers.
+   ;; Paths must have a trailing slash (i.e. `~/.mycontribs/')
+   dotspacemacs-configuration-layer-path '()
+
+   ;; List of configuration layers to load.
+   dotspacemacs-configuration-layers
+   '(markdown
+     html
+     ;; ----------------------------------------------------------------
+     ;; Example of useful layers you may want to use right away.
+     ;; Uncomment some layer names and press `SPC f e R' (Vim style) or
+     ;; `M-m f e R' (Emacs style) to install them.
+     ;; ----------------------------------------------------------------
+     ;; auto-completion
+     ;; better-defaults
+     emacs-lisp
+     git
+     helm
+     (osx :variables osx-swap-option-and-command t)
+     ;; javascript
+     ;; markdown
+     multiple-cursors
+     ;; org
+     ;; (shell :variables
+     ;;        shell-default-height 30
+     ;;        shell-default-position 'bottom)
+     ;; spell-checking
+     syntax-checking
+     treemacs
 
      razzi
-     razzi-clojure
-     razzi-dired
-     razzi-helm
-     razzi-isearch
-     razzi-javascript
-     razzi-projectile
-     razzi-python
-     razzi-tab-completion
-     razzi-vc
-
-     ;; razzi-voice
      razzi-dumb-jump
-     ; razzilisp
-     razzi-restclient
-     razzineotree
-     razzicompletion
+     razzi-javascript
+     ;; razzi-vc
+     razzi-tabs
+     (version-control :variables
+                      git-magit-status-fullscreen t))
 
-     term
-     ;; ivy someday
+   ;; List of additional packages that will be installed without being
+   ;; wrapped in a layer. If you need some configuration for these
+   ;; packages, then consider creating a layer. You can also put the
+   ;; configuration in `dotspacemacs/user-config'.
+   ;; To use a local version of a package, use the `:location' property:
+   ;; '(your-package :location "~/path/to/your-package/")
+   ;; Also include the dependencies as they will not be resolved automatically.
+   dotspacemacs-additional-packages '(general)
 
-     ;; org
-     (syntax-checking :variables syntax-checking-enable-tooltips nil))
-   dotspacemacs-excluded-packages '(org anaconda-mode company-anaconda evil-escape eldoc archive-mode lsp-ui auto-highlight-symbol editorconfig)
-   dotspacemacs-additional-packages '(super-save
-                                      ;; add-node-modules-path
-                                      elpy
-                                      python-test
-                                      smartparens
-                                      cherry-blossom-theme
-                                      load-theme-buffer-local
-                                      flow-js2-mode
-                                      pytest
-                                      buffer-move
-                                      helm-rg
-                                      evil-terminal-cursor-changer
-                                      evil-multiedit
-                                      multiple-cursors
-                                      pyenv-mode
-                                      string-inflection
-                                      virtualenvwrapper
-                                      apib-mode
-                                      general)
-   dotspacemacs-install-packages 'used-only
-   dotspacemacs-delete-orphan-packages t))
+   ;; A list of packages that cannot be updated.
+   dotspacemacs-frozen-packages '()
+
+   ;; A list of packages that will not be installed and loaded.
+   dotspacemacs-excluded-packages '()
+
+   ;; Defines the behaviour of Spacemacs when installing packages.
+   ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
+   ;; `used-only' installs only explicitly used packages and deletes any unused
+   ;; packages as well as their unused dependencies. `used-but-keep-unused'
+   ;; installs only the used packages but won't delete unused ones. `all'
+   ;; installs *all* packages supported by Spacemacs and never uninstalls them.
+   ;; (default is `used-only')
+   dotspacemacs-install-packages 'used-only))
 
 (defun dotspacemacs/init ()
+  "Initialization:
+This function is called at the very beginning of Spacemacs startup,
+before layer configuration.
+It should only modify the values of Spacemacs settings."
+  ;; This setq-default sexp is an exhaustive list of all the supported
+  ;; spacemacs settings.
   (setq-default
+   ;; If non-nil then enable support for the portable dumper. You'll need
+   ;; to compile Emacs 27 from source following the instructions in file
+   ;; EXPERIMENTAL.org at to root of the git repository.
+   ;; (default nil)
+   dotspacemacs-enable-emacs-pdumper nil
+
+   ;; Name of executable file pointing to emacs 27+. This executable must be
+   ;; in your PATH.
+   ;; (default "emacs")
+   dotspacemacs-emacs-pdumper-executable-file "emacs"
+
+   ;; Name of the Spacemacs dump file. This is the file will be created by the
+   ;; portable dumper in the cache directory under dumps sub-directory.
+   ;; To load it when starting Emacs add the parameter `--dump-file'
+   ;; when invoking Emacs 27.1 executable on the command line, for instance:
+   ;;   ./emacs --dump-file=~/.emacs.d/.cache/dumps/spacemacs.pdmp
+   ;; (default spacemacs.pdmp)
+   dotspacemacs-emacs-dumper-dump-file "spacemacs.pdmp"
+
+   ;; If non-nil ELPA repositories are contacted via HTTPS whenever it's
+   ;; possible. Set it to nil if you have no way to use HTTPS in your
+   ;; environment, otherwise it is strongly recommended to let it set to t.
+   ;; This variable has no effect if Emacs is launched with the parameter
+   ;; `--insecure' which forces the value of this variable to nil.
+   ;; (default t)
+   dotspacemacs-elpa-https t
+
+   ;; Maximum allowed time in seconds to contact an ELPA repository.
+   ;; (default 5)
+   dotspacemacs-elpa-timeout 5
+
+   ;; Set `gc-cons-threshold' and `gc-cons-percentage' when startup finishes.
+   ;; This is an advanced option and should not be changed unless you suspect
+   ;; performance issues due to garbage collection operations.
+   ;; (default '(100000000 0.1))
+   dotspacemacs-gc-cons '(100000000 0.1)
+
+   ;; If non-nil then Spacelpa repository is the primary source to install
+   ;; a locked version of packages. If nil then Spacemacs will install the
+   ;; latest version of packages from MELPA. (default nil)
+   dotspacemacs-use-spacelpa nil
+
+   ;; If non-nil then verify the signature for downloaded Spacelpa archives.
+   ;; (default t)
+   dotspacemacs-verify-spacelpa-archives t
+
+   ;; If non-nil then spacemacs will check for updates at startup
+   ;; when the current branch is not `develop'. Note that checking for
+   ;; new versions works via git commands, thus it calls GitHub services
+   ;; whenever you start Emacs. (default nil)
+   dotspacemacs-check-for-update nil
+
+   ;; If non-nil, a form that evaluates to a package directory. For example, to
+   ;; use different package directories for different Emacs versions, set this
+   ;; to `emacs-version'. (default 'emacs-version)
+   dotspacemacs-elpa-subdirectory 'emacs-version
+
+   ;; One of `vim', `emacs' or `hybrid'.
+   ;; `hybrid' is like `vim' except that `insert state' is replaced by the
+   ;; `hybrid state' with `emacs' key bindings. The value can also be a list
+   ;; with `:variables' keyword (similar to layers). Check the editing styles
+   ;; section of the documentation for details on available variables.
+   ;; (default 'vim)
    dotspacemacs-editing-style 'vim
-   dotspacemacs-enable-lazy-installation nil ; as long as I have a patched python layer
-   dotspacemacs-verbose-loading t
-   dotspacemacs-startup-banner nil
-   dotspacemacs-startup-lists '(recents projects)
-   dotspacemacs-startup-recent-list-size 5
-   dotspacemacs-themes '(leuven
-                         monokai
-                         solarized-dark
-                         spacemacs-light
-                         solarized-light
-                         spacemacs-dark
-                         zenburn)
+
+   ;; Specify the startup banner. Default value is `official', it displays
+   ;; the official spacemacs logo. An integer value is the index of text
+   ;; banner, `random' chooses a random text banner in `core/banners'
+   ;; directory. A string value must be a path to an image format supported
+   ;; by your Emacs build.
+   ;; If the value is nil then no banner is displayed. (default 'official)
+   dotspacemacs-startup-banner 'official
+
+   ;; List of items to show in startup buffer or an association list of
+   ;; the form `(list-type . list-size)`. If nil then it is disabled.
+   ;; Possible values for list-type are:
+   ;; `recents' `bookmarks' `projects' `agenda' `todos'.
+   ;; List sizes may be nil, in which case
+   ;; `spacemacs-buffer-startup-lists-length' takes effect.
+   dotspacemacs-startup-lists '((recents . 5)
+                                (projects . 7))
+
+   ;; True if the home buffer should respond to resize events. (default t)
+   dotspacemacs-startup-buffer-responsive t
+
+   ;; Default major mode for a new empty buffer. Possible values are mode
+   ;; names such as `text-mode'; and `nil' to use Fundamental mode.
+   ;; (default `text-mode')
+   dotspacemacs-new-empty-buffer-major-mode 'text-mode
+
+   ;; Default major mode of the scratch buffer (default `text-mode')
+   dotspacemacs-scratch-mode 'text-mode
+
+   ;; Initial message in the scratch buffer, such as "Welcome to Spacemacs!"
+   ;; (default nil)
+   dotspacemacs-initial-scratch-message nil
+
+   ;; List of themes, the first of the list is loaded when spacemacs starts.
+   ;; Press `SPC T n' to cycle to the next theme in the list (works great
+   ;; with 2 themes variants, one dark and one light)
+   dotspacemacs-themes '(spacemacs-dark
+                         spacemacs-light)
+
+   ;; Set the theme for the Spaceline. Supported themes are `spacemacs',
+   ;; `all-the-icons', `custom', `doom', `vim-powerline' and `vanilla'. The
+   ;; first three are spaceline themes. `doom' is the doom-emacs mode-line.
+   ;; `vanilla' is default Emacs mode-line. `custom' is a user defined themes,
+   ;; refer to the DOCUMENTATION.org for more info on how to create your own
+   ;; spaceline theme. Value can be a symbol or list with additional properties.
+   ;; (default '(spacemacs :separator wave :separator-scale 1.5))
+   dotspacemacs-mode-line-theme '(spacemacs :separator wave :separator-scale 1.5)
+
+   ;; If non-nil the cursor color matches the state color in GUI Emacs.
+   ;; (default t)
+   dotspacemacs-colorize-cursor-according-to-state t
+
+   ;; Default font or prioritized list of fonts.
    dotspacemacs-default-font '("Source Code Pro"
-                               :size 17.9
+                               :size 18.0
                                :weight normal
-                               :width normal
-                               :powerline-scale 1.1)
+                               :width normal)
+
+   ;; The leader key (default "SPC")
    dotspacemacs-leader-key "SPC"
+
+   ;; The key used for Emacs commands `M-x' (after pressing on the leader key).
+   ;; (default "SPC")
+   dotspacemacs-emacs-command-key "SPC"
+
+   ;; The key used for Vim Ex commands (default ":")
+   dotspacemacs-ex-command-key ":"
+
+   ;; The leader key accessible in `emacs state' and `insert state'
+   ;; (default "M-m")
    dotspacemacs-emacs-leader-key "M-m"
-   dotspacemacs-major-mode-leader-key "M-,"
-   dotspacemacs-major-mode-emacs-leader-key "C-SPC"
-   dotspacemacs-distinguish-gui-tab t
-   dotspacemacs-command-key ":"
-   ;; If non nil the default layout name is displayed in the mode-line.
+
+   ;; Major mode leader key is a shortcut key which is the equivalent of
+   ;; pressing `<leader> m`. Set it to `nil` to disable it. (default ",")
+   dotspacemacs-major-mode-leader-key ","
+
+   ;; Major mode leader key accessible in `emacs state' and `insert state'.
+   ;; (default "C-M-m")
+   dotspacemacs-major-mode-emacs-leader-key "C-M-m"
+
+   ;; These variables control whether separate commands are bound in the GUI to
+   ;; the key pairs `C-i', `TAB' and `C-m', `RET'.
+   ;; Setting it to a non-nil value, allows for separate commands under `C-i'
+   ;; and TAB or `C-m' and `RET'.
+   ;; In the terminal, these pairs are generally indistinguishable, so this only
+   ;; works in the GUI. (default nil)
+   dotspacemacs-distinguish-gui-tab nil
+
+   ;; Name of the default layout (default "Default")
+   dotspacemacs-default-layout-name "Default"
+
+   ;; If non-nil the default layout name is displayed in the mode-line.
    ;; (default nil)
    dotspacemacs-display-default-layout nil
-   ;; If non nil then the last auto saved layouts are resume automatically upon
+
+   ;; If non-nil then the last auto saved layouts are resumed automatically upon
    ;; start. (default nil)
    dotspacemacs-auto-resume-layouts nil
-   dotspacemacs-auto-save-file-location nil
-   ;; If non nil, `helm' will try to minimize the space it uses. (default nil)
-   dotspacemacs-helm-resize nil
-   ;; if non nil, the helm header is hidden when there is only one source.
-   ;; (default nil)
-   dotspacemacs-helm-no-header t
-   dotspacemacs-enable-paste-micro-state t
-   dotspacemacs-mode-line-theme 'spacemacs
+
+   ;; If non-nil, auto-generate layout name when creating new layouts. Only has
+   ;; effect when using the "jump to layout by number" commands. (default nil)
+   dotspacemacs-auto-generate-layout-names nil
+
+   ;; Size (in MB) above which spacemacs will prompt to open the large file
+   ;; literally to avoid performance issues. Opening a file literally means that
+   ;; no major mode or minor modes are active. (default is 1)
+   dotspacemacs-large-file-size 1
+
+   ;; Location where to auto-save files. Possible values are `original' to
+   ;; auto-save the file in-place, `cache' to auto-save the file to another
+   ;; file stored in the cache directory and `nil' to disable auto-saving.
+   ;; (default 'cache)
+   dotspacemacs-auto-save-file-location 'cache
+
+   ;; Maximum number of rollback slots to keep in the cache. (default 5)
+   dotspacemacs-max-rollback-slots 5
+
+   ;; If non-nil, the paste transient-state is enabled. While enabled, after you
+   ;; paste something, pressing `C-j' and `C-k' several times cycles through the
+   ;; elements in the `kill-ring'. (default nil)
+   dotspacemacs-enable-paste-transient-state nil
+
+   ;; Which-key delay in seconds. The which-key buffer is the popup listing
+   ;; the commands bound to the current keystroke sequence. (default 0.4)
+   dotspacemacs-which-key-delay 0.4
+
+   ;; Which-key frame position. Possible values are `right', `bottom' and
+   ;; `right-then-bottom'. right-then-bottom tries to display the frame to the
+   ;; right; if there is insufficient space it displays it at the bottom.
+   ;; (default 'bottom)
+   dotspacemacs-which-key-position 'bottom
+
+   ;; Control where `switch-to-buffer' displays the buffer. If nil,
+   ;; `switch-to-buffer' displays the buffer in the current window even if
+   ;; another same-purpose window is available. If non-nil, `switch-to-buffer'
+   ;; displays the buffer in a same-purpose window even if the buffer can be
+   ;; displayed in the current window. (default nil)
+   dotspacemacs-switch-to-buffer-prefers-purpose nil
+
+   ;; If non-nil a progress bar is displayed when spacemacs is loading. This
+   ;; may increase the boot time on some systems and emacs builds, set it to
+   ;; nil to boost the loading time. (default t)
+   dotspacemacs-loading-progress-bar t
+
+   ;; If non-nil the frame is fullscreen when Emacs starts up. (default nil)
+   ;; (Emacs 24.4+ only)
    dotspacemacs-fullscreen-at-startup nil
+
+   ;; If non-nil `spacemacs/toggle-fullscreen' will not use native fullscreen.
+   ;; Use to disable fullscreen animations in OSX. (default nil)
+   dotspacemacs-fullscreen-use-non-native nil
+
+   ;; If non-nil the frame is maximized when Emacs starts up.
+   ;; Takes effect only if `dotspacemacs-fullscreen-at-startup' is nil.
+   ;; (default nil) (Emacs 24.4+ only)
    dotspacemacs-maximized-at-startup nil
+
+   ;; If non-nil the frame is undecorated when Emacs starts up. Combine this
+   ;; variable with `dotspacemacs-maximized-at-startup' in OSX to obtain
+   ;; borderless fullscreen. (default nil)
+   dotspacemacs-undecorated-at-startup nil
+
+   ;; A value from the range (0..100), in increasing opacity, which describes
+   ;; the transparency level of a frame when it's active or selected.
+   ;; Transparency can be toggled through `toggle-transparency'. (default 90)
+   dotspacemacs-active-transparency 90
+
+   ;; A value from the range (0..100), in increasing opacity, which describes
+   ;; the transparency level of a frame when it's inactive or deselected.
+   ;; Transparency can be toggled through `toggle-transparency'. (default 90)
+   dotspacemacs-inactive-transparency 90
+
+   ;; If non-nil show the titles of transient states. (default t)
+   dotspacemacs-show-transient-state-title t
+
+   ;; If non-nil show the color guide hint for transient state keys. (default t)
+   dotspacemacs-show-transient-state-color-guide t
+
+   ;; If non-nil unicode symbols are displayed in the mode line.
+   ;; If you use Emacs as a daemon and wants unicode characters only in GUI set
+   ;; the value to quoted `display-graphic-p'. (default t)
+   dotspacemacs-mode-line-unicode-symbols t
+
+   ;; If non-nil smooth scrolling (native-scrolling) is enabled. Smooth
+   ;; scrolling overrides the default behavior of Emacs which recenters point
+   ;; when it reaches the top or bottom of the screen. (default t)
    dotspacemacs-smooth-scrolling t
-   dotspacemacs-line-numbers t
-   dotspacemacs-smartparens-strict-mode t
+
+   ;; Control line numbers activation.
+   ;; If set to `t', `relative' or `visual' then line numbers are enabled in all
+   ;; `prog-mode' and `text-mode' derivatives. If set to `relative', line
+   ;; numbers are relative. If set to `visual', line numbers are also relative,
+   ;; but lines are only visual lines are counted. For example, folded lines
+   ;; will not be counted and wrapped lines are counted as multiple lines.
+   ;; This variable can also be set to a property list for finer control:
+   ;; '(:relative nil
+   ;;   :visual nil
+   ;;   :disabled-for-modes dired-mode
+   ;;                       doc-view-mode
+   ;;                       markdown-mode
+   ;;                       org-mode
+   ;;                       pdf-view-mode
+   ;;                       text-mode
+   ;;   :size-limit-kb 1000)
+   ;; When used in a plist, `visual' takes precedence over `relative'.
+   ;; (default nil)
+   dotspacemacs-line-numbers nil
+
+   ;; Code folding method. Possible values are `evil' and `origami'.
+   ;; (default 'evil)
+   dotspacemacs-folding-method 'evil
+
+   ;; If non-nil `smartparens-strict-mode' will be enabled in programming modes.
+   ;; (default nil)
+   dotspacemacs-smartparens-strict-mode nil
+
+   ;; If non-nil pressing the closing parenthesis `)' key in insert mode passes
+   ;; over any automatically added closing parenthesis, bracket, quote, etc...
+   ;; This can be temporary disabled by pressing `C-q' before `)'. (default nil)
+   dotspacemacs-smart-closing-parenthesis nil
+
+   ;; Select a scope to highlight delimiters. Possible values are `any',
+   ;; `current', `all' or `nil'. Default is `all' (highlight any scope and
+   ;; emphasis the current one). (default 'all)
+   dotspacemacs-highlight-delimiters 'all
+
+   ;; If non-nil, start an Emacs server if one is not already running.
+   ;; (default nil)
+   dotspacemacs-enable-server nil
+
+   ;; Set the emacs server socket location.
+   ;; If nil, uses whatever the Emacs default is, otherwise a directory path
+   ;; like \"~/.emacs.d/server\". It has no effect if
+   ;; `dotspacemacs-enable-server' is nil.
+   ;; (default nil)
+   dotspacemacs-server-socket-dir nil
+
+   ;; If non-nil, advise quit functions to keep server open when quitting.
+   ;; (default nil)
+   dotspacemacs-persistent-server nil
+
+   ;; List of search tool executable names. Spacemacs uses the first installed
+   ;; tool of the list. Supported tools are `rg', `ag', `pt', `ack' and `grep'.
+   ;; (default '("rg" "ag" "pt" "ack" "grep"))
    dotspacemacs-search-tools '("rg" "ag" "pt" "ack" "grep")
+
+   ;; Format specification for setting the frame title.
+   ;; %a - the `abbreviated-file-name', or `buffer-name'
+   ;; %t - `projectile-project-name'
+   ;; %I - `invocation-name'
+   ;; %S - `system-name'
+   ;; %U - contents of $USER
+   ;; %b - buffer name
+   ;; %f - visited file name
+   ;; %F - frame name
+   ;; %s - process status
+   ;; %p - percent of buffer above top of window, or Top, Bot or All
+   ;; %P - percent of buffer above bottom of window, perhaps plus Top, or Bot or All
+   ;; %m - mode name
+   ;; %n - Narrow if appropriate
+   ;; %z - mnemonics of buffer, terminal, and keyboard coding systems
+   ;; %Z - like %z, but including the end-of-line format
+   ;; (default "%I@%S")
+   dotspacemacs-frame-title-format "%a"
+
+   ;; Format specification for setting the icon title format
+   ;; (default nil - same as frame-title-format)
+   dotspacemacs-icon-title-format nil
+
    ;; Delete whitespace while saving buffer. Possible values are `all'
    ;; to aggressively delete empty line and long sequences of whitespace,
-   ;; `trailing' to delete only the whitespace at end of lines, `changed'to
+   ;; `trailing' to delete only the whitespace at end of lines, `changed' to
    ;; delete only whitespace for changed lines or `nil' to disable cleanup.
    ;; (default nil)
-   ;todo replace with git hook(s)
-   dotspacemacs-whitespace-cleanup 'nil))
+   dotspacemacs-whitespace-cleanup nil
+
+   ;; Either nil or a number of seconds. If non-nil zone out after the specified
+   ;; number of seconds. (default nil)
+   dotspacemacs-zone-out-when-idle nil
+
+   ;; Run `spacemacs/prettify-org-buffer' when
+   ;; visiting README.org files of Spacemacs.
+   ;; (default nil)
+   dotspacemacs-pretty-docs nil))
+
+(defun dotspacemacs/user-env ()
+  "Environment variables setup.
+This function defines the environment variables for your Emacs session. By
+default it calls `spacemacs/load-spacemacs-env' which loads the environment
+variables declared in `~/.spacemacs.env' or `~/.spacemacs.d/.spacemacs.env'.
+See the header of this file for more information."
+  (spacemacs/load-spacemacs-env))
 
-(defun dotspacemacs/user-init ()
-  "This function is mostly useful for variables that need to be set
-before packages are loaded."
-  (setq custom-file "~/.emacs.d/custom.el"
-        helm-mode-fuzzy-match t
-        helm-ff-newfile-prompt-p nil
-        helm-M-x-fuzzy-match t
-        ;; exec-path-from-shell-check-startup-files nil
-        )
-  (load custom-file 'noerror))
-
-(defun razzi/insert-newline-after()
-  (interactive)
-  (save-excursion
-    (evil-insert-newline-below)
-    (forward-line -1)))
-
-(defun razzi/toggle-true-false ()
-  (interactive)
-  "fixme nomacro"
-  (if (s-equals? (thing-at-point 'word t) "False")
-      (progn (evil-execute-macro 1 "diw")
-             (insert "True"))
-    (progn (evil-execute-macro 1 "diw")
-           (insert "False")))
-  (evil-normal-state))
-
-(defun razzi/insert-newline-before()
-  (interactive)
-  (save-excursion
-    (evil-insert-newline-above)
-    (forward-line)))
-
-(defun razzi/abbrev-or-add-global-abbrev ()
-  (interactive)
-  (if (abbrev-expansion (thing-at-point 'word))
-      (progn
-        (expand-abbrev)
-        (message "Expanded"))
-    (inverse-add-global-abbrev 1)))
-
-(defun razzi/paste ()
-  (interactive)
-  (evil-paste-before 1)
-  (right-char))
-
-(defun razzi/transpose-previous-chars ()
-  (interactive)
-  (backward-char 1)
-  (transpose-chars nil))
-
-(defun razzi/append-comma ()
-  (interactive)
-  (evil-append 0 0 nil)
-  (move-end-of-line nil)
-  (insert ",")
-  (evil-normal-state))
-
-(defun razzi/save-delete-close ()
-  (interactive)
-  (save-if-buffer-is-file)
-  (kill-this-buffer)
-  (when (> (length (window-list)) 1)
-    (delete-window)))
-
-(defun save-if-buffer-is-file ()
-  (if (and buffer-file-name (buffer-modified-p))
-      (save-buffer)))
-
-(defun razzi/transpose-next-line ()
-  "Switch the current and next lines"
-  (interactive)
-  (forward-line 1)
-  (transpose-lines 1)
-  (forward-line -1))
-
-(defun razzi/transpose-previous-line (arg)
-  "Switch the current and previous lines"
-  (interactive "P")
-  (let ((count (or arg 1))
-        (unused))
-    (dotimes (number count unused)
-      (progn
-        (transpose-lines 1)
-        (forward-line -2)))))
-
-(defun razzi/put-before ()
-  (interactive)
-  (evil-with-single-undo
-    (evil-insert-newline-above)
-    (indent-for-tab-command)
-    (insert (s-trim (current-kill 0)))
-    (forward-line)))
-
-(defun razzi/close-all-file-buffers ()
-  (interactive)
-  (mapc 'kill-buffer (buffer-list)))
-
-(defun razzi/put-after ()
-  (interactive)
-  (evil-with-single-undo
-    (evil-insert-newline-below)
-    (indent-for-tab-command)
-    (insert (s-trim (current-kill 0)))
-    (forward-line)))
-
-(defun razzi/get-current-paragraph ()
-  "hacky af"
-  (interactive)
-  (save-excursion
-    (evil-execute-macro 1 "vap")
-    (let ((text (buffer-substring-no-properties (region-beginning) (region-end))))
-      (evil-execute-macro 1 "vv")
-      text)))
-
-(defun razzi/copy-paragraph ()
-  (interactive)
-  (move-beginning-of-line nil)
-  (let ((sentence (razzi/get-current-paragraph)))
-    (insert sentence)
-    (insert "\n"))) ; TODO in python make this copy a method _or_ class!
-
-(defun razzi/put-debugger ()
-  (interactive)
-  (evil-insert-newline-below)
-  (indent-for-tab-command)
-  (insert "__import__('ipdb').set_trace()"))
-
-(defun razzi/put-uuid ()
-  (interactive)
-  (insert (uuidgen-4)))
-
-(defun razzi/restart-emacs ()
-  (interactive)
-  (save-some-buffers t)
-  (mapcar 'delete-process (process-list))
-  (restart-emacs))
-
-(defun razzi/kill-line-and-whitespace ()
-  (interactive)
-  (sp-kill-hybrid-sexp nil)
-  (delete-trailing-whitespace))
-
-(defun razzi/change-line ()
-  "Make vim C use paredit-kill"
-  (interactive)
-  (sp-kill-hybrid-sexp nil)
-  (evil-insert 0))
-
-(defun razzi/surround-with-single-quotes (start end)
-  (interactive "r")
-  (evil-surround-region start end nil ?'))
-
-(defun razzi/surround-with-backticks (start end)
-  (interactive "r")
-  (evil-surround-region start end nil ?`))
-
-(defun razzi/surround-with-double-quotes (start end)
-  (interactive "r")
-  (evil-surround-region start end nil ?\"))
-
-(defun razzi/surround-with-parens (start end)
-  (interactive "r")
-  (evil-surround-region start end nil ?\))
-  (goto-char (+ 1 end)))
-
-(defun razzi/surround-with-brackets (start end)
-  (interactive "r")
-  (evil-surround-region start end nil ?\])
-  (goto-char (+ 1 end)))
-
-(defun razzi/edit-init ()
-  (interactive)
-  (find-file "~/.spacemacs.d/init.el"))
-
-(defun razzi/file-at-point ()
-  (interactive)
-  (find-file-at-point (thing-at-point 'filename t)))
-
-(defun razzi/mark-line-text ()
-  (interactive)
-  (move-end-of-line nil)
-  (set-mark-command nil)
-  (back-to-indentation))
-
-;; (defun razzi/almost-end-of-line (start end)
-;;   (interactive "r")
-;;   (evil-end-of-line 1)
-;;   (evil-execute-macro 1 "$h"))
-
-(defun razzi/almost-end-of-buffer (arg)
-  (interactive "P")
-  (let ((inhibit-message t))
-    (if (null arg)
-        (progn
-          (end-of-buffer)
-          (previous-line))
-      (evil-goto-line arg))))
-
-(defun razzi/replay-q-macro ()
-  (interactive)
-  (evil-execute-macro 1 "@q"))
-
-(defun razzi/recompile ()
-  (interactive)
-  (save-buffer)
-  (recompile))
-
-(defun razzi/evil-mc-quit-and-quit ()
-  (interactive)
-  (when (and (boundp 'iedit-mode) iedit-mode) (iedit-mode))
-  ;; (evil-mc-undo-all-cursors)
-  (keyboard-quit))
-
-(defun razzi/get-python-module ()
-  (let* ((root (s-append "/" (s-chomp (shell-command-to-string "git root"))))
-         (relative-path (s-chop-prefix root (buffer-file-name))))
-    (s-replace "/" "." (file-name-sans-extension relative-path))))
-
-(defun razzi/copy-test-file-path ()
-  (interactive)
-  (let ((module (razzi/get-python-module)))
-    (kill-new module)
-    (message "Copied module '%s' to the clipboard." module)))
-
-(defun razzi/copy-test-method-path ()
-  (interactive)
-  (let* ((module (razzi/get-python-module))
-         (method (nose-py-testable))
-         (path (format "%s.%s" module method)))
-    (kill-new path)
-    (message "Copied path '%s' to the clipboard." path)))
-
-; todo refactor with above
-(defun razzi/copy-project-file-path ()
-  (interactive)
-  (let* ((root (s-append "/" (s-chomp (shell-command-to-string "git root"))))
-         (relative-path (s-chop-prefix root (buffer-file-name))))
-    (kill-new relative-path)
-    (message "Copied path '%s' to the clipboard." relative-path)))
-
-; todo no macro
-(defun razzi/double-quotes-to-single ()
-  (interactive)
-  (evil-execute-macro 1 "cs\"'"))
-
-(defun razzi/git-push ()
-  (interactive)
-  (shell-command "git push"))
-
-(defun always-yes (&rest _) t)
-
-(defun no-confirm (fun &rest args)
-  "Apply FUN to ARGS, skipping user confirmations."
-  (cl-letf (((symbol-function 'y-or-n-p) #'always-yes)
-            ((symbol-function 'yes-or-no-p) #'always-yes))
-    (apply fun args)))
-
-(defun razzi/run-script-on-file (command)
-  (save-buffer)
-  (shell-command (concat command " " (buffer-file-name)))
-  (no-confirm 'revert-buffer t t))
-
-(defun razzi/buffer-string-for-buffer (buffer)
-  (with-current-buffer buffer
-    (buffer-string)))
-
-(defun razzi/get-import-path ()
-  (when (get-buffer "*import_it-output*")
-    (with-current-buffer "*import_it-output*"
-      (erase-buffer)))
-
-  (call-process
-     "import_it"
-     nil
-     '("*import_it-output*" "*import_it-error*")
-     nil
-     (thing-at-point 'symbol) (shell-command-to-string "git root"))
-
-  (razzi/buffer-string-for-buffer "*import_it-output*")
-
-  (razzi/autoflake))
-
-(defun razzi/import-this ()
-  (interactive)
-  (save-buffer)
-  ;; (shell-command-to-string "git root")
-  (let ((import-path (razzi/get-import-path)))
-    (progn
-      (save-excursion
-        (goto-char (point-min))
-        (insert import-path))
-      (razzi/isort))))
-
-(defun razzi/import-this-copy ()
-  (interactive)
-  (kill-new (s-trim (razzi/get-import-path))))
-
-; TODO move to python
-; TODO fails silently
-(defun razzi/isort ()
-  (interactive)
-  (razzi/run-script-on-file "isort"))
-
-(defun razzi/autoflake ()
-  (interactive)
-  (razzi/run-script-on-file "autoflake --remove-all-unused-imports -i"))
-
-(defun razzi/importmagic ()
-  (interactive)
-  (razzi/run-script-on-file "importmagic"))
-
-(defun razzi/prettier ()
-  (interactive)
-  (razzi/run-script-on-file "prettier --write"))
-
-(defun razzi/gray ()
-  (interactive)
-  (razzi/run-script-on-file "gray"))
-
-(defun razzi/split-after-comma ()
-  (interactive)
-  (evil-find-char 1 ?,)
-  (evil-forward-char)
-  (if (eq (following-char) ?\s)
-      (evil-replace (point) (+ (point) 1) nil ?\n)
-    (progn
-      (insert ?\n)
-      (indent-for-tab-command))))
-
-(defun razzi/create-scratch-buffer ()
-  (interactive)
-  (switch-to-buffer (get-buffer-create "*scratch*")))
-
-(defun razzi/put-paren ()
-  "fixme no macro"
-  (interactive)
-  (evil-execute-macro 1 "ox")
-  (evil-normal-state)
-  (evil-execute-macro 1 "r)<<"))
-
-(defun razzi/next-and-center ()
-  (interactive)
-  (let ((inhibit-redisplay t))
-    (evil-search-next 1)
-    (evil-scroll-line-to-center nil)))
-
-(defun razzi/previous-and-center ()
-  (interactive)
-  (let ((inhibit-redisplay t))
-    (evil-search-previous 1)
-    (evil-scroll-line-to-center nil)))
-
-(defun razzi/exit-insert-and-save ()
-  (interactive)
-  (evil-normal-state)
-  (save-buffer))
-
-(defun prelude-eval-and-replace ()
-  "Replace the preceding sexp with its value."
-  (interactive)
-  (backward-kill-sexp)
-  (condition-case nil
-      (prin1 (eval (read (current-kill 0)))
-             (current-buffer))
-    (error (message "Invalid expression")
-           (insert (current-kill 0)))))
-
-(defun razzi/copy-file-name ()
-  "Copy the current buffer file name to the clipboard."
-  (interactive)
-  (let ((filename (file-name-nondirectory (buffer-file-name))))
-    (when filename
-      (kill-new filename)
-      (message "Copied buffer file name '%s' to the clipboard." filename))))
-
-(defun razzi/file-access-from-clipboard ()
-  "Copy the current buffer file name to the clipboard."
-  (interactive)
-  (find-file (s-join "/" (mapcar 's-trim (list (shell-command-to-string "git root")
-                                               (current-kill 0))))))
-
-(defun razzi/copy-file-dir ()
-  "Copy the current buffer directory to the clipboard."
-  (interactive)
-  (kill-new default-directory)
-  (message "Copied buffer directory '%s' to the clipboard." default-directory))
-
-(defun razzi/split-alternate-buffer ()
-  (interactive)
-  (split-window-right)
-  (spacemacs/alternate-buffer))
-
-(defun razzi/exit-insert ()
-  (interactive)
-  (expand-abbrev)
-  (evil-normal-state))
-
-(defun razzi/open-sexp ()
-  (interactive)
-  (evil-first-non-blank)
-  (sp-forward-sexp)
-  (newline-and-indent)
-  (evil-insert-state))
-
-(defun razzi/open-sexp-eol ()
-  (interactive)
-  (evil-end-of-line)
-  (newline-and-indent)
-  (evil-insert-state))
-
-(defun razzi/python-format ()
-  (interactive)
-  (shell-command (format "python_format.sh %s" (buffer-file-name)))
-  (revert-buffer nil t))
-
-(defun razzi/search-paste ()
-  (interactive)
-  (minibuffer-with-setup-hook '(lambda () (yank))
-    (spacemacs/helm-project-smart-do-search)))
-
-(defun razzi/search-non-test ()
-  (interactive)
-  (minibuffer-with-setup-hook '(lambda () (insert "-Ttpy -tpy "))
-    (spacemacs/helm-project-smart-do-search)))
-
-(defun razzi/monroe ()
-  (interactive)
-  (monroe "localhost:7888"))
-
-(defun copy-region-to-other-window (start end)
-  "Move selected text to other window"
-  (interactive "r")
-  (if (use-region-p)
-      (save-excursion
-        (kill-ring-save start end)
-        (other-window 1)
-        (yank)
-        (newline))
-    (message "No region selected")))
-
-(defun razzi/hackro ()
-  "Other window, go to bottom and into insert mode"
-  (interactive)
-  (other-window 1)
-  (evil-execute-macro 1 "GA"))
-
-(defun razzi-previous-useful-buffer ()
-  (interactive)
-  (switch-to-buffer (nth 2 (seq-filter #'buffer-file-name (buffer-list)))))
-
-(defun razzi/associate-extension-mode (extension mode)
-  (let ((pattern (s-concat "\\." extension "$")))
-    (add-to-list 'auto-mode-alist (cons pattern mode))))
-
-(defun toggle-window-split ()
-  (interactive)
-  (if (= (count-windows) 2)
-      (let* ((this-win-buffer (window-buffer))
-         (next-win-buffer (window-buffer (next-window)))
-         (this-win-edges (window-edges (selected-window)))
-         (next-win-edges (window-edges (next-window)))
-         (this-win-2nd (not (and (<= (car this-win-edges)
-                     (car next-win-edges))
-                     (<= (cadr this-win-edges)
-                     (cadr next-win-edges)))))
-         (splitter
-          (if (= (car this-win-edges)
-             (car (window-edges (next-window))))
-          'split-window-horizontally
-        'split-window-vertically)))
-    (delete-other-windows)
-    (let ((first-win (selected-window)))
-      (funcall splitter)
-      (if this-win-2nd (other-window 1))
-      (set-window-buffer (selected-window) this-win-buffer)
-      (set-window-buffer (next-window) next-win-buffer)
-      (select-window first-win)
-      (if this-win-2nd (other-window 1))))))
-
-(defun razzi/switch-to-other-buffer ()
-  (interactive)
-  (switch-to-buffer (cadr (buffer-list))))
-
-(defun razzi/match-and-next ()
-  (interactive)
-  (evil-multiedit-match-symbol-and-next)
-
-  (evil-multiedit-match-symbol-and-next))
-
-(defun copy-file-name-to-clipboard ()
-  "Copy the current buffer file name to the clipboard."
-  (interactive)
-  (let ((filename (if (equal major-mode 'dired-mode)
-                      default-directory
-                    (buffer-file-name))))
-    (when filename
-      (kill-new filename)
-      (message "Copied buffer file name '%s' to the clipboard." filename))))
-
-(defun razzi/yas-expand()
-  (interactive)
-  (yas-expand)
-  (if (eq (following-char) ?\s)
-      (delete-char 1)))
-
-(defun razzi/surround-paragraph()
-  (interactive)
-                                        ; blerg
-  (evil-execute-macro 1 "ysil<p"))
-;; (evil-visual-char)
-;; (evil-end-of-line)
-;; (evil-surround-region (region-beginning) (1+ (region-end)) 'line ?<)
-;; ;; (self-insert-command "p")
-;; (exit-minibuffer))
-
-(defun razzi/surround-h2()
-  (interactive) ; blerg
-  (evil-execute-macro 1 "ysil<h2"))
-
-(defun razzi/surround-div()
-  (interactive)
-                                        ; blerg
-  (evil-execute-macro 1 "ysil<div"))
-
-                                        ; todo clojure style (defmacro let)
-;; (let [filename 1] (message filename))
-
-                                        ; vaguely better than copying and pasting manually
-(defun razzi/send-region-to-tmux (start end)
-  (interactive "r")
-  (setq tmux-fd "/dev/ttys001") ; todo hardcoded
-  (shell-command (s-concat "sudo writevt " tmux-fd " \"" (buffer-substring start end) "\"")))
-
-(defun razzi/search-project-whole-word ()
-  (interactive)
-  ;todo
-  (evil-execute-macro 1 "g/")
-  (sleep-for 0 500)
-  (evil-execute-macro 1 "\b"))
-
-(defun razzi/swap-commented-out ()
-  (interactive)
-  (evilnc-comment-or-uncomment-lines 1)
-  (evil-next-line)
-  (evilnc-comment-or-uncomment-lines 1))
-
-(defun razzi/star-isearch ()
-  (interactive)
-  (while (not (looking-at "[A-z]"))
-    (forward-char))
-
-  (let ((inhibit-redisplay 1)
-        (selection (evil-visual-state-p))
-        (visual-type (evil-visual-type))
-        (text (if (use-region-p)
-                  (buffer-substring-no-properties (region-beginning) (region-end))
-                (thing-at-point 'symbol))))
-                                        ; Go to the start of the word if not in visual and not already at the start
-    (when (and (not selection)
-               (not (looking-at "\\_<")))
-      (backward-sexp))
-    (evil-exit-visual-state)
-    (isearch-mode t)
-    (isearch-yank-string text)
-    (isearch-done)
-    (evil-search-next)
-    (when (and
-           selection
-           (not (eq visual-type 'line)))
-      (evil-search-previous))))
-
-(defun razzi/pound-isearch ()
-  (interactive)
-  (while (not (looking-at "[A-z]"))
-    (backward-char))
-  (let ((inhibit-redisplay 1)
-        (selection (evil-visual-state-p))
-        (visual-type (evil-visual-type))
-        (text (if (use-region-p)
-                  (buffer-substring-no-properties (region-beginning) (region-end))
-                (thing-at-point 'symbol))))
-    (when (and (not selection)
-               (not (looking-at "\\_<")))
-      (progn
-        (backward-sexp)
-        (if (eq ?' (char-before (point)))
-            (forward-char))))
-    (save-excursion
-      (isearch-mode nil)
-      (message text)
-      (isearch-yank-string text)
-      (isearch-done))
-    (evil-search-next)
-    (when (and
-           selection
-           (not (eq visual-type 'line)))
-      (evil-search-previous))))
-
-(defun razzi/delete-delimiters ()
-  (interactive)
-  (if (-contains? '(?\{ ?\} ?\( ?\)) (following-char))
-      (evil-execute-macro 1 "%mx%dl`xdl")
-    (evil-delete-char (point) (+ (point) 1))))
 
 (defun dotspacemacs/user-config ()
+  "It is mostly for variables that should be set before packages are loaded.
+If you are unsure, try setting them in `dotspacemacs/user-config' first."
   (setq
-   evil-search-module 'evil-search
-   shell-file-name "/bin/bash"
-   flycheck-python-flake8-executable "flake8"
-   display-time-default-load-average nil
-   tags-add-tables t
-   cider-allow-jack-in-without-project t
+   custom-file "~/.emacs.d/custom.el"
+   syntax-checking-enable-tooltips nil)
+  )
 
-   recentf-exclude '("TAGS")
-   create-lockfiles nil
-   evil-cross-lines t
-   evil-ex-substitute-global t
-   evil-insert-state-cursor 'bar
-   evil-regexp-search nil
-   ;; evil-regexp-search t
-   evilmi-always-simple-jump t
-   ns-pop-up-frames nil
-   hl-todo-keyword-faces nil
+(defun dotspacemacs/user-load ()
+  "Library to load while dumping.
+This function is called only while dumping Spacemacs configuration. You can
+`require' or `load' the libraries of your choice that will be included in the
+dump."
+  )
 
-   clojure-indent-style :always-indent
-   js2-strict-missing-semi-warning nil
-   python-indent-guess-indent-offset nil
-
-   search-upper-case t
-   abbrev-file-name "~/.emacs.d/abbrev_defs.el"
-   frame-title-format "%f"
-
-   save-abbrevs 'silently
-   confirm-nonexistent-file-or-buffer nil
-   kill-buffer-query-functions
-   (delq 'process-kill-buffer-query-function kill-buffer-query-functions)
-
-   powerline-default-separator 'nil
-   vc-follow-symlinks t
-
-   mc/always-run-for-all t
-   web-mode-markup-indent-offset 2
-   mac-option-modifier 'super
-   mac-command-modifier 'meta)
-
-  (abbrev-mode)
-  (display-time-mode)
-  (super-save-mode)
-
-  (global-auto-revert-mode 1)
-  ;; (global-evil-mc-mode 1)
-  (global-subword-mode)
-  (menu-bar-mode -1)
-
-  (spaceline-toggle-buffer-encoding-abbrev-off)
-  (spaceline-toggle-buffer-size-off)
-  (spaceline-toggle-minor-modes-off)
-
-  (set-face-foreground 'font-lock-comment-face "dark grey")
-  (set-face-foreground 'font-lock-doc-face "teal")
-  ;; (set-face-background 'hl-line "#f3f9ff")
-
-  (evil-leader/set-key
-    ;; "'" 'razzi/double-quotes-to-single
-    ")" 'razzi/put-paren ; this is janky but useful
-    "," 'razzi/append-comma ; only makes sense for python-like
-    "-" 'razzi/save-delete-close
-    "." 'razzi/copy-paragraph ; unused
-    "`" 'razzi/toggle-true-false ; unused
-    "<backtab>" 'razzi/split-alternate-buffer
-    "C-o" 'razzi/put-before
-    "DEL" 'razzi/restart-emacs
-    "ESC" 'kill-this-buffer
-    "O" 'razzi/put-before
-    "RET" 'razzi/split-after-comma
-    "SPC" 'helm-M-x
-    "TAB" 'spacemacs/alternate-buffer
-    "[" 'evil-open-above
-    "\\" 'multi-term
-    "]" '(lambda () (interactive) (evil-execute-macro 1 "ysiW]"))
-    "c r" 'razzi/recompile
-    "d d" '(lambda () (interactive) (funcall 'describe-variable (variable-at-point)))
-    "e n" 'flycheck-next-error
-    "e p" 'flycheck-previous-error
-    "f SPC" 'copy-file-name-to-clipboard
-    "f a" 'razzi/file-access-from-clipboard
-    "f i" 'razzi/edit-init
-    "f n" 'razzi/copy-file-name
-    "f d" 'razzi/copy-file-dir
-    "f p" 'razzi/copy-test-file-path
-    "f r" 'helm-mini
-    "f u" 'razzi/copy-test-method-path
-    "f RET" 'razzi/copy-project-file-path
-    "g g" 'magit-checkout
-    "g p" 'razzi/git-push
-    "h f" 'describe-function
-    "h v" 'describe-variable
-    "i c" 'razzi/copy-paragraph
-    "i d" 'razzi/put-debugger
-    "i i" 'razzi/import-this
-    "i y" 'razzi/import-this-copy
-    "i m" 'razzi/importmagic
-    "i f" 'razzi/prettier ; could be more generic
-    "i u" 'razzi/put-uuid
-    "i e" 'iedit-mode
-    "i s" 'razzi/isort
-    "i a" 'razzi/autoflake
-    "i g" 'razzi/gray
-    "i b" 'blacken-buffer
-    "o" 'razzi/put-after
-    "C-SPC" 'spacemacs//workspaces-eyebrowse-next-window-config-n
-    "q b" 'razzi/close-all-file-buffers
-    "q r" 'razzi/restart-emacs
-    "s /" 'razzi/search-non-test
-    "t t" 'elpy-test
-    "t SPC" 'spacemacs/toggle-debug-on-error
-    "v" 'razzi/search-paste
-    "w o" 'other-window
-    "=" 'razzi/python-format)
-
-  (mapc 'evil-declare-not-repeat '(razzi/next-and-center razzi/previous-and-center flycheck-next-error flycheck-previous-error))
+(defun dotspacemacs/user-config ()
+  "Configuration for user code:
+This function is called at the very end of Spacemacs startup, after layer
+configuration.
+Put your configuration code here, except for variables that should be set
+before packages are loaded."
+  (setq evil-cross-lines t
+        evil-ex-substitute-global t)
 
   (global-set-key (kbd "C-`") 'describe-key)
 
-  (evil-set-initial-state 'term-mode 'insert)
-
-  (general-define-key :states 'insert
-                      ;; "-" '(lambda () (interactive) (insert "_"))
-                      ;; "_" '(lambda () (interactive) (insert "-"))
-                      "<escape>" 'razzi/exit-insert
-                      "C-c a" 'razzi/abbrev-or-add-global-abbrev
-                      "C-h" 'sp-backward-delete-char
-                      "C-l" 'sp-slurp-hybrid-sexp
-                      "C-t" 'razzi/transpose-previous-chars
-                      "C-p" 'evil-complete-previous
-                      "<tab>" 'razzi/yas-expand
-                      "M-RET" 'lisp-state-eval-sexp-end-of-line
-                      "s-<backspace>" 'evil-delete-backward-word
-                      "M-l" 'sp-forward-sexp
-                      "M-i" 'razzi/yas-expand
-                      "M-s" 'razzi/exit-insert-and-save
-                      "M-v" 'razzi/paste)
+  (evil-leader/set-key
+    "ESC" 'razzi-save-delete-close
+    "f i" 'spacemacs/find-dotfile
+    "f SPC" 'razzi-copy-file-name
+    "e n" 'flycheck-next-error
+    "e p" 'flycheck-previous-error
+    "o" 'razzi-put-after
+    "q b" 'razzi-close-all-file-buffers)
 
   (general-define-key :states 'normal
-                      "<tab>" (lambda () (interactive)) ; sometimes I hit this by mistake; causes syntax errors
-                      "-" 'razzi/transpose-next-line
-                      "0" 'evil-first-non-blank
-                      "<backtab>" 'razzi-previous-useful-buffer
-                      "C" 'razzi/change-line
-                      "C-SPC j" 'evil-window-down
-                      "C-SPC k" 'evil-window-up
-                      "C-a" 'evil-numbers/inc-at-pt
-                      "C-g" 'razzi/evil-mc-quit-and-quit
-                      "C-h" 'evil-window-left
-                      "C-l" 'evil-window-right
-                      "C-p" 'evil-paste-after
-                      "C-x" 'evil-numbers/dec-at-pt
-                      "C-;" 'evil-ex-nohighlight
-                      "D" 'razzi/kill-line-and-whitespace
-                      "E" 'forward-symbol
-                      "G" 'razzi/almost-end-of-buffer
-                      "K" 'evil-previous-line ; typo this one all the time
-                      "M-a" 'mark-whole-buffer
-                      "M-c" 'evil-yank-line
-                      "M--" 'spacemacs/scale-down-font
-                      "M-0" 'spacemacs/reset-font-size
                       "M-/" 'evilnc-comment-or-uncomment-lines
-                      "M-?" 'razzi/swap-commented-out
-                      "M-l" 'evil-visual-line
-                      "M-=" 'spacemacs/scale-up-font
                       "M-RET" 'lisp-state-eval-sexp-end-of-line
-                      "M-'" 'spacemacs/eval-current-form-sp
-                      "M-`" 'other-window
-                      "M-d" 'evil-mc-make-and-goto-next-match
-                      "M-p" 'helm-projectile-find-file
-                      "M-r" 'sp-raise-sexp
                       "M-s" 'razzi-flycheck-and-save-buffer
-                      "M-n" 'razzi/match-and-next
-                      "M-[" 'flycheck-previous-error
-                      "M-]" 'flycheck-next-error
-                      "M-f" 'evil-ex-search-forward
-                      "M-w" 'kill-this-buffer
-                      "N" 'evil-search-previous
-                      "Q" 'razzi/replay-q-macro
-                      "/" 'evil-search-forward
-                      "[ SPC" 'razzi/insert-newline-before
-                      "[ c" 'git-gutter:previous-hunk
-                      "] SPC" 'razzi/insert-newline-after
-                      "] c" 'git-gutter:next-hunk
-                      "^" 'evil-digit-argument-or-evil-beginning-of-line
-                      "_" 'razzi/transpose-previous-line
-                      "*" 'razzi/star-isearch
-                      "#" 'razzi/pound-isearch
-                                        ; todo visual c buggy now
-                      "c" (general-key-dispatch 'evil-change
-                            "d" 'find-file
-                            "ru" 'string-inflection-upcase
-                            "rs" 'string-inflection-underscore
-                            "rt" 'string-inflection-camelcase
-                            "rc" 'string-inflection-lower-camelcase
-                            "rd" 'string-inflection-kebab-case
-                            "c" 'magit-commit) ; todo should be in vc layer
-                      "<" (general-key-dispatch 'evil-shift-left
-                            "p" 'razzi/surround-paragraph
-                            "2" 'razzi/surround-h2
-                            "d" 'razzi/surround-div) ; todo should be in html layer
-                      "M-, p" 'razzi/surround-paragraph
-                      "M-, v" 'razzi/surround-div
-                      "gb" 'magit-blame-addition
-                      "g/" 'spacemacs/helm-project-smart-do-search-region-or-symbol
-                      "g." 'razzi/search-project-whole-word
-                      "g[" 'helm-etags-select
-                      "g]" '(lambda () (interactive) (dumb-jump-go) (evil-scroll-line-to-center nil))
-                      "gf" 'razzi/file-at-point
-                      "n" 'evil-search-next
-                      ;; "x" 'razzi/delete-delimiters
-                      "s-d" 'evil-mc-make-and-goto-next-match
-                      "s-x" 'helm-M-x)
+                      "g /" 'spacemacs/helm-project-smart-do-search-region-or-symbol
+                      "g T" 'centaur-tabs-backward
+                      "g ]" 'dumb-jump-go
+                      "g s" 'magit-status
+                      "g t" 'centaur-tabs-forward)
 
-  ;; (general-define-key :states 'visual "$" nil)
-
-  (evil-define-motion evil-last-non-blank (count)
-    "Move the cursor to the last non-blank character
-on the current line. If COUNT is given, move COUNT - 1
-lines downward first."
-    :type inclusive
-    (evil-end-of-line count)
-    (re-search-backward "^\\|[^[:space:]]")
-    (setq evil-this-type (if (eolp) 'exclusive 'inclusive)))
-
-  (general-define-key :states 'visual
-                      "!" 'sort-lines
-                      "$" 'evil-last-non-blank
-                      "'" 'razzi/surround-with-single-quotes
-                      "`" 'razzi/surround-with-backticks
-                      ")" 'razzi/surround-with-parens
-                      "\"" 'razzi/surround-with-double-quotes
-                      "]" 'razzi/surround-with-brackets
-                      "E" 'forward-symbol
-                      "c" 'evil-change
-                      "ae" 'mark-whole-buffer
-                      "il" 'razzi/mark-line-text
-                      "M-RET" 'eval-region
-                      "M-l" 'evil-next-line
-                      "M-c" 'evil-yank
-                      "<" 'evil-shift-left
-                      "M-d" 'mc/mark-next-symbol-like-this)
-
-  (evil-define-text-object whole-buffer (count &optional beginning end type)
-    (evil-range 0 (point-max)))
+  (general-define-key :states 'insert
+                      "M-s" 'razzi-exit-insert-and-save
+                      "C-t" 'razzi-transpose-previous-chars)
 
   (general-define-key :states 'operator
                       "E" 'forward-symbol
                       "ae" 'whole-buffer
-                      "SPC" 'evil-inner-symbol)
-
-  (define-key minibuffer-local-map (kbd "C-j") 'exit-minibuffer)
-
-  ;; (define-key helm-do-ag-map (kbd "M-v") 'yank)
-
-  ;; (company-tng-configure-default)
-  (add-hook 'evil-insert-state-exit-hook 'expand-abbrev)
-  (add-hook 'focus-out-hook 'garbage-collect)
-  (add-hook 'term-mode-hook 'turn-off-evil-mode)
-
-  (defun razzi/dark-terminal ()
-    (setq buffer-face-mode-face '(:background "#000000"
-                                              :foreground "#FFFFFF"))
-    (buffer-face-mode)
-    (set-face-background 'hl-line nil)
-    (hl-line-mode nil))
-
-  ;; (add-hook 'term-mode-hook 'razzi/dark-terminal)
-
-  (defun razzi/make-parent-directories (filename)
-    "Create parent directory if not exists while visiting file."
-    (unless (file-exists-p filename)
-      (let ((dir (file-name-directory filename)))
-        (unless (file-exists-p dir)
-          (make-directory dir)))))
-
-  ;; doesn't work
-  (advice-add 'find-file :before 'razzi/make-parent-directories)
-
-  (define-key minibuffer-local-map (kbd "M-v") 'yank)
-  (define-key global-map (kbd "M-v") 'yank)
-
-  ; doesn't work with ipdb
-  ;; (setq compilation-finish-function
-  ;;       (lambda (buf str)
-  ;;         (if (null (string-match ".*exited abnormally.*" str))
-  ;;             ;;no errors, make the compilation window go away in a few seconds
-  ;;             (progn
-  ;;               (run-at-time
-  ;;                 "2 sec" nil 'delete-windows-on
-  ;;                 (get-buffer-create "*compilation*"))
-  ;;               (message "No Compilation Errors!")))))
-
-  (add-hook 'term-mode-hook (lambda nil
-                              (global-hl-line-mode -1)
-                              ;; (set-face-foreground 'term "white")
-                              ;; (set-face-background 'term "black")
-                              (load-theme-buffer-local 'cherry-blossom (current-buffer))))
-
-  ;; (remove-hook 'term-mode-hook (first term-mode-hook))
-
-  (advice-add 'spacemacs/check-large-file :around 'no-confirm))
-
-; complain function which will put the string as a comment in a relevant config per mode
-; todo use parinfer
-; when yyp copy 2 lines, keep cursor on same character
-; ui for perspectives, like tmux
-; ! fixup commit onto last commit that edited that line
-; switch to hydra
-; evilmc visual E and $ not working
-; q from split doesn't close the split until redraw?
-;don't show . and .. in helm
-; slurp markdown
-; eval current finds outer form in comment
-; don't throw the comments all the way to the right
-; a function text object python
-; o put comma when adding to python collection
-; rename file doesn't work if moving in to directory
-; https://www.reddit.com/r/emacs/comments/3sd3ue/ask_remacs_sending_text_to_an_ansiterm_buffer/
-; !! tab shouldn't expand abbrevs when it's not on its own
-(setenv "RIPGREP_CONFIG_PATH" (expand-file-name "~/.rgrc"))
-
-;; (set-face-background 'lsp-face-highlight-read nil)
-;; (set-face-background 'lsp-face-highlight-write nil)
-;; clipboard link
-;; cr<space> split into words
-;; j shouldn't go to far left margin in lisp
-                                        ; way to search for whole word on * and even symbols only not constant strings for example
-
-                                        ; interactive ask for keybinding
-                                        ; json lint
-                                        ; c-r-SPC to sep into spaces
-                                        ; auto prettier on save
-                                        ; g c spc comment paragraph
-                                        ; kill buffer switch to useful buffer
-                                        ; spc ` toggle true false
-                                        ; switch to prev buffer should not go to one open in other window
-                                        ; C reindents...
-
-;; magit-diff-visit-worktree-file
-                                        ;previous useful buffer just cycles between 3 buffers
-;m-i autocomplete line
+                      "SPC" 'evil-inner-symbol))

@@ -1,6 +1,6 @@
 (defun razzi/magit-commit ()
   (interactive)
-  (save-if-buffer-is-file)
+  (razzi-save-if-buffer-is-file)
   (when (not (magit-anything-staged-p))
     (magit-run-git "add" "-u"))
   (let ((same-window-regexps nil))
@@ -8,7 +8,7 @@
 
 (defun razzi/save-and-status ()
   (interactive)
-  (save-if-buffer-is-file)
+  (razzi-save-if-buffer-is-file)
   (magit-status))
 
 (defun razzi/magit-push ()
@@ -32,9 +32,6 @@
                           "c" 'razzi/magit-commit
                           "e" 'magit-commit-extend)
                     "@" 'razzi/magit-reset-last)
-
-(magit-define-popup-action 'magit-push-popup ?p "Push current :D" 'razzi/magit-push)
-(magit-define-popup-action 'magit-push-popup ?h "Push to heroku :O" 'razzi/magit-push-heroku)
 
 (define-key evil-normal-state-map (kbd "gs") 'razzi/save-and-status)
 (define-key evil-normal-state-map (kbd "gp") 'razzi/magit-push)
