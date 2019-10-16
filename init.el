@@ -49,7 +49,8 @@ This function should only modify configuration layer settings."
      ;;        shell-default-height 30
      ;;        shell-default-position 'bottom)
      ;; spell-checking
-     syntax-checking
+     (syntax-checking :variables
+                      syntax-checking-enable-tooltips nil)
      treemacs
 
      razzi
@@ -362,7 +363,7 @@ It should only modify the values of Spacemacs settings."
    ;;   :size-limit-kb 1000)
    ;; When used in a plist, `visual' takes precedence over `relative'.
    ;; (default nil)
-   dotspacemacs-line-numbers nil
+   dotspacemacs-line-numbers t
 
    ;; Code folding method. Possible values are `evil' and `origami'.
    ;; (default 'evil)
@@ -453,17 +454,13 @@ See the header of this file for more information."
 (defun dotspacemacs/user-config ()
   "It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
-  (setq
-   custom-file "~/.emacs.d/custom.el"
-   syntax-checking-enable-tooltips nil)
-  )
+  (setq custom-file "~/.emacs.d/custom.el"))
 
 (defun dotspacemacs/user-load ()
   "Library to load while dumping.
 This function is called only while dumping Spacemacs configuration. You can
 `require' or `load' the libraries of your choice that will be included in the
-dump."
-  )
+dump.")
 
 (defun dotspacemacs/user-config ()
   "Configuration for user code:
@@ -477,13 +474,20 @@ before packages are loaded."
   (global-set-key (kbd "C-`") 'describe-key)
 
   (evil-leader/set-key
+    "<backtab>" 'razzi/split-alternate-buffer
     "ESC" 'razzi-save-delete-close
-    "f i" 'spacemacs/find-dotfile
-    "f SPC" 'razzi-copy-file-name
+    "O" 'razzi/put-before
+    "RET" 'razzi-split-after-comma
+    "SPC" 'helm-M-x
+    "TAB" 'spacemacs/alternate-buffer
+    "[" 'evil-open-above
     "e n" 'flycheck-next-error
     "e p" 'flycheck-previous-error
+    "f SPC" 'razzi-copy-file-name
+    "f i" 'spacemacs/find-dotfile
     "o" 'razzi-put-after
-    "q b" 'razzi-close-all-file-buffers)
+    "q b" 'razzi-close-all-file-buffers
+    "q r" 'razzi-restart-emacs)
 
   (general-define-key :states 'normal
                       "M-/" 'evilnc-comment-or-uncomment-lines
