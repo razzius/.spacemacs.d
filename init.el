@@ -897,7 +897,7 @@ before packages are loaded."
                       "M-v" 'razzi/paste)
 
   (general-define-key :states 'normal
-                      "<tab>" (lambda () (interactive)) ; sometimes I hit this by mistake; causes syntax errors
+                      "<tab>" 'flycheck-next-error
                       "-" 'razzi/transpose-next-line
                       "0" 'evil-first-non-blank
                       "<backtab>" 'razzi-previous-useful-buffer
