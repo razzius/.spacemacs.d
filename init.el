@@ -35,8 +35,7 @@ This function should only modify configuration layer settings."
      ;; Uncomment some layer names and press `SPC f e R' (Vim style) or
      ;; `M-m f e R' (Emacs style) to install them.
      ;; ----------------------------------------------------------------
-     ;; auto-completion
-     ;; better-defaults
+     auto-completion
      emacs-lisp
      git
      helm
@@ -56,6 +55,7 @@ This function should only modify configuration layer settings."
      razzi
      razzi-dumb-jump
      razzi-javascript
+     razzi-tab-completion
      ;; razzi-vc
      razzi-tabs
      (version-control :variables
@@ -454,7 +454,8 @@ See the header of this file for more information."
 (defun dotspacemacs/user-config ()
   "It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
-  (setq custom-file "~/.emacs.d/custom.el"))
+  (setq custom-file "~/.emacs.d/custom.el")
+  (load custom-file 'noerror))
 
 (defun dotspacemacs/user-load ()
   "Library to load while dumping.
