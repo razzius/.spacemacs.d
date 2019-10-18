@@ -57,7 +57,7 @@ This function should only modify configuration layer settings."
      razzi-dumb-jump
      razzi-javascript
      razzi-tab-completion
-     ;; razzi-vc
+     razzi-vc
      razzi-tabs
      (version-control :variables
                       git-magit-status-fullscreen t))
