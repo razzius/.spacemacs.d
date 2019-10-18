@@ -1,8 +1,7 @@
 (defconst razzi-javascript-packages '(rjsx-mode prettier-js))
 
 (defun razzi-javascript/init-prettier-js ()
-  ;; (add-hook 'rjsx-mode-hook 'prettier-js-mode)
-  (setq prettier-js-args '("--no-semi"))
+  (add-hook 'rjsx-mode-hook 'prettier-js-mode)
   (setq prettier-js-show-errors 'echo))
 
 (defun razzi-javascript/init-rjsx-mode ()
