@@ -39,6 +39,7 @@ This function should only modify configuration layer settings."
      emacs-lisp
      git
      helm
+     python
      (osx :variables osx-swap-option-and-command t)
      ;; javascript
      ;; markdown
@@ -453,9 +454,7 @@ See the header of this file for more information."
 
 (defun dotspacemacs/user-config ()
   "It is mostly for variables that should be set before packages are loaded.
-If you are unsure, try setting them in `dotspacemacs/user-config' first."
-  (setq custom-file "~/.emacs.d/custom.el")
-  (load custom-file 'noerror))
+If you are unsure, try setting them in `dotspacemacs/user-config' first.")
 
 (defun dotspacemacs/user-load ()
   "Library to load while dumping.
@@ -469,7 +468,8 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
-  (setq evil-cross-lines t
+  (setq custom-file "~/.emacs.d/custom.el"
+        evil-cross-lines t
         evil-ex-substitute-global t)
 
   (global-set-key (kbd "C-`") 'describe-key)
