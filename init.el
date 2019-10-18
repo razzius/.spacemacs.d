@@ -505,6 +505,7 @@ before packages are loaded."
 
   (general-define-key :states 'insert
                       "M-s" 'razzi-exit-insert-and-save
+                      "H-<backspace>" 'backward-kill-word  ; this is because I have system-wide C-w -> H-<backspace>
                       "C-t" 'razzi-transpose-previous-chars)
 
   (general-define-key :states 'operator
