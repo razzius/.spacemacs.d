@@ -6,11 +6,6 @@
   (let ((same-window-regexps nil))
     (magit-commit-create)))
 
-(defun razzi/save-and-status ()
-  (interactive)
-  (razzi-save-if-buffer-is-file)
-  (magit-status))
-
 (defun razzi/magit-push ()
   (interactive)
   (magit-run-git "push"))

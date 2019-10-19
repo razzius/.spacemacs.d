@@ -501,7 +501,7 @@ before packages are loaded."
                       "g /" 'spacemacs/helm-project-smart-do-search-region-or-symbol
                       "g T" 'centaur-tabs-backward
                       "g ]" 'dumb-jump-go
-                      "g s" 'magit-status
+                      "g s" 'razzi-save-and-magit-status
                       "g t" 'centaur-tabs-forward)
 
   (general-define-key :states 'insert
