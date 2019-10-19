@@ -3,24 +3,26 @@
                                       prettier-js
                                       flycheck-flow))
 
+(defun find-npm-bin (name)
+  (let* ((root (locate-dominating-file (buffer-file-name) "node_modules"))
+         (npm-bin (concat root "node_modules/.bin"))
+         (executable (expand-file-name name npm-bin)))
+    (when (file-executable-p executable)
+      executable)))
+
 (defun razzi-javascript/init-flycheck-flow ()
   (use-package flycheck-flow
     :config
-    (defun expand-root (root bin)
-      (and root
-           (expand-file-name (concat "node_modules/.bin/" bin)
-                             root)))
 
     (defun my/use-local-node-modules ()
-      (let* ((root (locate-dominating-file
-                    (or (buffer-file-name) default-directory)
-                    "node_modules"))
-             (flow (expand-root root "flow"))
-             (eslint (expand-root root "eslint")))
-        (when (and flow (file-executable-p flow))
+      (let ((flow (find-npm-bin "flow"))
+            (eslint (find-npm-bin "eslint")))
+
+        (when flow
           (setq-local flycheck-javascript-flow-executable flow))
 
-        (when (and eslint (file-executable-p eslint))
+        ;; todo should not configure eslint here
+        (when eslint
           (setq-local flycheck-javascript-eslint-executable eslint))))
 
     (add-hook 'flycheck-mode-hook #'my/use-local-node-modules)))
@@ -31,9 +33,12 @@
 (defun razzi-javascript/init-prettier-js ()
   (use-package prettier-js
     :config
-    (setq prettier-js-args '("--no-semi")
-          prettier-js-show-errors 'echo)
-    (add-hook 'rjsx-mode-hook 'prettier-js-mode)))
+
+    (defun razzi/use-local-prettier-hook ()
+      (setq-local prettier-js-command (find-npm-bin "prettier")))
+
+    (add-hook 'rjsx-mode-hook #'prettier-js-mode)
+    (add-hook 'prettier-js-mode-hook #'razzi/use-local-prettier-hook)))
 
 (defun razzi-javascript/init-rjsx-mode ()
   (use-package rjsx-mode
