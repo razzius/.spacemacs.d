@@ -494,10 +494,12 @@ before packages are loaded."
   (general-define-key :states 'normal
                       "M-/" 'evilnc-comment-or-uncomment-lines
                       "M-RET" 'lisp-state-eval-sexp-end-of-line
+                      "M-r" 'raise-sexp
                       "M-s" 'razzi-flycheck-and-save-buffer
                       "M-w" 'kill-current-buffer
                       "<C-tab>" 'centaur-tabs-forward
                       "<C-S-tab>" 'centaur-tabs-backward
+                      "C-M-;" 'eval-expression
                       "g /" 'spacemacs/helm-project-smart-do-search-region-or-symbol
                       "g T" 'centaur-tabs-backward
                       "g ]" 'dumb-jump-go
@@ -507,7 +509,8 @@ before packages are loaded."
   (general-define-key :states 'insert
                       "M-s" 'razzi-exit-insert-and-save
                       "H-<backspace>" 'backward-kill-word  ; this is because I have system-wide C-w -> H-<backspace>
-                      "C-t" 'razzi-transpose-previous-chars)
+                      "C-t" 'razzi-transpose-previous-chars
+                      "C-l" 'sp-slurp-hybrid-sexp)
 
   (general-define-key :states 'operator
                       "E" 'forward-symbol
