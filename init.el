@@ -28,7 +28,10 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(markdown
+   '(
+     javascript
+     react
+     markdown
      html
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
@@ -471,7 +474,8 @@ Put your configuration code here, except for variables that should be set
 before packages are loaded."
   (setq custom-file "~/.emacs.d/custom.el"
         evil-cross-lines t
-        evil-ex-substitute-global t)
+        evil-ex-substitute-global t
+        ns-pop-up-frames nil)
 
   (global-set-key (kbd "C-`") 'describe-key)
 
@@ -486,12 +490,15 @@ before packages are loaded."
     "e n" 'flycheck-next-error
     "e p" 'flycheck-previous-error
     "f SPC" 'razzi-copy-file-name
+    "f RET" 'razzi-copy-project-file-path
     "f i" 'spacemacs/find-dotfile
+    "i e" 'iedit-mode
     "o" 'razzi-put-after
     "q b" 'razzi-close-all-file-buffers
     "q r" 'razzi-restart-emacs)
 
   (general-define-key :states 'normal
+                      "<tab>" 'flycheck-next-error
                       "M-/" 'evilnc-comment-or-uncomment-lines
                       "M-RET" 'lisp-state-eval-sexp-end-of-line
                       "M-r" 'raise-sexp
