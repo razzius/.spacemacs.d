@@ -510,10 +510,13 @@ before packages are loaded."
                       "<C-tab>" 'centaur-tabs-forward
                       "<C-S-tab>" 'centaur-tabs-backward
                       "C-M-;" 'eval-expression
+                      "D" 'razzi-kill-line-and-whitespace
+                      "Q" 'razzi-replay-q-macro
                       "g /" 'spacemacs/helm-project-smart-do-search-region-or-symbol
                       "g T" 'centaur-tabs-backward
                       "g ]" 'dumb-jump-go
                       "g s" 'razzi-save-and-magit-status
+                      "g b" 'magit-blame-addition
                       "g t" 'centaur-tabs-forward)
 
   (general-define-key :states 'insert
