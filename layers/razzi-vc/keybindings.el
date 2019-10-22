@@ -16,7 +16,7 @@
 
 (defun razzi/magit-pull ()
   (interactive)
-  (magit-run-git "pull"))
+  (magit-run-git "pull-current"))
 
 (defun razzi/magit-reset-last ()
   (interactive)
