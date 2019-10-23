@@ -513,31 +513,37 @@ before packages are loaded."
   (general-define-key :states 'normal
                       "<tab>" 'flycheck-next-error
                       "M-/" 'evilnc-comment-or-uncomment-lines
+                      "0" 'evil-first-non-blank
+                      "<C-S-tab>" 'centaur-tabs-backward
+                      "<C-tab>" 'centaur-tabs-forward
+                      "C" 'razzi-change-line
+                      "C-M-;" 'eval-expression
+                      "D" 'razzi-kill-line-and-whitespace
                       "M-RET" 'lisp-state-eval-sexp-end-of-line
                       "M-r" 'raise-sexp
                       "M-s" 'razzi-flycheck-and-save-buffer
                       "M-w" 'kill-current-buffer
-                      "<C-tab>" 'centaur-tabs-forward
-                      "<C-S-tab>" 'centaur-tabs-backward
-                      "C-M-;" 'eval-expression
-                      "C" 'razzi-change-line
-                      "D" 'razzi-kill-line-and-whitespace
                       "Q" 'razzi-replay-q-macro
                       "g /" 'spacemacs/helm-project-smart-do-search-region-or-symbol
                       "g T" 'centaur-tabs-backward
                       "g ]" 'dumb-jump-go
-                      "g s" 'razzi-save-and-magit-status
                       "g b" 'magit-blame-addition
+                      "g s" 'razzi-save-and-magit-status
                       "g t" 'centaur-tabs-forward)
 
   (general-define-key :states 'insert
                       "M-s" 'razzi-exit-insert-and-save
                       "H-<backspace>" 'backward-kill-word  ; this is because I have system-wide C-w -> H-<backspace>
                       "C-t" 'razzi-transpose-previous-chars
+                      "C-i" (make-hippie-expand-function '(try-expand-line
+                                                           try-expand-line-all-buffers))
                       "C-l" 'sp-slurp-hybrid-sexp)
 
   (evil-define-text-object whole-buffer (count &optional beginning end type)
     (evil-range 0 (point-max)))
+
+  (general-define-key :states 'visual
+                      "$" 'evil-last-non-blank)
 
   (general-define-key :states 'operator
                       "E" 'forward-symbol
