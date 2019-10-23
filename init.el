@@ -482,15 +482,19 @@ before packages are loaded."
         evil-ex-substitute-global t
         ns-pop-up-frames nil)
 
+  (setq exec-path (append '("~/.local/bin") exec-path))
+
   (global-set-key (kbd "C-`") 'describe-key)
+  (menu-bar-mode -1)
 
   (evil-leader/set-key
     "<backtab>" 'razzi/split-alternate-buffer
+    "," 'razzi-append-comma
     "ESC" 'razzi-save-delete-close
     "O" 'razzi/put-before
     "RET" 'razzi-split-after-comma
     "SPC" 'helm-M-x
-    "TAB" 'spacemacs/alternate-buffer
+    "TAB" 'centaur-tabs-forward-group
     "[" 'evil-open-above
     "e n" 'flycheck-next-error
     "e p" 'flycheck-previous-error
@@ -498,11 +502,13 @@ before packages are loaded."
     "f RET" 'razzi-copy-project-file-path
     "f i" 'spacemacs/find-dotfile
     "i e" 'iedit-mode
+    "i d" 'razzi-put-debugger
     "i s" 'razzi-python-isort
     "i i" 'razzi-import-it-import-this
     "o" 'razzi-put-after
     "q b" 'razzi-close-all-file-buffers
-    "q r" 'razzi-restart-emacs)
+    "q r" 'razzi-restart-emacs
+    "t DEL" 'centaur-tabs-kill-all-buffers-in-current-group)
 
   (general-define-key :states 'normal
                       "<tab>" 'flycheck-next-error
@@ -514,6 +520,7 @@ before packages are loaded."
                       "<C-tab>" 'centaur-tabs-forward
                       "<C-S-tab>" 'centaur-tabs-backward
                       "C-M-;" 'eval-expression
+                      "C" 'razzi-change-line
                       "D" 'razzi-kill-line-and-whitespace
                       "Q" 'razzi-replay-q-macro
                       "g /" 'spacemacs/helm-project-smart-do-search-region-or-symbol
@@ -528,6 +535,9 @@ before packages are loaded."
                       "H-<backspace>" 'backward-kill-word  ; this is because I have system-wide C-w -> H-<backspace>
                       "C-t" 'razzi-transpose-previous-chars
                       "C-l" 'sp-slurp-hybrid-sexp)
+
+  (evil-define-text-object whole-buffer (count &optional beginning end type)
+    (evil-range 0 (point-max)))
 
   (general-define-key :states 'operator
                       "E" 'forward-symbol
