@@ -58,6 +58,8 @@ This function should only modify configuration layer settings."
 
      razzi
      razzi-dumb-jump
+     razzi-python
+     razzi-import-it
      razzi-javascript
      razzi-tab-completion
      razzi-vc
@@ -496,6 +498,8 @@ before packages are loaded."
     "f RET" 'razzi-copy-project-file-path
     "f i" 'spacemacs/find-dotfile
     "i e" 'iedit-mode
+    "i s" 'razzi-python-isort
+    "i i" 'razzi-import-it-import-this
     "o" 'razzi-put-after
     "q b" 'razzi-close-all-file-buffers
     "q r" 'razzi-restart-emacs)
