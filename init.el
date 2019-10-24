@@ -482,7 +482,7 @@ before packages are loaded."
         evil-ex-substitute-global t
         ns-pop-up-frames nil)
 
-  (setq exec-path (append '("~/.local/bin") exec-path))
+  (setq exec-path (append (list (expand-file-name "~/.local/bin")) exec-path))
 
   (global-set-key (kbd "C-`") 'describe-key)
   (global-subword-mode)
@@ -492,10 +492,12 @@ before packages are loaded."
     "<backtab>" 'razzi/split-alternate-buffer
     "," 'razzi-append-comma
     "ESC" 'razzi-save-delete-close
+    "TAB" 'spacemacs/alternate-buffer
     "O" 'razzi/put-before
     "RET" 'razzi-split-after-comma
     "SPC" 'helm-M-x
-    "TAB" 'centaur-tabs-forward-group
+    "g n" 'centaur-tabs-forward-group
+    "g p" 'centaur-tabs-backward-group
     "[" 'evil-open-above
     "e n" 'flycheck-next-error
     "e p" 'flycheck-previous-error
