@@ -509,6 +509,7 @@ before packages are loaded."
     "i s" 'razzi-python-isort
     "i i" 'razzi-import-it-import-this
     "i f" 'razzi-python-autoflake
+    "i g" 'razzi-python-gray
     "o" 'razzi-put-after
     "q b" 'razzi-close-all-file-buffers
     "q r" 'razzi-restart-emacs
