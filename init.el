@@ -506,6 +506,7 @@ before packages are loaded."
     "i d" 'razzi-put-debugger
     "i s" 'razzi-python-isort
     "i i" 'razzi-import-it-import-this
+    "i f" 'razzi-python-autoflake
     "o" 'razzi-put-after
     "q b" 'razzi-close-all-file-buffers
     "q r" 'razzi-restart-emacs
