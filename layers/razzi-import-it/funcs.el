@@ -20,7 +20,6 @@
   (let ((import-path (razzi-import-it-get-import-path)))
     (save-excursion
       (goto-char (point-min))
-      (insert import-path))))
-
-      ;(razzi/isort)
-      ;(razzi/autoflake)
+      (insert import-path))
+    (razzi-python-isort)
+    (razzi-python-autoflake)))
