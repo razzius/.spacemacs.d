@@ -485,6 +485,7 @@ before packages are loaded."
   (setq exec-path (append '("~/.local/bin") exec-path))
 
   (global-set-key (kbd "C-`") 'describe-key)
+  (global-subword-mode)
   (menu-bar-mode -1)
 
   (evil-leader/set-key
