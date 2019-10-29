@@ -11,7 +11,7 @@
      nil
      (thing-at-point 'symbol) (s-trim (shell-command-to-string "git root")) (buffer-file-name)))
 
-  (razzi-buffer-string-for-buffer "*import_it-output*"))
+  (razzi-buffer-string "*import_it-output*"))
 
 
 (defun razzi-import-it-import-this ()
