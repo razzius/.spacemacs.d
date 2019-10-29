@@ -492,27 +492,32 @@ before packages are loaded."
   (menu-bar-mode -1)
 
   (evil-leader/set-key
-    "<backtab>" 'razzi/split-alternate-buffer
+    "1" 'centaur-tabs-select-beg-tab
+    "2" 'centaur-tabs-select-visible-tab
+    "3" 'centaur-tabs-select-visible-tab
+    "9" 'centaur-tabs-select-end-tab
+    "'" 'razzi-vterm-get-or-create
     "," 'razzi-append-comma
+    "<backtab>" 'razzi/split-alternate-buffer
     "ESC" 'razzi-save-delete-close
-    "TAB" 'spacemacs/alternate-buffer
-    "O" 'razzi/put-before
+    "O" 'razzi-put-before
     "RET" 'razzi-split-after-comma
     "SPC" 'helm-M-x
-    "g n" 'centaur-tabs-forward-group
-    "g p" 'centaur-tabs-backward-group
+    "TAB" 'spacemacs/alternate-buffer
     "[" 'evil-open-above
     "e n" 'flycheck-next-error
     "e p" 'flycheck-previous-error
-    "f SPC" 'razzi-copy-file-name
     "f RET" 'razzi-copy-project-file-path
+    "f SPC" 'razzi-copy-file-name
     "f i" 'spacemacs/find-dotfile
-    "i e" 'iedit-mode
+    "g n" 'centaur-tabs-forward-group
+    "g p" 'centaur-tabs-backward-group
     "i d" 'razzi-put-debugger
-    "i s" 'razzi-python-isort
-    "i i" 'razzi-import-it-import-this
+    "i e" 'iedit-mode
     "i f" 'razzi-python-autoflake
     "i g" 'razzi-python-gray
+    "i i" 'razzi-import-it-import-this
+    "i s" 'razzi-python-isort
     "o" 'razzi-put-after
     "q b" 'razzi-close-all-file-buffers
     "q r" 'razzi-restart-emacs
@@ -521,6 +526,10 @@ before packages are loaded."
   (general-define-key :states 'normal
                       "<tab>" 'flycheck-next-error
                       "M-/" 'evilnc-comment-or-uncomment-lines
+                      "M-1" 'centaur-tabs-select-beg-tab
+                      "M-2" 'centaur-tabs-select-visible-tab
+                      "M-3" 'centaur-tabs-select-visible-tab
+                      "M-9" 'centaur-tabs-select-end-tab
                       "0" 'evil-first-non-blank
                       "<C-S-tab>" 'centaur-tabs-backward
                       "<C-tab>" 'centaur-tabs-forward
