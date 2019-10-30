@@ -176,7 +176,7 @@ It should only modify the values of Spacemacs settings."
    ;; directory. A string value must be a path to an image format supported
    ;; by your Emacs build.
    ;; If the value is nil then no banner is displayed. (default 'official)
-   dotspacemacs-startup-banner 'official
+   dotspacemacs-startup-banner nil
 
    ;; List of items to show in startup buffer or an association list of
    ;; the form `(list-type . list-size)`. If nil then it is disabled.
@@ -566,6 +566,9 @@ before packages are loaded."
                       "g s" 'razzi-save-and-magit-status
                       "g t" 'centaur-tabs-forward
                       "ZZ" 'razzi-save-delete-close)
+
+  ;; Disable C-p yasnippet behavior by removing hippie-expand definition
+  (define-key evil-insert-state-map [remap evil-complete-previous] nil)
 
   (general-define-key :states 'insert
                       "M-s" 'razzi-exit-insert-and-save
