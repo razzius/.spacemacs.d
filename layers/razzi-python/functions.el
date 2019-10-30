@@ -1,0 +1,10 @@
+(defun razzi-python/get-python-module ()
+  (let* ((root (s-append "/" (s-chomp (shell-command-to-string "git root"))))
+         (relative-path (s-chop-prefix root (buffer-file-name))))
+    (s-replace "/" "." (file-name-sans-extension relative-path))))
+
+(defun razzi-python/copy-test-file-path ()
+  (interactive)
+  (let ((module (razzi-python/get-python-module)))
+    (kill-new module)
+    (message "Copied module '%s' to the clipboard." module)))

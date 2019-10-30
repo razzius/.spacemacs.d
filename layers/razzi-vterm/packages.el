@@ -5,7 +5,8 @@
   (let ((buffer (get-buffer "vterm")))
     (if buffer
         (switch-to-buffer buffer)
-      (vterm))))
+      (vterm)))
+  (evil-append 1))
 
 (defun razzi-vterm-send-c-w ()
   (interactive)
@@ -48,6 +49,7 @@
     (evil-define-key 'insert vterm-mode-map (kbd "C-p") #'vterm--self-insert)
     (evil-define-key 'insert vterm-mode-map (kbd "C-w") #'vterm--self-insert)
     (evil-define-key 'insert vterm-mode-map (kbd "C-z") #'vterm--self-insert)
+    (evil-define-key 'insert vterm-mode-map (kbd "C-\\") #'vterm--self-insert)
     (evil-define-key 'insert vterm-mode-map (kbd "S-SPC") #'razzi-vterm-send-space)
     (evil-define-key 'insert vterm-mode-map (kbd "H-<backspace>") 'razzi-vterm-send-c-w)
     (evil-define-key 'insert vterm-mode-map (kbd "H-<right>") 'razzi-vterm-send-m-f)

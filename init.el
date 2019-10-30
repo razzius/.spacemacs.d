@@ -515,6 +515,7 @@ before packages are loaded."
     "f RET" 'razzi-copy-project-file-path
     "f SPC" 'razzi-copy-file-name
     "f i" 'spacemacs/find-dotfile
+    "f p" 'razzi-python/copy-test-file-path
     "g n" 'centaur-tabs-forward-group
     "g p" 'centaur-tabs-backward-group
     "i d" 'razzi-put-debugger
@@ -557,8 +558,10 @@ before packages are loaded."
 
   (general-define-key :states 'insert
                       "M-s" 'razzi-exit-insert-and-save
+                      "M-t" 'transpose-words
                       "H-<backspace>" 'backward-kill-word  ; this is because I have system-wide C-w -> H-<backspace>
                       "C-t" 'razzi-transpose-previous-chars
+                      "<tab>" 'razzi-tab-completion-tab-complete
                       "C-h" 'delete-backward-char
                       "C-i" (make-hippie-expand-function '(try-expand-line
                                                            try-expand-line-all-buffers))

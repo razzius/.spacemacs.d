@@ -12,3 +12,5 @@
 
 (setq flycheck-python-flake8-executable "flake8")
 (setq flycheck-flake8rc "~/.config/flake8")
+
+(add-hook 'python-mode-hook (lambda () (setq evil-shift-width 4)))

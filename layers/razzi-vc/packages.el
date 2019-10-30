@@ -29,33 +29,34 @@
 
                                  magit-insert-upstream-branch-header
                                  magit-insert-push-branch-header
-                                 magit-insert-tags-header)
-     magit-status-sections-hook '(magit-insert-merge-log
-                                  magit-insert-rebase-sequence
-                                  magit-insert-am-sequence
-                                  magit-insert-sequencer-sequence
-                                  magit-insert-bisect-output
-                                  magit-insert-bisect-rest
-                                  magit-insert-bisect-log
-                                  magit-insert-untracked-files
-                                  magit-insert-unstaged-changes
-                                  magit-insert-staged-changes
-                                  magit-insert-stashes
-                                  magit-insert-status-headers
-                                  magit-insert-unpulled-from-upstream
-                                  magit-insert-unpulled-from-pushremote
-                                  magit-insert-unpushed-to-upstream
-                                  magit-insert-unpushed-to-pushremote))))
+                                 magit-insert-tags-header))))
 
-(defun razzi-vc/init-git-gutter ()
-  (use-package git-gutter
-    :config
-    (spacemacs|diminish git-gutter-mode " ")
-    (setq
-      git-gutter:update-interval .4
-      git-gutter:hide-gutter t)
+     ;; magit-status-sections-hook '(magit-insert-merge-log
+     ;;                              magit-insert-rebase-sequence
+     ;;                              magit-insert-am-sequence
+     ;;                              magit-insert-sequencer-sequence
+     ;;                              magit-insert-bisect-output
+     ;;                              magit-insert-bisect-rest
+     ;;                              magit-insert-bisect-log
+     ;;                              magit-insert-untracked-files
+     ;;                              magit-insert-unstaged-changes
+     ;;                              magit-insert-staged-changes
+     ;;                              magit-insert-stashes
+     ;;                              magit-insert-status-headers
+     ;;                              magit-insert-unpulled-from-upstream
+     ;;                              magit-insert-unpulled-from-pushremote
+     ;;                              magit-insert-unpushed-to-upstream
+     ;;                              magit-insert-unpushed-to-pushremote)
 
-    (git-gutter:linum-setup)
-    (global-git-gutter-mode 1)
+;; (defun razzi-vc/init-git-gutter ()
+;;   (use-package git-gutter
+;;     :config
+;;     (spacemacs|diminish git-gutter-mode " ")
+;;     (setq
+;;       git-gutter:update-interval .4
+;;       git-gutter:hide-gutter t)
 
-    (add-to-list 'git-gutter:update-hooks 'focus-in-hook)))
+;;     (git-gutter:linum-setup)
+;;     (global-git-gutter-mode 1)
+
+;;     (add-to-list 'git-gutter:update-hooks 'focus-in-hook)))
