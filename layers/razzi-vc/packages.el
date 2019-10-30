@@ -1,4 +1,4 @@
-(setq razzi-vc-packages '(magit git-gutter))
+(setq razzi-vc-packages '(magit))
 
 (defun razzi-vc/post-init-magit ()
   (use-package magit
@@ -7,11 +7,12 @@
     (add-to-list 'magit-no-confirm 'unstage-all-changes)
 
     (add-hook 'git-commit-mode-hook 'evil-insert-state)
+    (add-hook 'magit-post-stage-hook 'recenter-top-bottom)
 
     (set-face-background 'magit-diff-context-highlight "light cyan")
     (set-face-background 'magit-diff-hunk-heading-highlight "gray60")
 
-    (transient-append-suffix 'magit-push "p" '("p" "current" razzi/magit-push))
+    ;; (transient-append-suffix 'magit-push "p" '("p" "current" razzi/magit-push))
     (transient-append-suffix 'magit-pull "p" '("d" "current" razzi/magit-pull))
 
     (magit-define-popup-action 'magit-push-popup ?h "Push to heroku :O" 'razzi/magit-push-heroku)
@@ -19,7 +20,6 @@
     (setq
      magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1
      magit-push-current-set-remote-if-missing nil
-     magit-commit-show-diff nil
      magit-status-headers-hook '(magit-insert-error-header
                                  magit-insert-diff-filter-header
 

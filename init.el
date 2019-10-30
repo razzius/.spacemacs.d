@@ -28,9 +28,8 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(
+   '(shell-scripts
      javascript
-     react
      markdown
      html
      ;; ----------------------------------------------------------------
@@ -42,7 +41,6 @@ This function should only modify configuration layer settings."
      emacs-lisp
      git
      helm
-     python
      (osx :variables osx-swap-option-and-command t)
      ;; javascript
      ;; markdown
@@ -53,11 +51,14 @@ This function should only modify configuration layer settings."
      ;;        shell-default-position 'bottom)
      ;; spell-checking
      (syntax-checking :variables
-                      syntax-checking-enable-tooltips nil)
+                      syntax-checking-enable-tooltips nil
+                      version-control-diff-tool 'git-gutter+
+                      version-control-diff-side 'left)
      treemacs
 
      razzi
      razzi-dumb-jump
+     razzi-helm
      razzi-python
      razzi-import-it
      razzi-javascript
@@ -488,6 +489,8 @@ before packages are loaded."
   (setq exec-path (append (list (expand-file-name "~/.local/bin")) exec-path))
 
   (global-set-key (kbd "C-`") 'describe-key)
+  (global-set-key (kbd "<C-tab>") 'centaur-tabs-forward)
+  (global-set-key (kbd "<C-S-tab>") 'centaur-tabs-backward)
   (global-subword-mode)
   (menu-bar-mode -1)
 
@@ -518,6 +521,7 @@ before packages are loaded."
     "i g" 'razzi-python-gray
     "i i" 'razzi-import-it-import-this
     "i s" 'razzi-python-isort
+    "m" 'vterm
     "o" 'razzi-put-after
     "q b" 'razzi-close-all-file-buffers
     "q r" 'razzi-restart-emacs
@@ -546,12 +550,14 @@ before packages are loaded."
                       "g ]" 'dumb-jump-go
                       "g b" 'magit-blame-addition
                       "g s" 'razzi-save-and-magit-status
-                      "g t" 'centaur-tabs-forward)
+                      "g t" 'centaur-tabs-forward
+                      "ZZ" 'razzi-save-delete-close)
 
   (general-define-key :states 'insert
                       "M-s" 'razzi-exit-insert-and-save
                       "H-<backspace>" 'backward-kill-word  ; this is because I have system-wide C-w -> H-<backspace>
                       "C-t" 'razzi-transpose-previous-chars
+                      "C-h" 'delete-backward-char
                       "C-i" (make-hippie-expand-function '(try-expand-line
                                                            try-expand-line-all-buffers))
                       "C-l" 'sp-slurp-hybrid-sexp)
