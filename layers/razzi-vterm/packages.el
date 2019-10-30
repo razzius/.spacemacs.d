@@ -8,6 +8,13 @@
       (vterm)))
   (evil-append 1))
 
+(defun razzi-vterm-buffer-vterm-p (buffer)
+  (eq (razzi-buffer-major-mode buffer) 'vterm-mode))
+
+(defun razzi-vterm-previous ()
+  (interactive)
+  (switch-to-buffer (nth 1 (seq-filter #'razzi-buffer-vterm-p (buffer-list)))))
+
 (defun razzi-vterm-split ()
   (interactive)
   (split-window-vertically)
@@ -60,7 +67,7 @@
     (evil-define-key 'insert vterm-mode-map (kbd "C-SPC [") #'evil-normal-state)
     (evil-define-key 'insert vterm-mode-map (kbd "C-SPC n") #'centaur-tabs-forward)
     (evil-define-key 'insert vterm-mode-map (kbd "C-SPC p") #'centaur-tabs-backward)
-    (evil-define-key 'insert vterm-mode-map (kbd "C-SPC SPC") #'spacemacs/alternate-buffer)
+    (evil-define-key 'insert vterm-mode-map (kbd "C-SPC SPC") #'razzi-vterm-previous)
     (evil-define-key 'insert vterm-mode-map (kbd "C-SPC c") #'vterm)
     (evil-define-key 'insert vterm-mode-map (kbd "C-SPC j") #'windmove-down)
     (evil-define-key 'insert vterm-mode-map (kbd "C-SPC k") #'windmove-up)
