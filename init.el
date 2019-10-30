@@ -512,7 +512,7 @@ before packages are loaded."
     "2" 'centaur-tabs-select-visible-tab
     "3" 'centaur-tabs-select-visible-tab
     "9" 'centaur-tabs-select-end-tab
-    "ESC" 'razzi-save-delete-close
+    "ESC" 'with-editor-finish
     "O" 'razzi-put-before
     "RET" 'razzi-split-after-comma
     "SPC" 'helm-M-x
@@ -565,7 +565,7 @@ before packages are loaded."
                       "g b" 'magit-blame-addition
                       "g s" 'razzi-save-and-magit-status
                       "g t" 'centaur-tabs-forward
-                      "ZZ" 'razzi-save-delete-close)
+                      "ZZ" 'with-editor-finish)
 
   ;; Disable C-p yasnippet behavior by removing hippie-expand definition
   (define-key evil-insert-state-map [remap evil-complete-previous] nil)

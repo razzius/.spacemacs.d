@@ -6,6 +6,7 @@
   (let ((current-symbol (thing-at-point 'symbol)))
     (when (or (s-contains? "_" current-symbol)
               (s-contains? "-" current-symbol)
+              (s-contains? "/" current-symbol)
               (null (yas-expand)))
       (company-select-next))))
 
