@@ -11,3 +11,6 @@
   (use-package flycheck-mypy
     :config
     (flycheck-add-next-checker 'python-flake8 'python-mypy)))
+
+(defun razzi-python/post-init-nose ()
+  (use-package nose))
