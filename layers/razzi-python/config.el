@@ -12,5 +12,6 @@
 
 (setq flycheck-python-flake8-executable "flake8")
 (setq flycheck-flake8rc "~/.config/flake8")
+(setq flycheck-python-mypy-args '("--ignore-missing-imports" "--follow-imports=silent"))
 
 (add-hook 'python-mode-hook (lambda () (setq evil-shift-width 4)))
