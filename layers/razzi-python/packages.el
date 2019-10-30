@@ -1,4 +1,4 @@
-(defconst razzi-python-packages '(blacken flycheck-mypy))
+(defconst razzi-python-packages '(blacken flycheck-mypy nose))
 
 (setq-default flycheck-disabled-checkers '(python-pylint python-pycompile))
 

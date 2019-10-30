@@ -29,7 +29,7 @@ This function should only modify configuration layer settings."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
-     (python :variables python-backend nil)
+     (python :variables python-backend 'disabled)
      shell-scripts
      javascript
      markdown
@@ -483,6 +483,7 @@ before packages are loaded."
 
   (setq custom-file "~/.emacs.d/custom.el"
         evil-cross-lines t
+        dired-recursive-deletes 'always
         evil-ex-substitute-global t
         evil-insert-state-message nil
         kill-buffer-query-functions nil
@@ -505,26 +506,27 @@ before packages are loaded."
   (menu-bar-mode -1)
 
   (evil-leader/set-key
+    "'" 'vterm-toggle
+    "," 'razzi-append-comma
     "1" 'centaur-tabs-select-beg-tab
     "2" 'centaur-tabs-select-visible-tab
     "3" 'centaur-tabs-select-visible-tab
     "9" 'centaur-tabs-select-end-tab
-    "'" 'vterm-toggle
-    "," 'razzi-append-comma
-    "`" 'razzi-toggle-true-false
-    "<backtab>" 'razzi/split-alternate-buffer
     "ESC" 'razzi-save-delete-close
     "O" 'razzi-put-before
     "RET" 'razzi-split-after-comma
     "SPC" 'helm-M-x
     "TAB" 'spacemacs/alternate-buffer
     "[" 'evil-open-above
+    "`" 'razzi-toggle-true-false
     "e n" 'flycheck-next-error
     "e p" 'flycheck-previous-error
     "f RET" 'razzi-copy-project-file-path
-    "f SPC" 'razzi-copy-file-name
+    "f SPC" 'razzi-copy-full-file-name
     "f i" 'spacemacs/find-dotfile
+    "f n" 'razzi-copy-file-name
     "f p" 'razzi-python/copy-test-file-path
+    "f u" 'razzi-python/copy-test-method-path
     "g n" 'centaur-tabs-forward-group
     "g p" 'centaur-tabs-backward-group
     "i d" 'razzi-put-debugger

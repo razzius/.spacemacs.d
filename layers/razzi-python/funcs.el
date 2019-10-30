@@ -8,3 +8,11 @@
   (let ((module (razzi-python/get-python-module)))
     (kill-new module)
     (message "Copied module '%s' to the clipboard." module)))
+
+(defun razzi-python/copy-test-method-path ()
+  (interactive)
+  (let* ((module (razzi-python/get-python-module))
+         (method (nose-py-testable))
+         (path (format "%s.%s" module method)))
+    (kill-new path)
+    (message "Copied path '%s' to the clipboard." path)))
