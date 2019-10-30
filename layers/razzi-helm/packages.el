@@ -21,5 +21,7 @@
 (defun razzi-helm/post-init-helm-projectile ()
   (use-package helm-projectile
     :config
+    (global-set-key (kbd "C-/") nil)
+    (define-key undo-tree-map (kbd "C-/") nil)
     (define-key helm-projectile-projects-map (kbd "C-/") 'raz-helm-projectile-rg)
-    (helm-add-action-to-source "rg thing!!" 'razzi/rg-thing helm-source-projectile-projects)))
+    (helm-add-action-to-source "ripgrep" 'razzi-helm-run-project-search helm-source-projectile-projects)))

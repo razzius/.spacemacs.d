@@ -503,6 +503,7 @@ before packages are loaded."
     "9" 'centaur-tabs-select-end-tab
     "'" 'razzi-vterm-get-or-create
     "," 'razzi-append-comma
+    "`" 'razzi-toggle-true-false
     "<backtab>" 'razzi/split-alternate-buffer
     "ESC" 'razzi-save-delete-close
     "O" 'razzi-put-before

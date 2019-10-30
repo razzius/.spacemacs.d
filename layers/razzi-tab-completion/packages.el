@@ -3,9 +3,11 @@
 (defun razzi-tab-completion-tab-complete ()
   "Either cycle completion or expand snippet"
   (interactive)
-  (when (or (s-contains? "_" (thing-at-point 'symbol))
-          (null (yas-expand)))
-    (company-select-next)))
+  (let ((current-symbol (thing-at-point 'symbol)))
+    (when (or (s-contains? "_" current-symbol)
+              (s-contains? "-" current-symbol)
+              (null (yas-expand)))
+      (company-select-next))))
 
 (defun razzi-tab-completion/init-yasnippet ()
   (use-package yasnippet
