@@ -493,6 +493,14 @@ before packages are loaded."
   (global-set-key (kbd "C-`") 'describe-key)
   (global-set-key (kbd "<C-tab>") 'centaur-tabs-forward)
   (global-set-key (kbd "<C-S-tab>") 'centaur-tabs-backward)
+
+  (defun razzi-open-file-on-click ()
+    (interactive)
+    (evil-normal-state)
+    (find-file (ffap-string-at-point)))
+
+  (global-set-key [mouse-1] 'razzi-open-file-on-click)
+
   (global-subword-mode)
   (menu-bar-mode -1)
 
@@ -501,7 +509,7 @@ before packages are loaded."
     "2" 'centaur-tabs-select-visible-tab
     "3" 'centaur-tabs-select-visible-tab
     "9" 'centaur-tabs-select-end-tab
-    "'" 'razzi-vterm-get-or-create
+    "'" 'vterm-toggle
     "," 'razzi-append-comma
     "`" 'razzi-toggle-true-false
     "<backtab>" 'razzi/split-alternate-buffer

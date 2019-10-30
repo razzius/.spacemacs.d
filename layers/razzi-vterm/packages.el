@@ -1,4 +1,4 @@
-(defconst razzi-vterm-packages '(vterm))
+(defconst razzi-vterm-packages '(vterm vterm-toggle))
 
 (defun razzi-vterm-get-or-create ()
   (interactive)
@@ -6,6 +6,12 @@
     (if buffer
         (switch-to-buffer buffer)
       (vterm)))
+  (evil-append 1))
+
+(defun razzi-vterm-split ()
+  (interactive)
+  (split-window-vertically)
+  (vterm)
   (evil-append 1))
 
 (defun razzi-vterm-send-c-w ()
@@ -51,9 +57,46 @@
     (evil-define-key 'insert vterm-mode-map (kbd "C-w") #'vterm--self-insert)
     (evil-define-key 'insert vterm-mode-map (kbd "C-z") #'vterm--self-insert)
     (evil-define-key 'insert vterm-mode-map (kbd "C-\\") #'vterm--self-insert)
+    (evil-define-key 'insert vterm-mode-map (kbd "C-SPC [") #'evil-normal-state)
+    (evil-define-key 'insert vterm-mode-map (kbd "C-SPC n") #'centaur-tabs-forward)
+    (evil-define-key 'insert vterm-mode-map (kbd "C-SPC p") #'centaur-tabs-backward)
+    (evil-define-key 'insert vterm-mode-map (kbd "C-SPC SPC") #'spacemacs/alternate-buffer)
+    (evil-define-key 'insert vterm-mode-map (kbd "C-SPC c") #'vterm)
+    (evil-define-key 'insert vterm-mode-map (kbd "C-SPC j") #'windmove-down)
+    (evil-define-key 'insert vterm-mode-map (kbd "C-SPC k") #'windmove-up)
+    (evil-define-key 'insert vterm-mode-map (kbd "C-SPC \"") #'razzi-vterm-split)
+    (evil-define-key 'insert vterm-mode-map (kbd "C-y") #'vterm--self-insert)
     (evil-define-key 'insert vterm-mode-map (kbd "S-SPC") #'razzi-vterm-send-space)
     (evil-define-key 'insert vterm-mode-map (kbd "H-<backspace>") 'razzi-vterm-send-c-w)
     (evil-define-key 'insert vterm-mode-map (kbd "H-<right>") 'razzi-vterm-send-m-f)
     (evil-define-key 'insert vterm-mode-map (kbd "H-<left>") 'razzi-vterm-send-m-b)
     (evil-define-key 'insert vterm-mode-map (kbd "M-<backspace>") 'razzi-vterm-send-c-u)
     (evil-define-key 'insert vterm-mode-map (kbd "M-v") 'vterm-yank)))
+
+(defun razzi-vterm/init-vterm-toggle ()
+  (use-package vterm-toggle
+    :config
+    (setq centaur-tabs-buffer-groups-function 'vmacs-awesome-tab-buffer-groups)
+    (defun vmacs-awesome-tab-buffer-groups ()
+      "`vmacs-awesome-tab-buffer-groups' control buffers' group rules. "
+      (list
+       (cond
+        ((derived-mode-p 'eshell-mode 'term-mode 'shell-mode 'vterm-mode)
+         "Term")
+        ((string-match-p (rx (or
+                              "\*Helm"
+                              "\*helm"
+                              "\*tramp"
+                              "\*Completions\*"
+                              "\*sdcv\*"
+                              "\*Messages\*"
+                              "\*Ido Completions\*"
+                              ))
+                         (buffer-name))
+         "Emacs")
+        (t "Common"))))
+
+    (setq vterm-toggle--vterm-buffer-p-function 'vmacs-term-mode-p)
+    (defun vmacs-term-mode-p(&optional args)
+      (derived-mode-p 'eshell-mode 'term-mode 'shell-mode 'vterm-mode))))
+
