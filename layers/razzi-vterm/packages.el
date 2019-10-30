@@ -1,23 +1,16 @@
 (defconst razzi-vterm-packages '(vterm vterm-toggle))
 
-(defun razzi-vterm-get-or-create ()
-  (interactive)
-  (let ((buffer (get-buffer "vterm")))
-    (if buffer
-        (switch-to-buffer buffer)
-      (vterm)))
-  (evil-append 1))
-
 (defun razzi-vterm-buffer-vterm-p (buffer)
   (eq (razzi-buffer-major-mode buffer) 'vterm-mode))
 
 (defun razzi-vterm-previous ()
   (interactive)
-  (switch-to-buffer (nth 1 (seq-filter #'razzi-buffer-vterm-p (buffer-list)))))
+  (switch-to-buffer (nth 1 (seq-filter #'razzi-vterm-buffer-vterm-p (buffer-list)))))
 
 (defun razzi-vterm-split ()
   (interactive)
   (split-window-vertically)
+  (windmove-down)
   (vterm)
   (evil-append 1))
 
