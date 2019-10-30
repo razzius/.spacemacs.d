@@ -40,6 +40,7 @@
     (add-hook 'vterm-mode-hook 'evil-insert-state)
 
     (evil-define-key 'insert vterm-mode-map (kbd "C-a") #'vterm--self-insert)
+    (evil-define-key 'insert vterm-mode-map (kbd "<tab>") #'vterm--self-insert)
     (evil-define-key 'insert vterm-mode-map (kbd "C-c") #'vterm--self-insert)
     (evil-define-key 'insert vterm-mode-map (kbd "C-d") #'vterm--self-insert)
     (evil-define-key 'insert vterm-mode-map (kbd "C-e") #'vterm--self-insert)
