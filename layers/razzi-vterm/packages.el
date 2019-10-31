@@ -83,6 +83,7 @@
     (evil-define-key 'insert vterm-mode-map (kbd "C-z") #'vterm--self-insert)
     (evil-define-key 'insert vterm-mode-map (kbd "C-\\") #'vterm--self-insert)
     (evil-define-key 'insert vterm-mode-map (kbd "C-SPC [") #'evil-normal-state)
+    (evil-define-key 'insert vterm-mode-map (kbd "C-SPC <escape>") #'evil-normal-state)
     (evil-define-key 'insert vterm-mode-map (kbd "C-SPC n") #'centaur-tabs-forward)
     (evil-define-key 'insert vterm-mode-map (kbd "C-SPC p") #'centaur-tabs-backward)
     (evil-define-key 'insert vterm-mode-map (kbd "C-SPC SPC") #'razzi-vterm-previous)
@@ -98,6 +99,7 @@
     (evil-define-key 'insert vterm-mode-map (kbd "H-<right>") 'razzi-vterm-send-m-f)
     (evil-define-key 'insert vterm-mode-map (kbd "H-<left>") 'razzi-vterm-send-m-b)
     (evil-define-key 'insert vterm-mode-map (kbd "M-<backspace>") 'razzi-vterm-send-c-u)
+    (evil-define-key 'insert vterm-mode-map (kbd "M-[") 'evil-normal-state)
     (evil-define-key 'insert vterm-mode-map (kbd "M-'") 'razzi-vterm-toggle)
     (evil-define-key 'insert vterm-mode-map (kbd "M-v") 'vterm-yank)))
 

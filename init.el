@@ -582,12 +582,18 @@ before packages are loaded."
                       "C-t" 'razzi-transpose-previous-chars
                       "<tab>" 'razzi-tab-completion-tab-complete
                       "C-h" 'delete-backward-char
-                      "C-i" (make-hippie-expand-function '(try-expand-line
-                                                           try-expand-line-all-buffers))
+                      "C-i" 'razzi-expand-line
                       "C-l" 'sp-slurp-hybrid-sexp)
 
   (evil-define-text-object whole-buffer (count &optional beginning end type)
     (evil-range 0 (point-max)))
+
+  (define-key input-decode-map "\C-i" [C-i])
+
+  (defun razzi-expand-line ()
+    (interactive)
+    (let ((hippie-expand-try-functions-list '(try-expand-line-all-buffers)))
+      (call-interactively 'hippie-expand)))
 
   (mapc 'evil-declare-not-repeat '(flycheck-next-error flycheck-previous-error))
 
