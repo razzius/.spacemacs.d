@@ -60,14 +60,15 @@ This function should only modify configuration layer settings."
 
      razzi
      razzi-dumb-jump
+     razzi-focus-out
      razzi-helm
-     razzi-python
      razzi-import-it
      razzi-javascript
+     razzi-mouse
+     razzi-python
      razzi-tab-completion
-     razzi-vc
      razzi-tabs
-     razzi-focus-out
+     razzi-vc
      razzi-vterm
      razzi-work
      (version-control :variables
@@ -495,27 +496,6 @@ before packages are loaded."
   (global-set-key (kbd "<C-tab>") 'centaur-tabs-forward)
   (global-set-key (kbd "<C-S-tab>") 'centaur-tabs-backward)
 
-  (defun razzi-open-file-on-click ()
-    (interactive)
-    (evil-normal-state)
-    (find-file (ffap-string-at-point)))
-
-  (global-set-key [mouse-1] 'razzi-open-file-on-click)
-
-  (defun razzi-prevent-scroll-past-end-of-file ()
-    (interactive)
-    (save-excursion
-      (let ((this-scroll-margin (min (max 0 scroll-margin)
-                                     (truncate (/ (window-body-height) 4.0)))))
-        (move-to-window-line (- -1 this-scroll-margin)))
-
-      (let ((lines (count-lines (point-min) (point-max)))
-            (point-line (count-lines 1 (point))))
-        (when (< (1+ point-line) lines)
-          (scroll-up 1)))))
-
-  (global-set-key [wheel-down] 'razzi-prevent-scroll-past-end-of-file)
-
   (global-subword-mode)
   (menu-bar-mode -1)
 
@@ -557,6 +537,7 @@ before packages are loaded."
 
   (general-define-key :states 'normal
                       "<tab>" 'flycheck-next-error
+                      "!" 'evil-ex-sort
                       "M-/" 'evilnc-comment-or-uncomment-lines
                       "M-1" 'centaur-tabs-select-beg-tab
                       "M-2" 'centaur-tabs-select-visible-tab
