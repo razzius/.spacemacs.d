@@ -1,5 +1,9 @@
 (defconst razzi-vterm-packages '(vterm vterm-toggle))
 
+(defun razzi-vterm-toggle ()
+  (razzi-save-if-buffer-is-file)
+  (vterm-toggle))
+
 (defun razzi-vterm-buffer-vterm-p (buffer)
   (eq (razzi-buffer-major-mode buffer) 'vterm-mode))
 
@@ -52,7 +56,11 @@
     (defun razzi-vterm-disable-line-highlight ()
       (setq-local global-hl-line-mode nil))
 
+    (defun razzi-vterm-disable-status-line ()
+      (setq mode-line-format nil))
+
     (add-hook 'vterm-mode-hook 'razzi-vterm-disable-line-highlight)
+    (add-hook 'vterm-mode-hook 'razzi-vterm-disable-status-line)
     (add-hook 'vterm-exit-functions #'(lambda (buf) (when buf (kill-buffer buf))))
     (add-hook 'vterm-mode-hook 'evil-insert-state)
 
@@ -76,6 +84,8 @@
     (evil-define-key 'insert vterm-mode-map (kbd "C-SPC c") #'razzi-vterm-new)
     (evil-define-key 'insert vterm-mode-map (kbd "C-SPC j") #'windmove-down)
     (evil-define-key 'insert vterm-mode-map (kbd "C-SPC k") #'windmove-up)
+    (evil-define-key 'insert vterm-mode-map (kbd "C-SPC m") #'spacemacs/toggle-maximize-buffer)
+    (evil-define-key 'insert vterm-mode-map (kbd "C-SPC '") #'vterm-toggle)
     (evil-define-key 'insert vterm-mode-map (kbd "C-SPC \"") #'razzi-vterm-split)
     (evil-define-key 'insert vterm-mode-map (kbd "C-y") #'vterm--self-insert)
     (evil-define-key 'insert vterm-mode-map (kbd "S-SPC") #'razzi-vterm-send-space)

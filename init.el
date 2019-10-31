@@ -86,7 +86,7 @@ This function should only modify configuration layer settings."
    dotspacemacs-frozen-packages '()
 
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages '(anaconda-mode company-anaconda evil-escape)
+   dotspacemacs-excluded-packages '(anaconda-mode company-anaconda evil-escape blacken importmagic)
 
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
@@ -506,7 +506,7 @@ before packages are loaded."
   (menu-bar-mode -1)
 
   (evil-leader/set-key
-    "'" 'vterm-toggle
+    "'" 'razzi-vterm-toggle
     "," 'razzi-append-comma
     "1" 'centaur-tabs-select-beg-tab
     "2" 'centaur-tabs-select-visible-tab
@@ -553,6 +553,7 @@ before packages are loaded."
                       "C-<tab>" 'centaur-tabs-forward
                       "C-SPC j" 'windmove-down
                       "C-SPC k" 'windmove-up
+                      "C-SPC '" 'razzi-vterm-toggle
                       "C" 'razzi-change-line
                       "C-M-;" 'eval-expression
                       "D" 'razzi-kill-line-and-whitespace
