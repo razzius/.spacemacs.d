@@ -1,6 +1,4 @@
-(defconst razzi-packages '((razzi :location (recipe
-                                             :fetcher github
-                                             :repo "razzius/razzi.el"))))
+(defconst razzi-packages '((razzi :location local)))
 
 (defun razzi/init-razzi ()
   (use-package razzi))
