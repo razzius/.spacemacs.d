@@ -1,7 +1,9 @@
 (defun razzi-mouse-open-file-on-click ()
   (interactive)
   (evil-normal-state)
-  (find-file (ffap-string-at-point)))
+  (let ((string-at-point (ffap-string-at-point)))
+    (when (file-exists-p string-at-point)
+      (find-file string-at-point))))
 
 (global-set-key [mouse-1] 'razzi-mouse-open-file-on-click)
 

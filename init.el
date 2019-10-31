@@ -546,7 +546,13 @@ before packages are loaded."
                       "0" 'evil-first-non-blank
                       "C-S-<tab>" 'centaur-tabs-backward
                       "C-<tab>" 'centaur-tabs-forward
+                      "C-M-<tab>" 'centaur-tabs-move-current-tab-to-right
+                      "C-M-S-<tab>" 'centaur-tabs-move-current-tab-to-left
+                      "C-SPC p" 'centaur-tabs-backward
+                      "C-SPC n" 'centaur-tabs-forward
                       "C-SPC j" 'windmove-down
+                      "C-SPC \"" #'razzi-vterm-split
+                      "M-'" 'razzi-vterm-toggle
                       "C-SPC k" 'windmove-up
                       "C-SPC '" 'razzi-vterm-toggle
                       "C-SPC SPC" 'spacemacs/alternate-buffer
@@ -582,6 +588,8 @@ before packages are loaded."
 
   (evil-define-text-object whole-buffer (count &optional beginning end type)
     (evil-range 0 (point-max)))
+
+  (mapc 'evil-declare-not-repeat '(flycheck-next-error flycheck-previous-error))
 
   (general-define-key :states 'visual
                       "$" 'evil-last-non-blank)

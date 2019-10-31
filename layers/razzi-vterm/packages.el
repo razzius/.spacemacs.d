@@ -3,7 +3,10 @@
 (defun razzi-vterm-toggle ()
   (interactive)
   (razzi-save-if-buffer-is-file)
-  (vterm-toggle))
+  (vterm-toggle)
+  (if (eq major-mode 'vterm-mode)
+      (evil-append 1)
+    (evil-normal-state)))
 
 (defun razzi-vterm-buffer-vterm-p (buffer)
   (eq (razzi-buffer-major-mode buffer) 'vterm-mode))
@@ -67,6 +70,7 @@
 
     (evil-define-key 'insert vterm-mode-map (kbd "C-a") #'vterm--self-insert)
     (evil-define-key 'insert vterm-mode-map (kbd "<tab>") #'vterm--self-insert)
+    (evil-define-key 'insert vterm-mode-map (kbd "<escape>") #'vterm--self-insert)
     (evil-define-key 'insert vterm-mode-map (kbd "C-c") #'vterm--self-insert)
     (evil-define-key 'insert vterm-mode-map (kbd "C-d") #'vterm--self-insert)
     (evil-define-key 'insert vterm-mode-map (kbd "C-e") #'vterm--self-insert)
@@ -94,6 +98,7 @@
     (evil-define-key 'insert vterm-mode-map (kbd "H-<right>") 'razzi-vterm-send-m-f)
     (evil-define-key 'insert vterm-mode-map (kbd "H-<left>") 'razzi-vterm-send-m-b)
     (evil-define-key 'insert vterm-mode-map (kbd "M-<backspace>") 'razzi-vterm-send-c-u)
+    (evil-define-key 'insert vterm-mode-map (kbd "M-'") 'razzi-vterm-toggle)
     (evil-define-key 'insert vterm-mode-map (kbd "M-v") 'vterm-yank)))
 
 (defun razzi-vterm/init-vterm-toggle ()

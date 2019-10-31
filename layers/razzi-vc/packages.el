@@ -12,7 +12,6 @@
     (set-face-background 'magit-diff-context-highlight "light cyan")
     (set-face-background 'magit-diff-hunk-heading-highlight "gray60")
 
-    ;; (transient-append-suffix 'magit-push "p" '("p" "current" razzi/magit-push))
     (transient-append-suffix 'magit-pull "p" '("d" "current" razzi/magit-pull))
 
     (magit-define-popup-action 'magit-push-popup ?h "Push to heroku :O" 'razzi/magit-push-heroku)
