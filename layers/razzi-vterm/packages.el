@@ -1,6 +1,7 @@
 (defconst razzi-vterm-packages '(vterm vterm-toggle))
 
 (defun razzi-vterm-toggle ()
+  (interactive)
   (razzi-save-if-buffer-is-file)
   (vterm-toggle))
 
