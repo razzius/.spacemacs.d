@@ -4,7 +4,7 @@
 # Install emacs application
 $ brew tap d12frosted/emacs-plus
 $ brew install emacs-plus
-$ ln -s /usr/local/Cellar/emacs-plus/*/Emacs.app/ /Applications/
+$ brew link emacs-plus
 $ alias emacs='open -a /Applications/Emacs.app/'
 
 # Install spacemacs
