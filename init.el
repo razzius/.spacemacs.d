@@ -549,6 +549,7 @@ before packages are loaded."
                       "C-SPC j" 'windmove-down
                       "C-SPC k" 'windmove-up
                       "C-SPC '" 'razzi-vterm-toggle
+                      "C-SPC SPC" 'spacemacs/alternate-buffer
                       "C" 'razzi-change-line
                       "C-M-;" 'eval-expression
                       "D" 'razzi-kill-line-and-whitespace
