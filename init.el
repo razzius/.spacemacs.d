@@ -37,7 +37,6 @@
     ;   :variables auto-completion-enable-snippets-in-popup t)
      ;rename to razzivc
      vc
-     osx
      term
      ;; tl
 
@@ -254,9 +253,7 @@ before packages are loaded."
     (evil-insert-newline-below)
     (indent-for-tab-command)
     (insert (s-trim (current-kill 0)))
-    (forward-line)
-    )
-  )
+    (forward-line)))
 
 (defun razzi/copy-paragraph ()
   (interactive)
