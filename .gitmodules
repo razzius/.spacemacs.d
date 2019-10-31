@@ -1,0 +1,3 @@
+[submodule "layers/razzi/local/razzi"]
+	path = layers/razzi/local/razzi
+	url = https://github.com/razzius/razzi.el
