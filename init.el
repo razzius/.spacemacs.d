@@ -549,8 +549,10 @@ before packages are loaded."
                       "M-3" 'centaur-tabs-select-visible-tab
                       "M-9" 'centaur-tabs-select-end-tab
                       "0" 'evil-first-non-blank
-                      "<C-S-tab>" 'centaur-tabs-backward
-                      "<C-tab>" 'centaur-tabs-forward
+                      "C-S-<tab>" 'centaur-tabs-backward
+                      "C-<tab>" 'centaur-tabs-forward
+                      "C-SPC j" 'windmove-down
+                      "C-SPC k" 'windmove-up
                       "C" 'razzi-change-line
                       "C-M-;" 'eval-expression
                       "D" 'razzi-kill-line-and-whitespace

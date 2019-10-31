@@ -22,4 +22,5 @@
       (goto-char (point-min))
       (insert import-path))
     (razzi-python-isort)
-    (razzi-python-autoflake)))
+    (razzi-python-autoflake)
+    (flycheck-buffer)))

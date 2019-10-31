@@ -3,9 +3,14 @@
 (defun razzi-vterm-buffer-vterm-p (buffer)
   (eq (razzi-buffer-major-mode buffer) 'vterm-mode))
 
+(defun razzi-vterm-buffers ()
+  (seq-filter #'razzi-vterm-buffer-vterm-p (buffer-list)))
+
 (defun razzi-vterm-previous ()
   (interactive)
-  (switch-to-buffer (nth 1 (seq-filter #'razzi-vterm-buffer-vterm-p (buffer-list)))))
+  (let ((vterm-buffers (razzi-vterm-buffers)))
+    (when (> (length vterm-buffers) 1)
+      (switch-to-buffer (nth 1 vterm-buffers)))))
 
 (defun razzi-vterm-split ()
   (interactive)
@@ -13,6 +18,12 @@
   (windmove-down)
   (vterm)
   (evil-append 1))
+
+(defun razzi-vterm-new ()
+  (interactive)
+  (dotimes (_ (length (razzi-vterm-buffers)))
+    (centaur-tabs-move-current-tab-to-right))
+  (vterm))
 
 (defun razzi-vterm-send-c-w ()
   (interactive)
@@ -54,6 +65,7 @@
     (evil-define-key 'insert vterm-mode-map (kbd "C-k") #'vterm--self-insert)
     (evil-define-key 'insert vterm-mode-map (kbd "C-n") #'vterm--self-insert)
     (evil-define-key 'insert vterm-mode-map (kbd "C-p") #'vterm--self-insert)
+    (evil-define-key 'insert vterm-mode-map (kbd "C-t") #'vterm--self-insert)
     (evil-define-key 'insert vterm-mode-map (kbd "C-w") #'vterm--self-insert)
     (evil-define-key 'insert vterm-mode-map (kbd "C-z") #'vterm--self-insert)
     (evil-define-key 'insert vterm-mode-map (kbd "C-\\") #'vterm--self-insert)
@@ -61,7 +73,7 @@
     (evil-define-key 'insert vterm-mode-map (kbd "C-SPC n") #'centaur-tabs-forward)
     (evil-define-key 'insert vterm-mode-map (kbd "C-SPC p") #'centaur-tabs-backward)
     (evil-define-key 'insert vterm-mode-map (kbd "C-SPC SPC") #'razzi-vterm-previous)
-    (evil-define-key 'insert vterm-mode-map (kbd "C-SPC c") #'vterm)
+    (evil-define-key 'insert vterm-mode-map (kbd "C-SPC c") #'razzi-vterm-new)
     (evil-define-key 'insert vterm-mode-map (kbd "C-SPC j") #'windmove-down)
     (evil-define-key 'insert vterm-mode-map (kbd "C-SPC k") #'windmove-up)
     (evil-define-key 'insert vterm-mode-map (kbd "C-SPC \"") #'razzi-vterm-split)
@@ -99,4 +111,3 @@
     (setq vterm-toggle--vterm-buffer-p-function 'vmacs-term-mode-p)
     (defun vmacs-term-mode-p(&optional args)
       (derived-mode-p 'eshell-mode 'term-mode 'shell-mode 'vterm-mode))))
-
