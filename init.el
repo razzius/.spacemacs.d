@@ -538,6 +538,8 @@ before packages are loaded."
   (general-define-key :states 'normal
                       "<tab>" 'flycheck-next-error
                       "!" 'evil-ex-sort
+                      "M-[" 'evil-backward-paragraph
+                      "M-]" 'evil-forward-paragraph
                       "M-/" 'evilnc-comment-or-uncomment-lines
                       "M-1" 'centaur-tabs-select-beg-tab
                       "M-2" 'centaur-tabs-select-visible-tab
@@ -553,6 +555,7 @@ before packages are loaded."
                       "C-SPC j" 'windmove-down
                       "C-SPC \"" #'razzi-vterm-split
                       "M-'" 'razzi-vterm-toggle
+                      "g f" 'razzi-go-to-file-at-point
                       "C-SPC k" 'windmove-up
                       "C-SPC '" 'razzi-vterm-toggle
                       "C-SPC SPC" 'spacemacs/alternate-buffer
@@ -563,13 +566,16 @@ before packages are loaded."
                       "M-r" 'raise-sexp
                       "M-s" 'razzi-flycheck-and-save-buffer
                       "M-w" 'kill-current-buffer
+                      "K" 'evil-previous-line  ; Protect against typo
                       "Q" 'razzi-replay-q-macro
                       "g /" 'spacemacs/helm-project-smart-do-search-region-or-symbol
                       "g T" 'centaur-tabs-backward
+                      "g [" 'dumb-jump-go-prompt
                       "g ]" 'dumb-jump-go
                       "g b" 'magit-blame-addition
                       "g s" 'razzi-save-and-magit-status
                       "g t" 'centaur-tabs-forward
+                      "p" 'evil-paste-after
                       "ZZ" 'with-editor-finish)
 
   ;; Disable C-p yasnippet behavior by removing hippie-expand definition
@@ -589,16 +595,19 @@ before packages are loaded."
     (evil-range 0 (point-max)))
 
   (define-key input-decode-map "\C-i" [C-i])
+  (define-key evil-insert-state-map [C-i] 'razzi-expand-line)
 
   (defun razzi-expand-line ()
     (interactive)
-    (let ((hippie-expand-try-functions-list '(try-expand-line-all-buffers)))
+    (let ((hippie-expand-try-functions-list '(try-expand-line
+                                              try-expand-line-all-buffers)))
       (call-interactively 'hippie-expand)))
 
   (mapc 'evil-declare-not-repeat '(flycheck-next-error flycheck-previous-error))
 
   (general-define-key :states 'visual
-                      "$" 'evil-last-non-blank)
+                      "$" 'evil-last-non-blank
+                      "0" 'evil-first-non-blank)
 
   (general-define-key :states 'operator
                       "E" 'forward-symbol

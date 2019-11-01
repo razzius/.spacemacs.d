@@ -56,6 +56,7 @@
 (defun razzi-vterm/init-vterm ()
   (use-package vterm
     :config
+    (setq vterm-max-scrollback 10000)
 
     (defun razzi-vterm-disable-line-highlight ()
       (setq-local global-hl-line-mode nil))
