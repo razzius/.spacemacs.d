@@ -566,6 +566,8 @@ before packages are loaded."
                       "M-r" 'raise-sexp
                       "M-s" 'razzi-flycheck-and-save-buffer
                       "M-w" 'kill-current-buffer
+                      "M-h" 'centaur-tabs-backward
+                      "M-l" 'centaur-tabs-forward
                       "K" 'evil-previous-line  ; Protect against typo
                       "Q" 'razzi-replay-q-macro
                       "g /" 'spacemacs/helm-project-smart-do-search-region-or-symbol

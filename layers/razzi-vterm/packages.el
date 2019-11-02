@@ -53,6 +53,14 @@
   (interactive)
   (vterm-send-key " "))
 
+(defun razzi-vterm-send-c-n ()
+  (interactive)
+  (vterm-send-key "n" nil nil t))
+
+(defun razzi-vterm-send-c-p ()
+  (interactive)
+  (vterm-send-key "p" nil nil t))
+
 (defun razzi-vterm/init-vterm ()
   (use-package vterm
     :config
@@ -79,6 +87,7 @@
     (evil-define-key 'insert vterm-mode-map (kbd "C-k") #'vterm--self-insert)
     (evil-define-key 'insert vterm-mode-map (kbd "C-n") #'vterm--self-insert)
     (evil-define-key 'insert vterm-mode-map (kbd "C-p") #'vterm--self-insert)
+    (evil-define-key 'insert vterm-mode-map (kbd "C-r") #'vterm--self-insert)
     (evil-define-key 'insert vterm-mode-map (kbd "C-t") #'vterm--self-insert)
     (evil-define-key 'insert vterm-mode-map (kbd "C-w") #'vterm--self-insert)
     (evil-define-key 'insert vterm-mode-map (kbd "C-z") #'vterm--self-insert)
@@ -101,7 +110,14 @@
     (evil-define-key 'insert vterm-mode-map (kbd "H-<left>") 'razzi-vterm-send-m-b)
     (evil-define-key 'insert vterm-mode-map (kbd "M-<backspace>") 'razzi-vterm-send-c-u)
     (evil-define-key 'insert vterm-mode-map (kbd "M-[") 'evil-normal-state)
-    (evil-define-key 'insert vterm-mode-map (kbd "M-'") 'razzi-vterm-toggle)
+    (evil-define-key 'insert vterm-mode-map (kbd "M-'") 'centaur-tabs-backward)
+    (evil-define-key 'insert vterm-mode-map (kbd "M-e") 'razzi-vterm-toggle)
+    (evil-define-key 'insert vterm-mode-map (kbd "M-h") 'centaur-tabs-backward)
+    (evil-define-key 'insert vterm-mode-map (kbd "M-j") 'vterm-send-return)
+    (evil-define-key 'insert vterm-mode-map (kbd "M-n") 'razzi-vterm-send-c-n)
+    (evil-define-key 'insert vterm-mode-map (kbd "M-;") 'centaur-tabs-forward)
+    (evil-define-key 'insert vterm-mode-map (kbd "M-p") 'razzi-vterm-send-c-p)
+    (evil-define-key 'insert vterm-mode-map (kbd "M-l") 'centaur-tabs-forward)
     (evil-define-key 'insert vterm-mode-map (kbd "M-v") 'vterm-yank)))
 
 (defun razzi-vterm/init-vterm-toggle ()
