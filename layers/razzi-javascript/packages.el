@@ -30,7 +30,7 @@
 (defun razzi-javascript/init-flow-js2-mode ()
   (use-package flow-js2-mode))
 
-(defun razzi-javascript/init-prettier-js ()
+(defun razzi-javascript/post-init-prettier-js ()
   (use-package prettier-js
     :config
 

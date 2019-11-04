@@ -108,6 +108,7 @@
     (evil-define-key 'insert vterm-mode-map (kbd "H-<backspace>") 'razzi-vterm-send-c-w)
     (evil-define-key 'insert vterm-mode-map (kbd "H-<right>") 'razzi-vterm-send-m-f)
     (evil-define-key 'insert vterm-mode-map (kbd "H-<left>") 'razzi-vterm-send-m-b)
+    (evil-define-key 'insert vterm-mode-map (kbd "H-<up>") 'vterm--self-insert)
     (evil-define-key 'insert vterm-mode-map (kbd "M-<backspace>") 'razzi-vterm-send-c-u)
     (evil-define-key 'insert vterm-mode-map (kbd "M-[") 'evil-normal-state)
     (evil-define-key 'insert vterm-mode-map (kbd "M-'") 'centaur-tabs-backward)

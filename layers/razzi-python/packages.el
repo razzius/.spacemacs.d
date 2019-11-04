@@ -2,7 +2,7 @@
 
 (setq-default flycheck-disabled-checkers '(python-pylint python-pycompile))
 
-(defun razzi-python/init-blacken ()
+(defun razzi-python/post-init-blacken ()
   (use-package blacken
     :config
     (add-hook 'python-mode-hook 'blacken-mode)))

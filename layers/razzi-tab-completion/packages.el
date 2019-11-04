@@ -10,13 +10,13 @@
               (null (yas-expand)))
       (company-select-next))))
 
-(defun razzi-tab-completion/init-yasnippet ()
+(defun razzi-tab-completion/post-init-yasnippet ()
   (use-package yasnippet
     :init
     (setq yas-snippet-dirs '("~/.spacemacs.d/snippets"))
     (yas-global-mode)))
 
-(defun razzi-tab-completion/init-company ()
+(defun razzi-tab-completion/post-init-company ()
   (use-package company
     :init
     (setq company-idle-delay .12
