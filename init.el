@@ -535,7 +535,11 @@ before packages are loaded."
     "q r" 'razzi-restart-emacs
     "t DEL" 'centaur-tabs-kill-all-buffers-in-current-group)
 
-  (general-define-key "M-`" 'razzi-vterm-toggle)
+  (general-define-key "M-`" 'razzi-vterm-toggle
+                      "C-<tab>" 'centaur-tabs-forward
+                      "C-M-<tab>" 'centaur-tabs-move-current-tab-to-right
+                      "C-M-S-<tab>" 'centaur-tabs-move-current-tab-to-left
+                      "C-S-<tab>" 'centaur-tabs-backward)
 
   (general-define-key :states 'normal
                       "<tab>" 'flycheck-next-error
@@ -550,10 +554,6 @@ before packages are loaded."
                       "M-5" 'centaur-tabs-select-visible-tab
                       "M-9" 'centaur-tabs-select-end-tab
                       "0" 'evil-first-non-blank
-                      "C-S-<tab>" 'centaur-tabs-backward
-                      "C-<tab>" 'centaur-tabs-forward
-                      "C-M-<tab>" 'centaur-tabs-move-current-tab-to-right
-                      "C-M-S-<tab>" 'centaur-tabs-move-current-tab-to-left
                       "C-SPC p" 'centaur-tabs-backward
                       "C-SPC n" 'centaur-tabs-forward
                       "C-SPC j" 'windmove-down
