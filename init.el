@@ -546,6 +546,8 @@ before packages are loaded."
                       "M-1" 'centaur-tabs-select-beg-tab
                       "M-2" 'centaur-tabs-select-visible-tab
                       "M-3" 'centaur-tabs-select-visible-tab
+                      "M-4" 'centaur-tabs-select-visible-tab
+                      "M-5" 'centaur-tabs-select-visible-tab
                       "M-9" 'centaur-tabs-select-end-tab
                       "0" 'evil-first-non-blank
                       "C-S-<tab>" 'centaur-tabs-backward
