@@ -535,6 +535,8 @@ before packages are loaded."
     "q r" 'razzi-restart-emacs
     "t DEL" 'centaur-tabs-kill-all-buffers-in-current-group)
 
+  (general-define-key "M-`" 'razzi-vterm-toggle)
+
   (general-define-key :states 'normal
                       "<tab>" 'flycheck-next-error
                       "!" 'evil-ex-sort
