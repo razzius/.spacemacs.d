@@ -554,6 +554,8 @@ before packages are loaded."
                       "M-5" 'centaur-tabs-select-visible-tab
                       "M-9" 'centaur-tabs-select-end-tab
                       "0" 'evil-first-non-blank
+                      "C-h" 'windmove-left
+                      "C-l" 'windmove-right
                       "C-SPC p" 'centaur-tabs-backward
                       "C-SPC n" 'centaur-tabs-forward
                       "C-SPC j" 'windmove-down
@@ -591,8 +593,11 @@ before packages are loaded."
                       "M-s" 'razzi-exit-insert-and-save
                       "M-t" 'transpose-words
                       "H-<backspace>" 'backward-kill-word  ; this is because I have system-wide C-w -> H-<backspace>
+                      "C-a" 'beginning-of-line
+                      "C-e" 'end-of-line
                       "C-t" 'razzi-transpose-previous-chars
                       "<tab>" 'razzi-tab-completion-tab-complete
+                      "H-<left>" 'backward-word
                       "C-h" 'delete-backward-char
                       "C-i" 'razzi-expand-line
                       "C-l" 'sp-slurp-hybrid-sexp)
@@ -609,7 +614,7 @@ before packages are loaded."
                                               try-expand-line-all-buffers)))
       (call-interactively 'hippie-expand)))
 
-  (mapc 'evil-declare-not-repeat '(flycheck-next-error flycheck-previous-error))
+  (mapc 'evil-declare-not-repeat '(flycheck-next-error flycheck-previous-error razzi-flycheck-and-save-buffer))
 
   (general-define-key :states 'visual
                       "$" 'evil-last-non-blank
