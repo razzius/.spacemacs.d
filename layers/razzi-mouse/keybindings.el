@@ -10,12 +10,10 @@
 (defun razzi-mouse-prevent-scroll-past-end-of-file ()
   (interactive)
   (save-excursion
-    (let ((this-scroll-margin (min (max 0 scroll-margin)
-                                   (truncate (/ (window-body-height) 4.0)))))
-      (move-to-window-line (- -1 this-scroll-margin)))
+    (move-to-window-line -1)
 
-    (let ((lines (count-lines (point-min) (point-max)))
-          (point-line (count-lines 1 (point))))
+    (let ((lines (line-number-at-pos (point-max)))
+          (point-line (line-number-at-pos (point))))
       (when (< (1+ point-line) lines)
         (scroll-up 1)))))
 
