@@ -29,9 +29,9 @@
 
 (defun razzi-vterm-new ()
   (interactive)
+  (vterm)
   (dotimes (_ (length (razzi-vterm-buffers)))
-    (centaur-tabs-move-current-tab-to-right))
-  (vterm))
+    (centaur-tabs-move-current-tab-to-right)))
 
 (defun razzi-vterm-send-c-w ()
   (interactive)
