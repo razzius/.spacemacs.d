@@ -579,7 +579,7 @@ before packages are loaded."
                       "g /" 'spacemacs/helm-project-smart-do-search-region-or-symbol
                       "g T" 'centaur-tabs-backward
                       "g [" 'dumb-jump-go-prompt
-                      "g ]" 'dumb-jump-go
+                      "g ]" 'razzi-dumb-jump-go
                       "g b" 'magit-blame-addition
                       "g s" 'razzi-save-and-magit-status
                       "g t" 'centaur-tabs-forward
