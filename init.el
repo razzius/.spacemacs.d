@@ -547,12 +547,6 @@ before packages are loaded."
                       "M-[" 'evil-backward-paragraph
                       "M-]" 'evil-forward-paragraph
                       "M-/" 'evilnc-comment-or-uncomment-lines
-                      "M-1" 'centaur-tabs-select-beg-tab
-                      "M-2" 'centaur-tabs-select-visible-tab
-                      "M-3" 'centaur-tabs-select-visible-tab
-                      "M-4" 'centaur-tabs-select-visible-tab
-                      "M-5" 'centaur-tabs-select-visible-tab
-                      "M-9" 'centaur-tabs-select-end-tab
                       "0" 'evil-first-non-blank
                       "C-h" 'windmove-left
                       "C-l" 'windmove-right
@@ -569,6 +563,15 @@ before packages are loaded."
                       "C-M-;" 'eval-expression
                       "D" 'razzi-kill-line-and-whitespace
                       "M-RET" 'lisp-state-eval-sexp-end-of-line
+                      "M-1" 'centaur-tabs-select-beg-tab
+                      "M-2" 'centaur-tabs-select-visible-tab
+                      "M-3" 'centaur-tabs-select-visible-tab
+                      "M-4" 'centaur-tabs-select-visible-tab
+                      "M-5" 'centaur-tabs-select-visible-tab
+                      "M-6" 'centaur-tabs-select-visible-tab
+                      "M-7" 'centaur-tabs-select-visible-tab
+                      "M-8" 'centaur-tabs-select-visible-tab
+                      "M-9" 'centaur-tabs-select-end-tab
                       "M-r" 'raise-sexp
                       "M-s" 'razzi-flycheck-and-save-buffer
                       "M-w" 'kill-current-buffer
