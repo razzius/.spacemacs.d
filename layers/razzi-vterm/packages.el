@@ -33,9 +33,9 @@
   (dotimes (_ (length (razzi-vterm-buffers)))
     (centaur-tabs-move-current-tab-to-right)))
 
-(defun razzi-vterm-send-c-w ()
+(defun razzi-vterm-send-m-del ()
   (interactive)
-  (vterm-send-key "w" nil nil t))
+  (vterm-send-key "<backspace>" nil t nil))
 
 (defun razzi-vterm-send-m-f ()
   (interactive)
@@ -104,7 +104,7 @@
     (evil-define-key 'insert vterm-mode-map (kbd "C-w") #'vterm--self-insert)
     (evil-define-key 'insert vterm-mode-map (kbd "C-y") #'vterm--self-insert)
     (evil-define-key 'insert vterm-mode-map (kbd "C-z") #'vterm--self-insert)
-    (evil-define-key 'insert vterm-mode-map (kbd "H-<backspace>") 'razzi-vterm-send-c-w)
+    (evil-define-key 'insert vterm-mode-map (kbd "H-<backspace>") 'razzi-vterm-send-m-del)
     (evil-define-key 'insert vterm-mode-map (kbd "H-<left>") 'razzi-vterm-send-m-b)
     (evil-define-key 'insert vterm-mode-map (kbd "H-<right>") 'razzi-vterm-send-m-f)
     (evil-define-key 'insert vterm-mode-map (kbd "H-<up>") 'vterm--self-insert)
