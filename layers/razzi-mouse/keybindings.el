@@ -18,3 +18,15 @@
         (scroll-up 1)))))
 
 (global-set-key [wheel-down] 'razzi-mouse-prevent-scroll-past-end-of-file)
+
+(defun razzi-ns-drag-n-drop (event &optional new-frame force-text)
+  "Insert the path to the file dropped in."
+  (interactive "e")
+  (let* ((window (posn-window (event-start event)))
+         (arg (car (cdr (cdr event))))
+         (type (car arg))
+         (data (car (cdr arg)))
+         (name (s-replace-all '((" " . "\\ ")) data)))
+    (vterm-send-string name)))
+
+(global-set-key [drag-n-drop] 'razzi-ns-drag-n-drop)
