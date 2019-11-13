@@ -14,3 +14,5 @@
 
 (defun razzi-python/post-init-nose ()
   (use-package nose))
+
+; todo f snippet has duplicate function versus format

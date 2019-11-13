@@ -515,10 +515,10 @@ before packages are loaded."
     "`" 'razzi-toggle-true-false
     "e n" 'flycheck-next-error
     "e p" 'flycheck-previous-error
-    "f RET" 'razzi-copy-project-file-path
-    "f SPC" 'razzi-copy-full-file-name
+    "f RET" 'spacemacs/projectile-copy-file-path
+    "f SPC" 'spacemacs/copy-file-path
     "f i" 'spacemacs/find-dotfile
-    "f n" 'razzi-copy-file-name
+    "f n" 'spacemacs/copy-file-name
     "f p" 'razzi-python/copy-test-file-path
     "f u" 'razzi-python/copy-test-method-path
     "g n" 'centaur-tabs-forward-group
@@ -561,6 +561,7 @@ before packages are loaded."
                       "C-SPC SPC" 'spacemacs/alternate-buffer
                       "C" 'razzi-change-line
                       "C-M-;" 'eval-expression
+                      "M-S-t" 'reopen-killed-file
                       "D" 'razzi-kill-line-and-whitespace
                       "M-RET" 'lisp-state-eval-sexp-end-of-line
                       "M-1" 'centaur-tabs-select-beg-tab
@@ -621,9 +622,28 @@ before packages are loaded."
 
   (general-define-key :states 'visual
                       "$" 'evil-last-non-blank
+                      "K" 'evil-previous-line  ; Protect against typo
                       "0" 'evil-first-non-blank)
 
   (general-define-key :states 'operator
                       "E" 'forward-symbol
                       "ae" 'whole-buffer
-                      "SPC" 'evil-inner-symbol))
+                      "SPC" 'evil-inner-symbol)
+
+  ; todo integrate this
+  (defvar killed-file-list nil
+    "List of recently killed files.")
+
+  (defun add-file-to-killed-file-list ()
+    "If buffer is associated with a file name, add that file to the
+`killed-file-list' when killing the buffer."
+    (when buffer-file-name
+      (push buffer-file-name killed-file-list)))
+
+  (add-hook 'kill-buffer-hook #'add-file-to-killed-file-list)
+
+  (defun reopen-killed-file ()
+    "Reopen the most recently killed file, if one exists."
+    (interactive)
+    (when killed-file-list
+      (find-file (pop killed-file-list)))))
