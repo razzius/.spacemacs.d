@@ -536,6 +536,7 @@ before packages are loaded."
     "t DEL" 'centaur-tabs-kill-all-buffers-in-current-group)
 
   (general-define-key "M-`" 'razzi-vterm-toggle
+                      "M-w" 'kill-current-buffer
                       "C-<tab>" 'centaur-tabs-forward
                       "C-M-<tab>" 'centaur-tabs-move-current-tab-to-right
                       "C-M-S-<tab>" 'centaur-tabs-move-current-tab-to-left
@@ -575,7 +576,6 @@ before packages are loaded."
                       "M-9" 'centaur-tabs-select-end-tab
                       "M-r" 'raise-sexp
                       "M-s" 'razzi-flycheck-and-save-buffer
-                      "M-w" 'kill-current-buffer
                       "M-h" 'centaur-tabs-backward
                       "M-l" 'centaur-tabs-forward
                       "K" 'evil-previous-line  ; Protect against typo
