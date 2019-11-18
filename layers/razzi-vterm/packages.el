@@ -77,6 +77,8 @@
     (add-hook 'vterm-exit-functions #'(lambda (buf) (when buf (kill-buffer buf))))
     (add-hook 'vterm-mode-hook 'evil-insert-state)
 
+    (evil-define-key 'normal vterm-mode-map (kbd "o") #'browse-url-at-point)
+
     (evil-define-key 'insert vterm-mode-map (kbd "<escape>") #'vterm--self-insert)
     (evil-define-key 'insert vterm-mode-map (kbd "<tab>") #'vterm--self-insert)
     (evil-define-key 'insert vterm-mode-map (kbd "C-SPC '") #'vterm-toggle)
