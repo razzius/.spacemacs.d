@@ -487,6 +487,7 @@ before packages are loaded."
         dired-recursive-deletes 'always
         evil-ex-substitute-global t
         evil-insert-state-message nil
+        evil-visual-state-message nil
         kill-buffer-query-functions nil
         ns-pop-up-frames nil)
 
@@ -623,7 +624,8 @@ before packages are loaded."
   (general-define-key :states 'visual
                       "$" 'evil-last-non-blank
                       "K" 'evil-previous-line  ; Protect against typo
-                      "0" 'evil-first-non-blank)
+                      "0" 'evil-first-non-blank
+                      "v" 'evil-visual-line)
 
   (general-define-key :states 'operator
                       "E" 'forward-symbol
