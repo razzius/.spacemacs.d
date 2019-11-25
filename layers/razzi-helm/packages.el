@@ -1,4 +1,4 @@
-(defconst razzi-helm-packages '(helm helm-projectile))
+(defconst razzi-helm-packages '(helm helm-projectile helm-ag))
 
 (defun razzi-helm-run-project-search (dir)
   (interactive)
@@ -33,8 +33,12 @@
     :config
     (global-set-key (kbd "C-/") nil)
     (define-key undo-tree-map (kbd "C-/") nil)
-    (define-key helm-do-ag-map (kbd "<left>") nil)
     (define-key helm-projectile-projects-map (kbd "C-/") 'raz-helm-projectile-rg)
     (define-key helm-projectile-projects-map (kbd "C-;") 'raz-helm-projectile-magit-status)
     (helm-add-action-to-source "ripgrep" 'razzi-helm-run-project-search helm-source-projectile-projects)
     (helm-add-action-to-source "magit" 'razzi-helm-run-magit-status helm-source-projectile-projects)))
+
+(defun razzi-helm/post-init-helm-ag ()
+  (use-package helm-ag
+    :config
+    (define-key helm-do-ag-map (kbd "<left>") nil)))

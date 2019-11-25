@@ -70,7 +70,6 @@ This function should only modify configuration layer settings."
      razzi-tabs
      razzi-vc
      razzi-vterm
-     razzi-work
      (version-control :variables
                       git-magit-status-fullscreen t))
 
