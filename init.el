@@ -481,7 +481,8 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
-  (setq-default require-final-newline t)
+  (setq-default require-final-newline t
+                evil-symbol-word-search nil)
 
   (setq custom-file "~/.emacs.d/custom.el"
         evil-cross-lines t
@@ -557,9 +558,11 @@ before packages are loaded."
                       "C-l" 'windmove-right
                       "C-SPC p" 'centaur-tabs-backward
                       "C-SPC n" 'centaur-tabs-forward
+                      "C-SPC h" 'windmove-left
                       "C-SPC j" 'windmove-down
-                      "C-SPC \"" #'razzi-vterm-split
-                      "M-'" 'razzi-vterm-toggle
+                      "C-SPC k" 'windmove-up
+                      "C-SPC l" 'windmove-right
+                      "C-SPC \"" #'razzi-vterm-split-vertically
                       "g f" 'razzi-go-to-file-at-point
                       "C-SPC k" 'windmove-up
                       "C-SPC '" 'razzi-vterm-toggle
