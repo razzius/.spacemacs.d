@@ -20,10 +20,17 @@
     (when (> (length vterm-buffers) 1)
       (switch-to-buffer (nth 1 vterm-buffers)))))
 
-(defun razzi-vterm-split ()
+(defun razzi-vterm-split-vertically ()
   (interactive)
   (split-window-vertically)
   (windmove-down)
+  (vterm)
+  (evil-append 1))
+
+(defun razzi-vterm-split-horizontally ()
+  (interactive)
+  (split-window-horizontally)
+  (windmove-right)
   (vterm)
   (evil-append 1))
 
@@ -61,6 +68,14 @@
   (interactive)
   (vterm-send-key "p" nil nil t))
 
+(defun razzi-vterm-send-hyper-up ()
+  (interactive)
+  (vterm-send-key "<up>" nil t nil))
+
+(defun razzi-vterm-send-hyper-down ()
+  (interactive)
+  (vterm-send-key "<down>" nil t nil))
+
 (defun razzi-vterm/init-vterm ()
   (use-package vterm
     :config
@@ -85,10 +100,13 @@
     (evil-define-key 'insert vterm-mode-map (kbd "C-SPC <escape>") #'evil-normal-state)
     (evil-define-key 'insert vterm-mode-map (kbd "C-SPC SPC") #'razzi-vterm-previous)
     (evil-define-key 'insert vterm-mode-map (kbd "C-SPC [") #'evil-normal-state)
-    (evil-define-key 'insert vterm-mode-map (kbd "C-SPC \"") #'razzi-vterm-split)
+    (evil-define-key 'insert vterm-mode-map (kbd "C-SPC \"") #'razzi-vterm-split-vertically)
+    (evil-define-key 'insert vterm-mode-map (kbd "C-SPC %") #'razzi-vterm-split-horizontally)
     (evil-define-key 'insert vterm-mode-map (kbd "C-SPC c") #'razzi-vterm-new)
+    (evil-define-key 'insert vterm-mode-map (kbd "C-SPC h") #'windmove-left)
     (evil-define-key 'insert vterm-mode-map (kbd "C-SPC j") #'windmove-down)
     (evil-define-key 'insert vterm-mode-map (kbd "C-SPC k") #'windmove-up)
+    (evil-define-key 'insert vterm-mode-map (kbd "C-SPC l") #'windmove-right)
     (evil-define-key 'insert vterm-mode-map (kbd "C-SPC m") #'spacemacs/toggle-maximize-buffer)
     (evil-define-key 'insert vterm-mode-map (kbd "C-SPC n") #'centaur-tabs-forward)
     (evil-define-key 'insert vterm-mode-map (kbd "C-SPC p") #'centaur-tabs-backward)
@@ -129,6 +147,8 @@
     (evil-define-key 'insert vterm-mode-map (kbd "M-t") 'razzi-vterm-new)
     (evil-define-key 'insert vterm-mode-map (kbd "M-v") 'vterm-yank)
     (evil-define-key 'insert vterm-mode-map (kbd "M-w") 'kill-current-buffer)
+    (evil-define-key 'insert vterm-mode-map (kbd "H-<up>") 'razzi-vterm-send-hyper-up)
+    (evil-define-key 'insert vterm-mode-map (kbd "H-<down>") 'razzi-vterm-send-hyper-down)
     (evil-define-key 'insert vterm-mode-map (kbd "S-SPC") #'razzi-vterm-send-space)))
 
 (defun razzi-vterm/init-vterm-toggle ()
