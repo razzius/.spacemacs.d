@@ -547,6 +547,8 @@ before packages are loaded."
   (general-define-key :states 'normal
                       "<tab>" 'flycheck-next-error
                       "!" 'evil-ex-sort
+                      "-" 'move-line-down
+                      "_" 'move-line-up
                       "M-[" 'evil-backward-paragraph
                       "M-]" 'evil-forward-paragraph
                       "M-/" 'evilnc-comment-or-uncomment-lines
