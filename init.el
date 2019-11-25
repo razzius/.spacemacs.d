@@ -58,6 +58,8 @@ This function should only modify configuration layer settings."
                       version-control-diff-side 'left)
      treemacs
 
+     no-dots
+
      razzi
      razzi-dumb-jump
      razzi-focus-out
@@ -648,3 +650,9 @@ before packages are loaded."
     (interactive)
     (when killed-file-list
       (find-file (pop killed-file-list)))))
+
+(defmacro measure-time (&rest body)
+  "Measure the time it takes to evaluate BODY."
+  `(let ((time (current-time)))
+     ,@body
+     (message "%.06f" (float-time (time-since time)))))
