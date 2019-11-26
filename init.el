@@ -34,6 +34,8 @@ This function should only modify configuration layer settings."
      javascript
      markdown
      html
+     rust
+     clojure
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press `SPC f e R' (Vim style) or
@@ -65,6 +67,7 @@ This function should only modify configuration layer settings."
      razzi-focus-out
      razzi-helm
      razzi-import-it
+     razzi-clojure
      razzi-javascript
      razzi-mouse
      razzi-python

@@ -25,7 +25,7 @@
         (when eslint
           (setq-local flycheck-javascript-eslint-executable eslint))))
 
-    (add-hook 'flycheck-mode-hook #'my/use-local-node-modules)))
+    (add-hook 'rjsx-mode-hook #'my/use-local-node-modules)))
 
 (defun razzi-javascript/init-flow-js2-mode ()
   (use-package flow-js2-mode))
