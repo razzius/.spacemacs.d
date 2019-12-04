@@ -34,6 +34,10 @@
   (vterm)
   (evil-append 1))
 
+(defun razzi-vterm-enlarge-window ()
+  (interactive)
+  (enlarge-window 5))
+
 (defun razzi-vterm-new ()
   (interactive)
   (vterm)
@@ -105,7 +109,9 @@
     (evil-define-key 'insert vterm-mode-map (kbd "C-SPC c") #'razzi-vterm-new)
     (evil-define-key 'insert vterm-mode-map (kbd "C-SPC h") #'windmove-left)
     (evil-define-key 'insert vterm-mode-map (kbd "C-SPC j") #'windmove-down)
+    (evil-define-key 'insert vterm-mode-map (kbd "C-SPC J") #'razzi-vterm-enlarge-window)
     (evil-define-key 'insert vterm-mode-map (kbd "C-SPC k") #'windmove-up)
+    (evil-define-key 'insert vterm-mode-map (kbd "C-SPC C-k") #'windmove-up)
     (evil-define-key 'insert vterm-mode-map (kbd "C-SPC l") #'windmove-right)
     (evil-define-key 'insert vterm-mode-map (kbd "C-SPC m") #'spacemacs/toggle-maximize-buffer)
     (evil-define-key 'insert vterm-mode-map (kbd "C-SPC n") #'centaur-tabs-forward)

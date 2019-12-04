@@ -506,7 +506,7 @@ before packages are loaded."
   (menu-bar-mode -1)
 
   (evil-leader/set-key
-    "'" 'razzi-vterm-toggle
+    "'" 'razzi-vterm-split-vertically
     "," 'razzi-append-comma
     "1" 'centaur-tabs-select-beg-tab
     "2" 'centaur-tabs-select-visible-tab
@@ -531,6 +531,7 @@ before packages are loaded."
     "g p" 'centaur-tabs-backward-group
     "i d" 'razzi-put-debugger
     "i e" 'iedit-mode
+    "i c" 'razzi-duplicate-paragraph
     "i f" 'razzi-python-autoflake
     "i g" 'razzi-python-gray
     "i i" 'razzi-import-it-import-this
@@ -541,38 +542,43 @@ before packages are loaded."
     "q r" 'razzi-restart-emacs
     "t DEL" 'centaur-tabs-kill-all-buffers-in-current-group)
 
+  ; normal, insert
   (general-define-key "M-`" 'razzi-vterm-toggle
-                      "M-w" 'kill-current-buffer
                       "C-<tab>" 'centaur-tabs-forward
                       "C-M-<tab>" 'centaur-tabs-move-current-tab-to-right
                       "C-M-S-<tab>" 'centaur-tabs-move-current-tab-to-left
+                      "C-SPC" nil
+                      "C-SPC C-k" 'windmove-up
+                      "C-SPC RET" 'windmove-down
+                      "C-SPC h" 'windmove-left
+                      "C-SPC j" 'windmove-down
+                      "C-SPC k" 'windmove-up
+                      "C-SPC l" 'windmove-right
+                      "C-SPC n" 'centaur-tabs-forward
+                      "C-SPC p" 'centaur-tabs-backward
+                      "M-w" 'kill-current-buffer
+                      "M-z" 'razzi-undo
                       "C-S-<tab>" 'centaur-tabs-backward)
 
   (general-define-key :states 'normal
                       "<tab>" 'flycheck-next-error
                       "!" 'evil-ex-sort
-                      "-" 'move-line-down
-                      "_" 'move-line-up
+                      "-" 'move-text-down
+                      "_" 'move-text-up
                       "M-[" 'evil-backward-paragraph
                       "M-]" 'evil-forward-paragraph
                       "M-/" 'evilnc-comment-or-uncomment-lines
                       "0" 'evil-first-non-blank
                       "C-h" 'windmove-left
                       "C-l" 'windmove-right
-                      "C-SPC p" 'centaur-tabs-backward
-                      "C-SPC n" 'centaur-tabs-forward
-                      "C-SPC h" 'windmove-left
-                      "C-SPC j" 'windmove-down
-                      "C-SPC k" 'windmove-up
-                      "C-SPC l" 'windmove-right
                       "C-SPC \"" #'razzi-vterm-split-vertically
                       "g f" 'razzi-go-to-file-at-point
-                      "C-SPC k" 'windmove-up
                       "C-SPC '" 'razzi-vterm-toggle
                       "C-SPC SPC" 'spacemacs/alternate-buffer
                       "C" 'razzi-change-line
                       "C-M-;" 'eval-expression
                       "M-S-t" 'reopen-killed-file
+                      ; this is not bound correctly
                       "D" 'razzi-kill-line-and-whitespace
                       "M-RET" 'lisp-state-eval-sexp-end-of-line
                       "M-1" 'centaur-tabs-select-beg-tab
@@ -584,6 +590,7 @@ before packages are loaded."
                       "M-7" 'centaur-tabs-select-visible-tab
                       "M-8" 'centaur-tabs-select-visible-tab
                       "M-9" 'centaur-tabs-select-end-tab
+                      "M-o" 'razzi-open-sexp-below
                       "M-r" 'raise-sexp
                       "M-s" 'razzi-flycheck-and-save-buffer
                       "M-h" 'centaur-tabs-backward
@@ -606,12 +613,15 @@ before packages are loaded."
   (general-define-key :states 'insert
                       "M-s" 'razzi-exit-insert-and-save
                       "M-t" 'transpose-words
+                      "M-o" 'sp-end-of-next-sexp
                       "H-<backspace>" 'backward-kill-word  ; this is because I have system-wide C-w -> H-<backspace>
                       "C-a" 'beginning-of-line
                       "C-e" 'end-of-line
+                      "C-k" 'kill-line
                       "C-t" 'razzi-transpose-previous-chars
                       "<tab>" 'razzi-tab-completion-tab-complete
                       "H-<left>" 'backward-word
+                      "H-<right>" 'forward-word
                       "C-h" 'delete-backward-char
                       "C-i" 'razzi-expand-line
                       "C-l" 'sp-slurp-hybrid-sexp)
@@ -664,3 +674,5 @@ before packages are loaded."
   `(let ((time (current-time)))
      ,@body
      (message "%.06f" (float-time (time-since time)))))
+
+; v visual mode doesn't work
