@@ -551,12 +551,23 @@ before packages are loaded."
                       "C-SPC" nil
                       "C-SPC C-k" 'windmove-up
                       "C-SPC RET" 'windmove-down
+                      "C-SPC %" 'razzi-vterm-split-horizontally
                       "C-SPC h" 'windmove-left
                       "C-SPC j" 'windmove-down
                       "C-SPC k" 'windmove-up
                       "C-SPC l" 'windmove-right
                       "C-SPC n" 'centaur-tabs-forward
                       "C-SPC p" 'centaur-tabs-backward
+                      "M-/" 'evilnc-comment-or-uncomment-lines
+                      "M-1" 'centaur-tabs-select-beg-tab
+                      "M-2" 'centaur-tabs-select-visible-tab
+                      "M-3" 'centaur-tabs-select-visible-tab
+                      "M-4" 'centaur-tabs-select-visible-tab
+                      "M-5" 'centaur-tabs-select-visible-tab
+                      "M-6" 'centaur-tabs-select-visible-tab
+                      "M-7" 'centaur-tabs-select-visible-tab
+                      "M-8" 'centaur-tabs-select-visible-tab
+                      "M-9" 'centaur-tabs-select-end-tab
                       "M-w" 'kill-current-buffer
                       "M-z" 'razzi-undo
                       "C-S-<tab>" 'centaur-tabs-backward)
