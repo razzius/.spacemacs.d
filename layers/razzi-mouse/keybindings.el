@@ -7,6 +7,14 @@
 
 (global-set-key [mouse-1] 'razzi-mouse-open-file-on-click)
 
+(defun razzi-mouse-scroll-up-copy-mode-in-vterm (event)
+  (interactive (list last-input-event))
+  (when (and (eq major-mode 'vterm-mode)
+             (not vterm-copy-mode))
+    (vterm-copy-mode)
+    (evil-normal-state))
+  (mwheel-scroll event))
+
 (defun razzi-mouse-prevent-scroll-past-end-of-file ()
   (interactive)
   (save-excursion
@@ -17,6 +25,7 @@
       (when (< (1+ point-line) lines)
         (scroll-up 1)))))
 
+(global-set-key [wheel-up] 'razzi-mouse-scroll-up-copy-mode-in-vterm)
 (global-set-key [wheel-down] 'razzi-mouse-prevent-scroll-past-end-of-file)
 
 (defun razzi-ns-drag-n-drop (event &optional new-frame force-text)
