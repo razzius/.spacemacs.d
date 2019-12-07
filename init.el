@@ -647,7 +647,7 @@ before packages are loaded."
                       "$" 'evil-last-non-blank
                       "K" 'evil-previous-line  ; Protect against typo
                       "0" 'evil-first-non-blank
-                      "v" 'evil-visual-line)
+                      "v" 'evil-normal-state)
 
   (general-define-key :states 'operator
                       "E" 'forward-symbol
@@ -678,4 +678,3 @@ before packages are loaded."
      ,@body
      (message "%.06f" (float-time (time-since time)))))
 
-; v visual mode doesn't work
