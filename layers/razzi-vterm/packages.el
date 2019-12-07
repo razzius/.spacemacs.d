@@ -91,6 +91,15 @@
     (defun razzi-vterm-disable-status-line ()
       (setq mode-line-format nil))
 
+    (defun razzi-vterm-end-copy-mode ()
+      (interactive)
+      (vterm-copy-mode -1)
+      (when (eq evil-state 'normal)
+        (evil-append 1)))
+
+    (define-key vterm-copy-mode-map (kbd "<return>") 'razzi-vterm-end-copy-mode)
+    (evil-define-key 'normal vterm-mode-map (kbd "<return>") 'razzi-vterm-end-copy-mode)
+
     (add-hook 'vterm-mode-hook 'razzi-vterm-disable-line-highlight)
     (add-hook 'vterm-mode-hook 'razzi-vterm-disable-status-line)
     (add-hook 'vterm-exit-functions #'(lambda (buf) (when buf (kill-buffer buf))))

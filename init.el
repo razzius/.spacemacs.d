@@ -552,6 +552,7 @@ before packages are loaded."
                       "C-SPC C-k" 'windmove-up
                       "C-SPC RET" 'windmove-down
                       "C-SPC %" 'razzi-vterm-split-horizontally
+                      "C-SPC c" 'razzi-vterm-new
                       "C-SPC h" 'windmove-left
                       "C-SPC j" 'windmove-down
                       "C-SPC k" 'windmove-up
@@ -677,4 +678,3 @@ before packages are loaded."
   `(let ((time (current-time)))
      ,@body
      (message "%.06f" (float-time (time-since time)))))
-
