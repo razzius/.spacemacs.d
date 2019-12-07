@@ -97,6 +97,7 @@
     (add-hook 'vterm-mode-hook 'evil-insert-state)
 
     (evil-define-key 'normal vterm-mode-map (kbd "o") #'browse-url-at-point)
+    (evil-define-key 'normal vterm-mode-map (kbd "C-SPC c") #'razzi-vterm-new)
 
     (evil-define-key 'insert vterm-mode-map (kbd "<escape>") #'vterm--self-insert)
     (evil-define-key 'insert vterm-mode-map (kbd "<tab>") #'vterm--self-insert)

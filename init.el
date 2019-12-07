@@ -579,7 +579,6 @@ before packages are loaded."
                       "_" 'move-text-up
                       "M-[" 'evil-backward-paragraph
                       "M-]" 'evil-forward-paragraph
-                      "M-/" 'evilnc-comment-or-uncomment-lines
                       "0" 'evil-first-non-blank
                       "C-h" 'windmove-left
                       "C-l" 'windmove-right
@@ -593,15 +592,6 @@ before packages are loaded."
                       ; this is not bound correctly
                       "D" 'razzi-kill-line-and-whitespace
                       "M-RET" 'lisp-state-eval-sexp-end-of-line
-                      "M-1" 'centaur-tabs-select-beg-tab
-                      "M-2" 'centaur-tabs-select-visible-tab
-                      "M-3" 'centaur-tabs-select-visible-tab
-                      "M-4" 'centaur-tabs-select-visible-tab
-                      "M-5" 'centaur-tabs-select-visible-tab
-                      "M-6" 'centaur-tabs-select-visible-tab
-                      "M-7" 'centaur-tabs-select-visible-tab
-                      "M-8" 'centaur-tabs-select-visible-tab
-                      "M-9" 'centaur-tabs-select-end-tab
                       "M-o" 'razzi-open-sexp-below
                       "M-r" 'raise-sexp
                       "M-s" 'razzi-flycheck-and-save-buffer
@@ -636,7 +626,8 @@ before packages are loaded."
                       "H-<right>" 'forward-word
                       "C-h" 'delete-backward-char
                       "C-i" 'razzi-expand-line
-                      "C-l" 'sp-slurp-hybrid-sexp)
+                      "C-l" 'sp-slurp-hybrid-sexp
+                      "C-;" 'sp-forward-barf-sexp)
 
   (evil-define-text-object whole-buffer (count &optional beginning end type)
     (evil-range 0 (point-max)))
