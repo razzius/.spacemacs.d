@@ -488,13 +488,14 @@ before packages are loaded."
                 evil-symbol-word-search nil)
 
   (setq custom-file "~/.emacs.d/custom.el"
-        evil-cross-lines t
         dired-recursive-deletes 'always
+        evil-cross-lines t
         evil-ex-substitute-global t
         evil-insert-state-message nil
         evil-visual-state-message nil
         kill-buffer-query-functions nil
-        ns-pop-up-frames nil)
+        ns-pop-up-frames nil
+        vc-follow-symlinks nil)
 
   (setq exec-path (append (list (expand-file-name "~/.local/bin")) exec-path))
 
