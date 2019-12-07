@@ -1,14 +1,17 @@
 (defconst razzi-tab-completion-packages '(company yasnippet))
 
 (defun razzi-tab-completion-tab-complete ()
-  "Either cycle completion or expand snippet"
+  "Either cycle completion or expand snippet.
+  If an expansion would have a space after point, delete that space."
   (interactive)
-  (let ((current-symbol (thing-at-point 'symbol)))
-    (when (or (s-contains? "_" current-symbol)
+  (let ((current-symbol (or (thing-at-point 'symbol) "")))
+    (if (or (s-contains? "_" current-symbol)
               (s-contains? "-" current-symbol)
               (s-contains? "/" current-symbol)
               (null (yas-expand)))
-      (company-select-next))))
+        (company-select-next)
+      (when (string= (string (char-after)) " ")
+          (delete-forward-char 1)))))
 
 (defun razzi-tab-completion/post-init-yasnippet ()
   (use-package yasnippet
