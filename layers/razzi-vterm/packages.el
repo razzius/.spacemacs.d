@@ -44,6 +44,11 @@
   (dotimes (_ (length (razzi-vterm-buffers)))
     (centaur-tabs-move-current-tab-to-right)))
 
+(defun razzi-vterm-cancel-and-prompt ()
+  (interactive)
+  (vterm-send-ctrl-c)
+  (evil-append 1))
+
 (defun razzi-vterm-send-m-del ()
   (interactive)
   (vterm-send-key "<backspace>" nil t nil))
@@ -107,6 +112,8 @@
 
     (evil-define-key 'normal vterm-mode-map (kbd "o") #'browse-url-at-point)
     (evil-define-key 'normal vterm-mode-map (kbd "C-SPC c") #'razzi-vterm-new)
+    (evil-define-key 'normal vterm-mode-map (kbd "C-c") #'razzi-vterm-cancel-and-prompt)
+    (evil-define-key 'normal vterm-mode-map (kbd "M-w") 'kill-current-buffer)
 
     (evil-define-key 'insert vterm-mode-map (kbd "<escape>") #'vterm--self-insert)
     (evil-define-key 'insert vterm-mode-map (kbd "<tab>") #'vterm--self-insert)
@@ -133,10 +140,12 @@
     (evil-define-key 'insert vterm-mode-map (kbd "C-e") #'vterm--self-insert)
     (evil-define-key 'insert vterm-mode-map (kbd "C-h") #'vterm--self-insert)
     (evil-define-key 'insert vterm-mode-map (kbd "C-k") #'vterm--self-insert)
+    (evil-define-key 'insert vterm-mode-map (kbd "C-l") #'vterm--self-insert)
     (evil-define-key 'insert vterm-mode-map (kbd "C-n") #'vterm--self-insert)
     (evil-define-key 'insert vterm-mode-map (kbd "C-p") #'vterm--self-insert)
     (evil-define-key 'insert vterm-mode-map (kbd "C-r") #'vterm--self-insert)
     (evil-define-key 'insert vterm-mode-map (kbd "C-t") #'vterm--self-insert)
+    (evil-define-key 'insert vterm-mode-map (kbd "C-u") #'vterm--self-insert)
     (evil-define-key 'insert vterm-mode-map (kbd "C-w") #'vterm--self-insert)
     (evil-define-key 'insert vterm-mode-map (kbd "C-y") #'vterm--self-insert)
     (evil-define-key 'insert vterm-mode-map (kbd "C-z") #'vterm--self-insert)
