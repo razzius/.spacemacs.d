@@ -13,6 +13,7 @@
       dired-recursive-deletes 'always
       diredp-hide-details-initially-flag t)
 
+    (define-key dired-mode-map (kbd "q") 'kill-this-buffer)
     (define-key dired-mode-map (kbd "c") 'find-file)
     (define-key dired-mode-map (kbd ".") 'dired-up-directory)
     (define-key dired-mode-map (kbd "C-h") 'dired-up-directory)

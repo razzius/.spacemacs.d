@@ -30,12 +30,13 @@ This function should only modify configuration layer settings."
    dotspacemacs-configuration-layers
    '(
      (python :variables python-backend 'disabled)
-     shell-scripts
+     clojure
+     go
+     html
      javascript
      markdown
-     html
      rust
-     clojure
+     shell-scripts
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press `SPC f e R' (Vim style) or
@@ -228,7 +229,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; Default font or prioritized list of fonts.
    dotspacemacs-default-font '("Source Code Pro"
-                               :size 18.0
+                               :size 19.0
                                :weight normal
                                :width normal)
 
@@ -487,7 +488,9 @@ before packages are loaded."
   (setq-default require-final-newline t
                 evil-symbol-word-search nil)
 
-  (setq custom-file "~/.emacs.d/custom.el"
+  (setq create-lockfiles nil
+        custom-file "~/.emacs.d/custom.el"
+        go-tab-width 4
         dired-recursive-deletes 'always
         evil-cross-lines t
         evil-ex-substitute-global t
@@ -543,7 +546,17 @@ before packages are loaded."
     "q r" 'razzi-restart-emacs
     "t DEL" 'centaur-tabs-kill-all-buffers-in-current-group)
 
-  ; normal, insert
+  (general-define-key :states '(normal insert)
+                      "M-1" 'centaur-tabs-select-beg-tab
+                      "M-2" 'centaur-tabs-select-visible-tab
+                      "M-3" 'centaur-tabs-select-visible-tab
+                      "M-4" 'centaur-tabs-select-visible-tab
+                      "M-5" 'centaur-tabs-select-visible-tab
+                      "M-6" 'centaur-tabs-select-visible-tab
+                      "M-7" 'centaur-tabs-select-visible-tab
+                      "M-8" 'centaur-tabs-select-visible-tab
+                      "M-9" 'centaur-tabs-select-end-tab)
+
   (general-define-key "M-`" 'razzi-vterm-toggle
                       "C-<tab>" 'centaur-tabs-forward
                       "C-M-<tab>" 'centaur-tabs-move-current-tab-to-right
@@ -559,52 +572,45 @@ before packages are loaded."
                       "C-SPC l" 'windmove-right
                       "C-SPC n" 'centaur-tabs-forward
                       "C-SPC p" 'centaur-tabs-backward
+                      "M--" 'spacemacs/scale-down-font
+                      "M-=" 'spacemacs/scale-up-font
                       "M-/" 'evilnc-comment-or-uncomment-lines
-                      "M-1" 'centaur-tabs-select-beg-tab
-                      "M-2" 'centaur-tabs-select-visible-tab
-                      "M-3" 'centaur-tabs-select-visible-tab
-                      "M-4" 'centaur-tabs-select-visible-tab
-                      "M-5" 'centaur-tabs-select-visible-tab
-                      "M-6" 'centaur-tabs-select-visible-tab
-                      "M-7" 'centaur-tabs-select-visible-tab
-                      "M-8" 'centaur-tabs-select-visible-tab
-                      "M-9" 'centaur-tabs-select-end-tab
                       "M-w" 'kill-current-buffer
                       "M-z" 'razzi-undo
                       "C-S-<tab>" 'centaur-tabs-backward)
 
   (general-define-key :states 'normal
-                      "<tab>" 'flycheck-next-error
+                      ;; "<tab>" 'flycheck-next-error
                       "!" 'evil-ex-sort
                       "-" 'move-text-down
-                      "_" 'move-text-up
-                      "M-[" 'evil-backward-paragraph
-                      "M-]" 'evil-forward-paragraph
                       "0" 'evil-first-non-blank
-                      "C-h" 'windmove-left
-                      "C-l" 'windmove-right
-                      "C-SPC \"" #'razzi-vterm-split-vertically
-                      "g f" 'razzi-go-to-file-at-point
-                      "C-SPC '" 'razzi-vterm-toggle
-                      "C-SPC SPC" 'spacemacs/alternate-buffer
                       "C" 'razzi-change-line
                       "C-M-;" 'eval-expression
-                      "M-S-t" 'reopen-killed-file
-                      ; this is not bound correctly
+                      "C-SPC '" 'razzi-vterm-toggle
+                      "C-SPC SPC" 'spacemacs/alternate-buffer
+                      "C-SPC \"" #'razzi-vterm-split-vertically
+                      "C-h" 'windmove-left
+                      "C-l" 'windmove-right
                       "D" 'razzi-kill-line-and-whitespace
+                      "K" 'evil-previous-line  ; Protect against typo
                       "M-RET" 'lisp-state-eval-sexp-end-of-line
+                      "M-S-t" 'reopen-killed-file ; this is not bound correctly
+                      "M-[" 'evil-backward-paragraph
+                      "M-]" 'evil-forward-paragraph
+                      "M-c" 'quick-copy-line
+                      "M-h" 'centaur-tabs-backward
+                      "M-l" 'centaur-tabs-forward
                       "M-o" 'razzi-open-sexp-below
                       "M-r" 'raise-sexp
                       "M-s" 'razzi-flycheck-and-save-buffer
-                      "M-h" 'centaur-tabs-backward
-                      "M-l" 'centaur-tabs-forward
-                      "K" 'evil-previous-line  ; Protect against typo
                       "Q" 'razzi-replay-q-macro
+                      "_" 'move-text-up
                       "g /" 'spacemacs/helm-project-smart-do-search-region-or-symbol
                       "g T" 'centaur-tabs-backward
                       "g [" 'dumb-jump-go-prompt
                       "g ]" 'razzi-dumb-jump-go
                       "g b" 'magit-blame-addition
+                      "g f" 'razzi-go-to-file-at-point
                       "g s" 'razzi-save-and-magit-status
                       "g t" 'centaur-tabs-forward
                       "p" 'evil-paste-after
@@ -615,10 +621,13 @@ before packages are loaded."
 
   (general-define-key :states 'insert
                       "M-s" 'razzi-exit-insert-and-save
+                      "M-RET" 'lisp-state-eval-sexp-end-of-line
+                      "M-v" 'yank
                       "M-t" 'transpose-words
                       "M-o" 'sp-end-of-next-sexp
                       "H-<backspace>" 'backward-kill-word  ; this is because I have system-wide C-w -> H-<backspace>
                       "C-a" 'beginning-of-line
+                      "C-d" 'delete-forward-char
                       "C-e" 'end-of-line
                       "C-k" 'kill-line
                       "C-t" 'razzi-transpose-previous-chars
@@ -629,6 +638,9 @@ before packages are loaded."
                       "C-i" 'razzi-expand-line
                       "C-l" 'sp-slurp-hybrid-sexp
                       "C-;" 'sp-forward-barf-sexp)
+
+  (general-define-key :states '(normal visual)
+                      "gx" 'browse-url-at-point)
 
   (evil-define-text-object whole-buffer (count &optional beginning end type)
     (evil-range 0 (point-max)))
