@@ -57,10 +57,10 @@ This function should only modify configuration layer settings."
      ;; spell-checking
      (syntax-checking :variables
                       syntax-checking-enable-tooltips nil
-                      version-control-diff-tool 'git-gutter+
-                      version-control-diff-side 'left)
+                      )
      treemacs
 
+     helpful
      no-dots
 
      razzi
@@ -77,7 +77,9 @@ This function should only modify configuration layer settings."
      razzi-vc
      razzi-vterm
      (version-control :variables
-                      git-magit-status-fullscreen t))
+                      git-magit-status-fullscreen t
+                      version-control-diff-tool 'git-gutter+
+                      version-control-diff-side 'left))
 
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
