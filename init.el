@@ -692,3 +692,23 @@ before packages are loaded."
   `(let ((time (current-time)))
      ,@body
      (message "%.06f" (float-time (time-since time)))))
+
+; would be great to remove color themes etc to see why vi in vterm is showing up blank
+; emacs wants to indent these single semicolon comment lines
+                                        ; like this
+
+; todo move this out
+(defun quick-copy-line ()
+  "Copy the whole line that point is on and move to the beginning of the next line.
+    Consecutive calls to this command append each line to the
+    kill-ring."
+  (interactive)
+  (let ((beg (line-beginning-position 1))
+        (end (line-beginning-position 2)))
+    (if (eq last-command 'quick-copy-line)
+        (kill-append (buffer-substring beg end) (< end beg))
+      (kill-new (buffer-substring beg end))))
+  (beginning-of-line 2))
+
+
+; bring back crs to coerce to snake case
