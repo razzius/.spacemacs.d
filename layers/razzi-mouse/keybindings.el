@@ -11,8 +11,7 @@
   (interactive (list last-input-event))
   (when (and (eq major-mode 'vterm-mode)
              (not vterm-copy-mode))
-    (vterm-copy-mode)
-    (evil-normal-state))
+    (vterm-copy-mode))
   (mwheel-scroll event))
 
 (defun razzi-mouse-prevent-scroll-past-end-of-file ()
