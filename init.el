@@ -33,6 +33,7 @@ This function should only modify configuration layer settings."
      clojure
      go
      html
+     java
      javascript
      markdown
      rust
@@ -56,8 +57,7 @@ This function should only modify configuration layer settings."
      ;;        shell-default-position 'bottom)
      ;; spell-checking
      (syntax-checking :variables
-                      syntax-checking-enable-tooltips nil
-                      )
+                      syntax-checking-enable-tooltips nil)
      treemacs
 
      helpful
@@ -94,7 +94,7 @@ This function should only modify configuration layer settings."
    dotspacemacs-frozen-packages '()
 
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages '(anaconda-mode company-anaconda evil-escape blacken importmagic)
+   dotspacemacs-excluded-packages '(anaconda-mode company-anaconda evil-escape blacken importmagic clean-aindent-mode)
 
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
@@ -549,6 +549,7 @@ before packages are loaded."
     "t DEL" 'centaur-tabs-kill-all-buffers-in-current-group)
 
   (general-define-key :states '(normal insert)
+                      "C-c C-c" 'with-editor-finish
                       "M-1" 'centaur-tabs-select-beg-tab
                       "M-2" 'centaur-tabs-select-visible-tab
                       "M-3" 'centaur-tabs-select-visible-tab
