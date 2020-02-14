@@ -70,6 +70,7 @@ This function should only modify configuration layer settings."
      razzi-import-it
      razzi-clojure
      razzi-javascript
+     razzi-markdown
      razzi-mouse
      razzi-python
      razzi-tab-completion
@@ -597,7 +598,7 @@ before packages are loaded."
                       "D" 'razzi-kill-line-and-whitespace
                       "K" 'evil-previous-line  ; Protect against typo
                       "M-RET" 'lisp-state-eval-sexp-end-of-line
-                      "M-S-t" 'reopen-killed-file ; this is not bound correctly
+                      "M-T" 'reopen-killed-file
                       "M-[" 'evil-backward-paragraph
                       "M-]" 'evil-forward-paragraph
                       "M-c" 'quick-copy-line
@@ -713,3 +714,4 @@ before packages are loaded."
 
 
 ; bring back crs to coerce to snake case
+; click url to open
