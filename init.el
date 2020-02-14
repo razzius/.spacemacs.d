@@ -536,9 +536,10 @@ before packages are loaded."
     "f u" 'razzi-python/copy-test-method-path
     "g n" 'centaur-tabs-forward-group
     "g p" 'centaur-tabs-backward-group
+    "i b" 'razzi-python-black
+    "i c" 'razzi-duplicate-paragraph
     "i d" 'razzi-put-debugger
     "i e" 'iedit-mode
-    "i c" 'razzi-duplicate-paragraph
     "i f" 'razzi-python-autoflake
     "i g" 'razzi-python-gray
     "i i" 'razzi-import-it-import-this

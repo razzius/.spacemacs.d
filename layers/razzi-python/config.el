@@ -10,6 +10,10 @@
   (interactive)
   (razzi-run-script-on-file "gray"))
 
+(defun razzi-python-black ()
+  (interactive)
+  (razzi-run-script-on-file "black"))
+
 (setq blacken-executable "gray")
 (setq flycheck-python-flake8-executable "flake8")
 (setq flycheck-flake8rc "~/.config/flake8")
