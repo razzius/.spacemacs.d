@@ -530,6 +530,7 @@ before packages are loaded."
     "e p" 'flycheck-previous-error
     "f RET" 'spacemacs/projectile-copy-file-path
     "f SPC" 'spacemacs/copy-file-path
+    "f d" 'spacemacs/delete-current-buffer-file
     "f i" 'spacemacs/find-dotfile
     "f n" 'spacemacs/copy-file-name
     "f p" 'razzi-python/copy-test-file-path
@@ -551,6 +552,8 @@ before packages are loaded."
     "t DEL" 'centaur-tabs-kill-all-buffers-in-current-group)
 
   (general-define-key :states '(normal insert)
+                      "M-h" 'ns-do-hide-emacs
+                      "M-q" 'spacemacs/prompt-kill-emacs
                       "C-c C-c" 'with-editor-finish
                       "M-1" 'centaur-tabs-select-beg-tab
                       "M-2" 'centaur-tabs-select-visible-tab
@@ -603,8 +606,6 @@ before packages are loaded."
                       "M-[" 'evil-backward-paragraph
                       "M-]" 'evil-forward-paragraph
                       "M-c" 'quick-copy-line
-                      "M-h" 'centaur-tabs-backward
-                      "M-l" 'centaur-tabs-forward
                       "M-o" 'razzi-open-sexp-below
                       "M-r" 'raise-sexp
                       "M-s" 'razzi-flycheck-and-save-buffer
@@ -632,6 +633,7 @@ before packages are loaded."
                       "M-o" 'sp-end-of-next-sexp
                       "H-<backspace>" 'backward-kill-word  ; this is because I have system-wide C-w -> H-<backspace>
                       "C-a" 'beginning-of-line
+                      "C-c a" 'razzi-abbrev-or-add-global-abbrev
                       "C-d" 'delete-forward-char
                       "C-e" 'end-of-line
                       "C-k" 'kill-line
@@ -659,7 +661,7 @@ before packages are loaded."
                                               try-expand-line-all-buffers)))
       (call-interactively 'hippie-expand)))
 
-  (mapc 'evil-declare-not-repeat '(flycheck-next-error flycheck-previous-error razzi-flycheck-and-save-buffer))
+  (mapc 'evil-declare-not-repeat '(flycheck-next-error flycheck-previous-error razzi-flycheck-and-save-buffer evil-ex-search-next evil-ex-search-previous))
 
   (general-define-key :states 'visual
                       "$" 'evil-last-non-blank
@@ -671,6 +673,8 @@ before packages are loaded."
                       "E" 'forward-symbol
                       "ae" 'whole-buffer
                       "SPC" 'evil-inner-symbol)
+
+  (general-define-key "M-e" 'fill-paragraph)
 
   ; todo integrate this
   (defvar killed-file-list nil

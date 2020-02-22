@@ -164,6 +164,7 @@
     (evil-define-key 'insert vterm-mode-map (kbd "M-7") 'centaur-tabs-select-visible-tab)
     (evil-define-key 'insert vterm-mode-map (kbd "M-8") 'centaur-tabs-select-visible-tab)
     (evil-define-key 'insert vterm-mode-map (kbd "M-9") 'centaur-tabs-select-end-tab)
+    (evil-define-key 'insert vterm-mode-map (kbd "M-n") 'razzi-vterm-new)
     (evil-define-key 'insert vterm-mode-map (kbd "M-<backspace>") 'razzi-vterm-send-c-u)
     (evil-define-key 'insert vterm-mode-map (kbd "M-[") 'evil-normal-state)
     (evil-define-key 'insert vterm-mode-map (kbd "M-j") 'vterm-send-return)
