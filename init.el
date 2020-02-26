@@ -592,6 +592,12 @@ before packages are loaded."
                       "!" 'evil-ex-sort
                       "-" 'move-text-down
                       "0" 'evil-first-non-blank
+                      "c" (general-key-dispatch 'evil-change
+                            "ru" 'string-inflection-upcase
+                            "rs" 'string-inflection-underscore
+                            "rt" 'string-inflection-camelcase
+                            "rc" 'string-inflection-lower-camelcase
+                            "rd" 'string-inflection-kebab-case)
                       "C" 'razzi-change-line
                       "C-M-;" 'eval-expression
                       "C-SPC '" 'razzi-vterm-toggle
@@ -665,8 +671,9 @@ before packages are loaded."
 
   (general-define-key :states 'visual
                       "$" 'evil-last-non-blank
-                      "K" 'evil-previous-line  ; Protect against typo
                       "0" 'evil-first-non-blank
+                      "K" 'evil-previous-line  ; Protect against typo
+                      "c" 'evil-change
                       "v" 'evil-normal-state)
 
   (general-define-key :states 'operator
@@ -718,5 +725,4 @@ before packages are loaded."
   (beginning-of-line 2))
 
 
-; bring back crs to coerce to snake case
 ; click url to open
