@@ -69,10 +69,6 @@
   (interactive)
   (vterm-send-key " "))
 
-(defun razzi-vterm-send-c-n ()
-  (interactive)
-  (vterm-send-key "n" nil nil t))
-
 (defun razzi-vterm-send-c-p ()
   (interactive)
   (vterm-send-key "p" nil nil t))
@@ -168,7 +164,6 @@
     (evil-define-key 'insert vterm-mode-map (kbd "M-<backspace>") 'razzi-vterm-send-c-u)
     (evil-define-key 'insert vterm-mode-map (kbd "M-[") 'evil-normal-state)
     (evil-define-key 'insert vterm-mode-map (kbd "M-j") 'vterm-send-return)
-    (evil-define-key 'insert vterm-mode-map (kbd "M-n") 'razzi-vterm-send-c-n)
     (evil-define-key 'insert vterm-mode-map (kbd "M-p") 'razzi-vterm-send-c-p)
     (evil-define-key 'insert vterm-mode-map (kbd "M-t") 'razzi-vterm-new)
     (evil-define-key 'insert vterm-mode-map (kbd "M-v") 'vterm-yank)
