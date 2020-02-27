@@ -1,11 +1,12 @@
-(defun razzi-mouse-open-file-on-click ()
+(defun razzi-mouse-open-file-or-url-on-click ()
   (interactive)
   (let ((string-at-point (ffap-string-at-point)))
-    (when (and (not (string-empty-p string-at-point))
-               (file-exists-p string-at-point))
-      (find-file string-at-point))))
+    (if (and (not (string-empty-p string-at-point))
+             (file-exists-p string-at-point))
+        (find-file string-at-point)
+      (browse-url-at-point))))
 
-(global-set-key [mouse-1] 'razzi-mouse-open-file-on-click)
+(global-set-key [mouse-1] 'razzi-mouse-open-file-or-url-on-click)
 
 (defun razzi-mouse-scroll-up-copy-mode-in-vterm (event)
   (interactive (list last-input-event))

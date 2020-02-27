@@ -708,8 +708,6 @@ before packages are loaded."
      (message "%.06f" (float-time (time-since time)))))
 
 ; would be great to remove color themes etc to see why vi in vterm is showing up blank
-; emacs wants to indent these single semicolon comment lines
-                                        ; like this
 
 ; todo move this out
 (defun quick-copy-line ()
@@ -723,6 +721,3 @@ before packages are loaded."
         (kill-append (buffer-substring beg end) (< end beg))
       (kill-new (buffer-substring beg end))))
   (beginning-of-line 2))
-
-
-; click url to open
