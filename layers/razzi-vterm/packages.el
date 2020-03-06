@@ -103,7 +103,11 @@
 
     (add-hook 'vterm-mode-hook 'razzi-vterm-disable-line-highlight)
     (add-hook 'vterm-mode-hook 'razzi-vterm-disable-status-line)
-    (add-hook 'vterm-exit-functions #'(lambda (buf) (when buf (kill-buffer buf))))
+    (add-hook 'vterm-exit-functions #'(lambda (buf)
+                                        (when buf (kill-buffer buf))
+                                        (when (> (count-windows) 1)
+                                          (delete-window))))
+
     (add-hook 'vterm-mode-hook 'evil-insert-state)
 
     (evil-define-key 'normal vterm-mode-map (kbd "o") #'browse-url-at-point)
