@@ -544,8 +544,8 @@ before packages are loaded."
     "i f" 'razzi-python-autoflake
     "i g" 'razzi-python-gray
     "i i" 'razzi-import-it-import-this
+    "i n" 'evil-ex-nohighlight
     "i s" 'razzi-python-isort
-    "m" 'vterm
     "o" 'razzi-put-after
     "q b" 'razzi-close-all-file-buffers
     "q r" 'razzi-restart-emacs
@@ -721,3 +721,7 @@ before packages are loaded."
         (kill-append (buffer-substring beg end) (< end beg))
       (kill-new (buffer-substring beg end))))
   (beginning-of-line 2))
+
+
+; coming back to vterm buffer makes it go to copy mode?
+; spc i a import all
