@@ -489,7 +489,7 @@ configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
   (setq-default require-final-newline t
-                evil-symbol-word-search nil)
+                evil-symbol-word-search t)
 
   (setq create-lockfiles nil
         custom-file "~/.emacs.d/custom.el"
