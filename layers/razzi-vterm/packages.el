@@ -86,11 +86,10 @@
     :config
     (setq vterm-max-scrollback 10000)
 
-    (defun razzi-vterm-disable-line-highlight ()
-      (setq-local global-hl-line-mode nil))
-
-    (defun razzi-vterm-disable-status-line ()
-      (setq mode-line-format nil))
+    (defun razzi-setup-vterm ()
+      (setq-local
+       global-hl-line-mode nil
+       mode-line-format nil))
 
     (defun razzi-vterm-end-copy-mode ()
       (interactive)
@@ -98,15 +97,17 @@
       (when (eq evil-state 'normal)
         (evil-append 1)))
 
-    (define-key vterm-copy-mode-map (kbd "<return>") 'razzi-vterm-end-copy-mode)
-    (evil-define-key 'normal vterm-mode-map (kbd "<return>") 'razzi-vterm-end-copy-mode)
+    (defun razzi-vterm-close-buffer-on-exit (buf)
+      (when buf (kill-buffer buf))
+      (when (> (count-windows) 1)
+	(delete-window)))
+
+  (define-key vterm-copy-mode-map (kbd "<return>") 'razzi-vterm-end-copy-mode)
+  (evil-define-key 'normal vterm-mode-map (kbd "<return>") 'razzi-vterm-end-copy-mode)
 
     (add-hook 'vterm-mode-hook 'razzi-vterm-disable-line-highlight)
     (add-hook 'vterm-mode-hook 'razzi-vterm-disable-status-line)
-    (add-hook 'vterm-exit-functions #'(lambda (buf)
-                                        (when buf (kill-buffer buf))
-                                        (when (> (count-windows) 1)
-                                          (delete-window))))
+    (add-hook 'vterm-exit-functions #'razzi-vterm-close-buffer-on-exit)
 
     (add-hook 'vterm-mode-hook 'evil-insert-state)
 
