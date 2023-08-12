@@ -14,8 +14,6 @@
 
     (transient-append-suffix 'magit-pull "p" '("d" "current" razzi/magit-pull))
 
-    (magit-define-popup-action 'magit-push-popup ?h "Push to heroku :O" 'razzi/magit-push-heroku)
-
     (setq
      magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1
      magit-push-current-set-remote-if-missing nil

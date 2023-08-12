@@ -10,10 +10,6 @@
   (interactive)
   (magit-run-git "push"))
 
-(defun razzi/magit-push-heroku ()
-  (interactive)
-  (magit-run-git "push" "heroku" "master"))
-
 (defun razzi/magit-pull ()
   (interactive)
   (magit-run-git "pull-current"))
